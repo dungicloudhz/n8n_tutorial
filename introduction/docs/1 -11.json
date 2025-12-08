@@ -1,0 +1,128 @@
+{
+  "name": "1. Update lại Bitrix khi triển khai bị Hủy",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "*/30 * * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -500,
+        -120
+      ],
+      "id": "61b28ec5-84b2-42f7-8b0d-7f23f86c434b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://jira.ezcloudhotel.com/rest/api/2/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendQuery": true,
+        "specifyQuery": "json",
+        "jsonQuery": "{\n  \"jql\": \"project = TRIENKHAI AND issuetype = Epic AND status CHANGED TO \\\"Hủy\\\" AFTER -30m\",\n  \"fields\": \"summary,status,updated,customfield_12723\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -280,
+        -120
+      ],
+      "id": "c8d2158f-4ccd-49e9-a58f-a2d7fe1e4d7c",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "pvT4VbLwlFAVdKcr",
+          "name": "Jira dùng bản này"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const issues = $input.first().json.issues;\n\nreturn issues.map(issue => {\n  const link = issue.fields?.customfield_12723 || '';\n  const match = link.match(/\\/deal\\/details\\/(\\d+)\\//);\n  const dealId = match ? match[1] : null;\n\n  return {\n    json: {\n      issueKey: issue.key,\n      dealId,\n      status: issue.fields?.status?.name || '',\n      linkCRM: link\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -60,
+        -120
+      ],
+      "id": "2ebcb94e-9098-4c16-8551-15da2df10d9b",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://work.ezcloudhotel.com/rest/1/gzg799njddspx91w/crm.deal.update.json",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"id\": \"{{ $json.dealId }}\",\n  \"fields\": {\n    \"STAGE_ID\": \"LOSE\"\n  }\n}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        180,
+        -120
+      ],
+      "id": "d709bd51-4ef3-4476-add1-4f70df67b88a",
+      "name": "HTTP Request1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "076fe87a-4dad-4d3b-98dd-3d6c7969895a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "13b2b2194b9345d89f84307e594631e06e7c33486f6b0c841c9f8d968de524b3"
+  },
+  "id": "vrqnUHzHuHxk4Bj1",
+  "tags": []
+}

@@ -1,0 +1,1336 @@
+{
+  "name": "tiktok",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## | Step 1: Ket noi voi wavespeed.ai",
+        "height": 240,
+        "width": 1560,
+        "color": 2
+      },
+      "id": "33ea0996-a3a9-453c-8240-7441b76acb46",
+      "name": "Sticky Note10",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        560
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## | Step 2: Tạo và lấy file âm thanh ASMR từ dịch vụ Fal AI.\n",
+        "height": 240,
+        "width": 1560,
+        "color": 2
+      },
+      "id": "aa34b677-e211-4788-844e-ff4cf9dcb86a",
+      "name": "Sticky Note13",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        860
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## | INPUT: Tạo video",
+        "height": 540,
+        "width": 1560,
+        "color": 7
+      },
+      "id": "53423b70-f1bc-40f5-be23-e439e0dba4e7",
+      "name": "Sticky Note14",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## | Step 3 — Đăng video lên social media\n",
+        "height": 760,
+        "width": 1560,
+        "color": 4
+      },
+      "id": "b7e44acc-c749-4e32-b9d8-6aee6f90d889",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        1180
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1Q4F26v7qM_5Xh1nzcmd4J1Y4EQoYpDlhPgJxf-u7ILs/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Test Udemy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q4F26v7qM_5Xh1nzcmd4J1Y4EQoYpDlhPgJxf-u7ILs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "final_output": "={{ $json.video.url }}",
+            "idea": "={{ $json.output[0].Idea }}"
+          },
+          "matchingColumns": [
+            "idea"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "production",
+              "displayName": "production",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "environment_promp",
+              "displayName": "environment_promp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sound_prompt",
+              "displayName": "sound_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "final_output",
+              "displayName": "final_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "7b63d31d-1c79-4a90-889c-f8241e4aa0c6",
+      "name": "URL Final Video",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1360,
+        940
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "gIa8JTMYDfG4g2Tc",
+          "name": "Kết nôi gg sheet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.final_output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "69c6ed20-b13b-4ba0-a7b7-19bbaf45f022",
+      "name": "Upload Video to Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        360,
+        1520
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Danh sách mạng xã hội sẽ đăng').item.json.instagram_id }}\",\n    \"target\": {\n      \"targetType\": \"instagram\"\n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"instagram\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n\n",
+        "options": {}
+      },
+      "id": "855484c8-8d3b-42f8-a0fa-efaef811980e",
+      "name": "INSTAGRAM",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        940,
+        1260
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Danh sách mạng xã hội sẽ đăng').item.json.youtube_id }}\",\n    \"target\": {\n      \"targetType\": \"youtube\",\n      \"title\": \"{{ $('Get my video').item.json.Titre }}\",\n      \"privacyStatus\": \"unlisted\",\n      \"shouldNotifySubscribers\": \"false\"\n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"youtube\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "5d9f802e-80ea-490d-ac54-d41df3a86dd7",
+      "name": "YOUTUBE",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1160,
+        1260
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "=YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Danh sách mạng xã hội sẽ đăng').item.json.tiktok_id }}\",\n    \"target\": {\n      \"targetType\": \"tiktok\",\n      \"isYourBrand\": \"false\", \n      \"disabledDuet\": \"false\",\n      \"privacyLevel\": \"PUBLIC_TO_EVERYONE\",\n      \"isAiGenerated\": \"true\",\n      \"disabledStitch\": \"false\",\n      \"disabledComments\": \"false\",\n      \"isBrandedContent\": \"false\"\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"tiktok\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "256d2296-1b80-429b-a015-e6c04102f950",
+      "name": "TIKTOK",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1360,
+        1260
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "=YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Danh sách mạng xã hội sẽ đăng').item.json.facebook_id }}\",\n    \"target\": {\n      \"targetType\": \"facebook\",\n      \"pageId\": \"{{ $('Danh sách mạng xã hội sẽ đăng').item.json.facebook_page_id }}\"\n\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"facebook\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}",
+        "options": {}
+      },
+      "id": "5aa7be26-fdd9-4300-9e09-3b6d4efeef87",
+      "name": "FACEBOOK",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        940,
+        1500
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Danh sách mạng xã hội sẽ đăng').item.json.threads_id }}\",\n    \"target\": {\n      \"targetType\": \"threads\"\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"threads\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "8986fac8-b89f-45e3-9244-aa78a001c595",
+      "name": "THREADS",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1160,
+        1500
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Danh sách mạng xã hội sẽ đăng').item.json.linkedin_id }}\",\n    \"target\": {\n      \"targetType\": \"linkedin\"\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"linkedin\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "4532ed16-f785-4f66-9c07-b600ead9994b",
+      "name": "LINKEDIN",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        940,
+        1740
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "= {\n  \"post\": {\n    \"accountId\": \"{{ $('Danh sách mạng xã hội sẽ đăng').item.json.bluesky_id }}\",\n    \"target\": {\n      \"targetType\": \"bluesky\"\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"bluesky\",\n      \"mediaUrls\": [\n        \"https://pbs.twimg.com/media/GE8MgIiWEAAfsK3.jpg\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "9b351f0c-1a37-461d-9616-4d296369aa6d",
+      "name": "BLUESKY",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1160,
+        1740
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Danh sách mạng xã hội sẽ đăng').item.json.pinterest_id }}\",\n    \"target\": {\n      \"targetType\": \"pinterest\",\n      \"boardId\": \"{{ $('Danh sách mạng xã hội sẽ đăng').item.json.pinterest_board_id }}\"      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"pinterest\",\n      \"mediaUrls\": [\n        \"https://pbs.twimg.com/media/GE8MgIiWEAAfsK3.jpg\"\n      ]\n    }\n  }\n}\n\n",
+        "options": {}
+      },
+      "id": "597de5a1-a6ce-43af-ae06-c31123e6541b",
+      "name": "PINTEREST",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1360,
+        1740
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Danh sách mạng xã hội sẽ đăng').item.json.twitter_id }}\",\n    \"target\": {\n      \"targetType\": \"twitter\"\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"twitter\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "aeca2b68-7d44-4ef4-9a71-3560392698b0",
+      "name": "TWITTER",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1360,
+        1500
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "id": "0130daf0-c39a-443f-a057-0759fb2ad23f",
+      "name": "Chạy 1h/ lần",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        60,
+        100
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Hãy tạo ý tưởng video miêu tả hình ảnh một cô gái xinh đẹp, độc lập, tự tin, đang tận hưởng khoảnh khắc sau giờ tan làm.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Hãy tạo nội dung video ngắn miêu tả hình ảnh một cô gái xinh đẹp, độc lập, tự tin, đang tận hưởng khoảng thời gian sau giờ tan làm.\n\nYêu cầu:\n- Phong cách hiện đại, tích cực, truyền cảm hứng về sự độc lập, thành công và phong thái điềm tĩnh.\n- Mô tả rõ trang phục, không gian xung quanh, ánh sáng và cảm xúc thể hiện qua cử chỉ.\n- Caption ngắn gọn, dễ lan truyền, kèm 1 emoji và 12 hashtag (4 hashtag về chủ đề phụ nữ độc lập/thành công, 4 hashtag phổ biến nhất, 4 hashtag đang thịnh hành, tất cả viết thường, không dấu, cách nhau bằng khoảng trắng).\n- Ý tưởng phải dưới 13 từ, rõ ràng, không mơ hồ.\n- Môi trường tối đa 20 từ, phải khớp hành động (ví dụ: \"Quán cafe ấm cúng ánh đèn vàng\").\n- Âm thanh tối đa 15 từ, ví dụ: \"Tiếng nhạc chill nhẹ nhàng\".\n\nTrả về đúng định dạng JSON sau:\n\n[\n  {\n    \"Caption\": \"Tiêu đề ngắn dễ lan truyền kèm emoji #4_hashtag_chu_de #4_hashtag_pho_bien #4_hashtag_thinh_hanh\",\n    \"Idea\": \"Ý tưởng dưới 13 từ\",\n    \"Environment\": \"Mô tả bối cảnh tối đa 20 từ\",\n    \"Sound\": \"Mô tả âm thanh tối đa 15 từ\",\n    \"Status\": \"for production\"\n  }\n]\n\nChỉ trả về dữ liệu JSON, không thêm bất kỳ giải thích nào.\n"
+        }
+      },
+      "id": "94129f61-771a-4035-8ae1-3c13b2656984",
+      "name": "AI Agent: Tạo ý tưởng video",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        380,
+        100
+      ],
+      "typeVersion": 1.9
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1Q4F26v7qM_5Xh1nzcmd4J1Y4EQoYpDlhPgJxf-u7ILs/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Test Udemy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q4F26v7qM_5Xh1nzcmd4J1Y4EQoYpDlhPgJxf-u7ILs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "==ROW()-1",
+            "idea": "={{ $json.output[0].Idea }}",
+            "caption": "={{ $json.output[0].Caption }}",
+            "production": "={{ $json.output[0].Status }}",
+            "environment_promp": "={{ $json.output[0].Environment }}",
+            "sound_prompt": "={{ $json.output[0].Sound }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "production",
+              "displayName": "production",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "environment_promp",
+              "displayName": "environment_promp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sound_prompt",
+              "displayName": "sound_prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "final_output",
+              "displayName": "final_output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "59571dcf-a366-493c-bbc1-dcf93d1aceb6",
+      "name": "Lưu ý tưởng trên google sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        840,
+        100
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "gIa8JTMYDfG4g2Tc",
+          "name": "Kết nôi gg sheet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Hãy tạo 1 mô tả cảnh video dựa trên ý tưởng, môi trường và âm thanh đã cung cấp.\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Bạn là một AI chuyên gia phân tích video và mô tả nội dung chi tiết. \nNhiệm vụ của bạn là tạo mô tả video chi tiết, khách quan, sát với thực tế, và cùng phong cách với video mẫu đã cho (video: \"videotest.mp4\").\n\nHãy tuân thủ các nguyên tắc sau:\n1️⃣ Giữ giọng văn trung tính, quan sát khách quan, không thêm cảm xúc hay ý kiến chủ quan.\n2️⃣ Mô tả chính xác các đặc điểm:\n   - Vật thể chính trong video.\n   - Môi trường xung quanh.\n   - Chuyển động và hoạt động diễn ra.\n   - Kết cấu, màu sắc, ánh sáng.\n3️⃣ Mỗi mô tả ít nhất 500 ký tự, tối đa 1500 ký tự.\n4️⃣ Không sử dụng phép ẩn dụ hay nhân cách hóa.\n5️⃣ Luôn tuân theo phong cách mô tả thực tế chi tiết như video mẫu.\n6️⃣ Nếu video đầu vào là ý tưởng trừu tượng, hãy diễn giải thành chuỗi cảnh quay thực tế, bám sát phong cách video mẫu.\n\nKhi tạo mô tả, bạn cần bám sát vào:\n- Ý tưởng (Idea) do người dùng cung cấp.\n- Môi trường (Environment) do người dùng cung cấp.\n- Âm thanh (Sound) do người dùng cung cấp.\n\nĐịnh dạng kết quả:\nIdea: \"...\"\nEnvironment: \"...\"\nSound: \"...\"\n\nScene 1: \"...\""
+        }
+      },
+      "id": "1ba5434e-0a50-4bc7-976b-9ffccdb43fa8",
+      "name": "AI Agent: Sinh mô tả chi tiết cho video",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1180,
+        100
+      ],
+      "typeVersion": 1.9
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "id": "fce64992-53b4-4511-91ff-826b2e89f34c",
+      "name": "LLM: sinh nội dung gốc",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        320,
+        380
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "fVi4r4V2HhZ3EHUk",
+          "name": "Open AI kết nối LLM"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "333d02fd-dbb2-47b0-8bf4-a4a92ea69c51",
+      "name": "Tool: Tinh chỉnh ý tưởng đã sinh ra",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "position": [
+        500,
+        380
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[\n  {\n    \"Caption\": \"Diver Removes Nets Off Whale 🐋 #whalerescue #marinelife #oceanrescue #seahelpers #love #nature #instagood #explore #viral #savenature #oceanguardians #cleanoceans\",\n    \"Idea\": \"Diver carefully cuts tangled net from distressed whale in open sea\",\n    \"Environment\": \"Open ocean, sunlight beams through water, diver and whale, cinematic realism\",\n    \"Sound\": \"Primary sound description under 15 words\",\n    \"Status\": \"for production\"\n  }\n]\n"
+      },
+      "id": "c652b952-e886-4c31-9cec-4c528f2623a4",
+      "name": "Tách dữ liệu thành cấu trúc json chuẩn",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        660,
+        380
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "id": "2781482a-68d0-4eb3-93e3-e0f806014ba1",
+      "name": "LLM: Mô tả cụ thể ý tưởng",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1080,
+        380
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "fVi4r4V2HhZ3EHUk",
+          "name": "Open AI kết nối LLM"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "77b301d1-8d55-41cd-88f9-dd6d92a3a062",
+      "name": "Tool: Kiểm duyệt kịch bản",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "position": [
+        1260,
+        380
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"Idea\": \"An obsidian rock being sliced with a shimmering knife\",\n  \"Environment\": \"Clean studio table, subtle light reflections\",\n  \"Sound\": \"Crisp slicing, deep grinding, and delicate crumbling\",\n  \"Scene 1\": \"Extreme macro shot: a razor-sharp, polished knife blade presses into the dark, granular surface of an obsidian rock, just beginning to indent.\",\n  \"Scene 2\": \"Close-up: fine, iridescent dust particles erupt from the point of contact as the blade cuts deeper into the obsidian, catching the studio light.\",\n  \"Scene 3\": \"Mid-shot: the knife, held perfectly steady, has formed a shallow, clean groove across the obsidian's shimmering surface, revealing a new, smooth texture.\"\n}"
+      },
+      "id": "af0bdb24-3f13-4e98-9600-deaaf1aa0aa0",
+      "name": "Biến thành dữ liệu chuẩn bị cho các node tiếp theo",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        1420,
+        380
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "jsCode": "function findSceneEntries(obj) {\n  const scenes = [];\n\n  for (const [key, value] of Object.entries(obj)) {\n    if (key.toLowerCase().startsWith(\"scene\") && typeof value === \"string\") {\n      scenes.push(value);\n    } else if (typeof value === \"object\" && value !== null) {\n      scenes.push(...findSceneEntries(value));\n    }\n  }\n\n  return scenes;\n}\n\nlet output = [];\n\ntry {\n  const inputData = items[0].json;\n\n  // Nếu dữ liệu nằm trong output thì lấy nó\n  const data = inputData.output || inputData;\n\n  const scenes = findSceneEntries(data);\n\n  if (scenes.length === 0) {\n    throw new Error(\"No scene keys found at any level.\");\n  }\n\n  const idea = data.Idea || \"\";\n  const environment = data.Environment || \"\";\n  const sound = data.Sound || \"\";\n\n  output = scenes.map(scene => ({\n    json: {\n      description: scene,\n      idea: idea,\n      environment: environment,\n      sound: sound\n    }\n  }));\n} catch (e) {\n  throw new Error(\"Could not extract scenes properly. Details: \" + e.message);\n}\n\nreturn output;\n"
+      },
+      "id": "7363f19e-7965-44b2-8b93-9180a90d2c29",
+      "name": "Xử lý trích xuất mô tả từng cảnh lẻ",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        100,
+        640
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.wavespeed.ai/api/v3/bytedance/seedance-v1-pro-t2v-480p",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 838f458560933854703e411a2bf1538990fde0f27b149cab8538e8c772272da0"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "aspect_ratio",
+              "value": "9:16"
+            },
+            {
+              "name": "duration",
+              "value": "10"
+            },
+            {
+              "name": "prompt",
+              "value": "=VIDEO THEME: {{ $json.idea }} | ENVIRONMENT: {{ $json.environment }} | SOUND: {{ $json.sound }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {}
+        }
+      },
+      "id": "e3e7ae35-936e-4b2a-8ba4-7a175652c57e",
+      "name": "Kết nối với Wavespeed AI",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        440,
+        640
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "url": "=https://api.wavespeed.ai/api/v3/predictions/{{ $json.data.id }}/result",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 838f458560933854703e411a2bf1538990fde0f27b149cab8538e8c772272da0"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ffa8c572-7f3f-403b-b0b9-93b5c90342d1",
+      "name": "Lấy kết quả video từ Wavespeed API",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1100,
+        640
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://queue.fal.run/fal-ai/mmaudio-v2 ",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Key 431aa33f-a3ad-4a3b-b17d-18bcdca30792:ff26799a3667e34734eebbeca029a8c1"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "= {\n        \"prompt\": \"ASMR Soothing sound effects. {{ $('AI Agent: Sinh mô tả chi tiết cho video') }}\",\n        \"duration\": 10,\n        \"video_url\": \"{{ $json.data.outputs[0] }}\"\n  }\n",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 2000
+            }
+          }
+        }
+      },
+      "id": "7b260f82-4320-45f0-9c24-b33bf051a504",
+      "name": "Gửi yêu cầu tạo âm thanh (ASMR Sound).",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        60,
+        940
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "id": "480a210d-cdda-45f1-8b0c-c422969ddb81",
+      "name": "Đợi 60s",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        260,
+        940
+      ],
+      "webhookId": "abac7859-a9f6-46f3-95c2-df43ec32807d",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.status_url }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Key 431aa33f-a3ad-4a3b-b17d-18bcdca30792:ff26799a3667e34734eebbeca029a8c1"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3e403275-34b0-4fc4-a4c4-1194d65e47fc",
+      "name": "Trả ra âm thanh cuối cùng",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        460,
+        940
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lấy tất cả items\nconst items = $input.all();\n\n// Khởi tạo object kết quả\nlet result = {};\n\n// Lặp từng item\nfor (const item of items) {\n  // Gộp tất cả field của mỗi item vào result\n  result = {\n    ...result,\n    ...item.json\n  };\n}\n\n// Trả ra 1 item duy nhất chứa tất cả fields\nreturn [\n  {\n    json: result\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        940
+      ],
+      "id": "ef3702b2-4e34-4d4d-957f-f8207889cb6f",
+      "name": "Code"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        960,
+        940
+      ],
+      "id": "b3bbf107-4123-48ff-92af-5ac68d9a808b",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.data.urls.get }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 838f458560933854703e411a2bf1538990fde0f27b149cab8538e8c772272da0"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4b4f1057-a0b8-475e-aed9-bc26078e5eaf",
+      "name": "Kiểm tra trạng thái video",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1400,
+        640
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "id": "fec440b8-44dc-48e5-9ec6-2064954f10eb",
+      "name": "Dừng 60s để đợi video chạy xong",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        740,
+        640
+      ],
+      "webhookId": "60604cd4-5d90-48dc-93f4-1335e5f03fdd",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.response_url }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Key 431aa33f-a3ad-4a3b-b17d-18bcdca30792:ff26799a3667e34734eebbeca029a8c1"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        940
+      ],
+      "id": "d17cc70d-0f8a-49b1-b56d-58fcb5209ec3",
+      "name": "Trả ra file mp4 hoàn chỉnh"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"instagram_id\": \"1111\",\n  \"youtube_id\": \"1111\",\n  \"threads_id\": \"1111\",\n  \"tiktok_id\": \"1111\",\n  \"facebook_id\": \"1111\",\n  \"facebook_page_id\": \"1111\",\n  \"twitter_id\": \"1111\",\n  \"linkedin_id\": \"1111\",\n  \"pinterest_id\": \"1111\",\n  \"pinterest_board_id\": \"1111\",\n  \"bluesky_id\": \"1111\"\n}\n",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "e4be11b6-5043-4db8-a0b3-fbb240f1a07a",
+      "name": "Danh sách mạng xã hội sẽ đăng",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        140,
+        1520
+      ],
+      "typeVersion": 3.4
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "URL Final Video": {
+      "main": [
+        [
+          {
+            "node": "Danh sách mạng xã hội sẽ đăng",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Video to Blotato": {
+      "main": [
+        [
+          {
+            "node": "INSTAGRAM",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "YOUTUBE",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "TIKTOK",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "FACEBOOK",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "THREADS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "TWITTER",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LINKEDIN",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "BLUESKY",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "PINTEREST",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chạy 1h/ lần": {
+      "main": [
+        [
+          {
+            "node": "AI Agent: Tạo ý tưởng video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent: Tạo ý tưởng video": {
+      "main": [
+        [
+          {
+            "node": "Lưu ý tưởng trên google sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lưu ý tưởng trên google sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent: Sinh mô tả chi tiết cho video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent: Sinh mô tả chi tiết cho video": {
+      "main": [
+        [
+          {
+            "node": "Xử lý trích xuất mô tả từng cảnh lẻ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM: sinh nội dung gốc": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent: Tạo ý tưởng video",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool: Tinh chỉnh ý tưởng đã sinh ra": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent: Tạo ý tưởng video",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tách dữ liệu thành cấu trúc json chuẩn": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent: Tạo ý tưởng video",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM: Mô tả cụ thể ý tưởng": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent: Sinh mô tả chi tiết cho video",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool: Kiểm duyệt kịch bản": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent: Sinh mô tả chi tiết cho video",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Biến thành dữ liệu chuẩn bị cho các node tiếp theo": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent: Sinh mô tả chi tiết cho video",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Xử lý trích xuất mô tả từng cảnh lẻ": {
+      "main": [
+        [
+          {
+            "node": "Kết nối với Wavespeed AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kết nối với Wavespeed AI": {
+      "main": [
+        [
+          {
+            "node": "Dừng 60s để đợi video chạy xong",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lấy kết quả video từ Wavespeed API": {
+      "main": [
+        [
+          {
+            "node": "Kiểm tra trạng thái video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gửi yêu cầu tạo âm thanh (ASMR Sound).": {
+      "main": [
+        [
+          {
+            "node": "Đợi 60s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Đợi 60s": {
+      "main": [
+        [
+          {
+            "node": "Trả ra âm thanh cuối cùng",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trả ra âm thanh cuối cùng": {
+      "main": [
+        [
+          {
+            "node": "Trả ra file mp4 hoàn chỉnh",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "URL Final Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kiểm tra trạng thái video": {
+      "main": [
+        [
+          {
+            "node": "Gửi yêu cầu tạo âm thanh (ASMR Sound).",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dừng 60s để đợi video chạy xong": {
+      "main": [
+        [
+          {
+            "node": "Lấy kết quả video từ Wavespeed API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trả ra file mp4 hoàn chỉnh": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Danh sách mạng xã hội sẽ đăng": {
+      "main": [
+        [
+          {
+            "node": "Upload Video to Blotato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "dd19f916-75b3-4a4f-ae72-b4638e6ea760",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ce230667c1acec7215bde346169ee08dc2a0f12b160bcac6321e48058c1b01b2"
+  },
+  "id": "fORbMTLo8vmCke3T",
+  "tags": []
+}

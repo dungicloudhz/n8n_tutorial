@@ -1,0 +1,120 @@
+{
+  "name": "My workflow 5",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        -80
+      ],
+      "id": "97b9e638-bb22-4980-97a1-872c15cb3011",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "A peaceful and cozy scene of a young single woman enjoying her tranquil life in Vietnam. She is sitting by a sunny window with soft curtains, reading a book and drinking tea. The room is decorated with gentle pastel colors, potted plants, and minimalistic decor. The atmosphere is serene, warm, and inspiring, conveying happiness and self-love. No text in the image.",
+        "options": {
+          "returnImageUrls": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -260,
+        -80
+      ],
+      "id": "dfb65659-3959-446a-b20a-49d0c2baa33d",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "RHxWw9URb8HWofRc",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpRequestMethod": "POST",
+        "graphApiVersion": "v22.0",
+        "node": "728392097017202",
+        "edge": "photos",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "caption",
+                "value": "This is beautiful girll"
+              },
+              {
+                "name": "url",
+                "value": "={{ $json.url }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -80
+      ],
+      "id": "1c0cb1c2-c480-4c24-8bbb-5a2c9e263fe8",
+      "name": "Facebook Graph API",
+      "credentials": {
+        "facebookGraphApi": {
+          "id": "GWbp3Y8kjvnDOQWW",
+          "name": "Facebook Graph account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Facebook Graph API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d3d6d5d4-53e3-4a0c-b59a-f37e5f9f972f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ce230667c1acec7215bde346169ee08dc2a0f12b160bcac6321e48058c1b01b2"
+  },
+  "id": "qjRmhAg1fCvfQKfb",
+  "tags": []
+}

@@ -1,0 +1,151 @@
+{
+  "name": "1. Tự động gửi email Chúc mừng sinh nhật CBNV",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1-7"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -620,
+        -20
+      ],
+      "id": "46670fbe-4e52-44ee-a152-9b60ff61654e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hrm.base.vn/extapi/v1/employee/list\n",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Cookie",
+              "value": "basessid=3vqtm7r6f0fgle4co4fkmtog19u5hnqh0jrt6hk0898cviao10psbpq7qg3v5l0br2i5odkn2ng1289a"
+            },
+            {
+              "name": "cookie",
+              "value": "basessid=3vqtm7r6f0fgle4co4fkmtog19u5hnqh0jrt6hk0898cviao10psbpq7qg3v5l0br2i5odkn2ng1289a;"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "3563-CTV4MBFF6NL8746CFPWP7XBTJT3AWFR67RGKTBWHC4A6E6UXRG9522QV6Q5HQMKP-KKCJ89X8ZV9PPDSC3PNZ5YMDNPQC489B6BKQYPCH5HBLWBTQRVCKSAJPJRE8LH6U"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -400,
+        -20
+      ],
+      "id": "5100a654-4a9e-4bbe-853d-e8dc354f8e47",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = [];\nconst today = new Date();\nconst todayDay = today.getDate();\nconst todayMonth = today.getMonth() + 1;\n\n$input.all().forEach(item => {\n  const list = item.json.employees ?? [];\n\n  list.forEach(emp => {\n    const dobDay = parseInt(emp.dob_day);\n    const dobMonth = parseInt(emp.dob_month);\n\n    // So sánh với ngày sinh hôm nay\n    if (dobDay === todayDay && dobMonth === todayMonth) {\n      const fullName = `${emp.last_name || ''} ${emp.first_name || ''}`.trim();\n\n      result.push({\n        json: {\n          name: fullName,\n          email: emp.email || '',\n          dob_day: emp.dob_day || '',\n          dob_month: emp.dob_month || ''\n        }\n      });\n    }\n  });\n});\n\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -180,
+        -20
+      ],
+      "id": "ee86b558-e959-4de2-a8e4-8c268fd46451",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "fromEmail": "anhbt@ezcloud.vn",
+        "toEmail": "={{ $json.email }}",
+        "subject": "=Chúc mừng sinh nhật  {{ $json.name }}!",
+        "html": "=<div style=\"font-family: Arial, sans-serif; padding: 20px; background-color: #fef3c7; border-radius: 10px;\">\n  <h2 style=\"color: #f59e0b;\">🎂 Chúc mừng sinh nhật {{ $json.name }}!</h2>\n  <p>Chúc bạn có một ngày sinh nhật thật đặc biệt, ngập tràn niềm vui và hạnh phúc.</p>\n  <p>Hy vọng bạn sẽ có một tuổi mới nhiều thành công, sức khỏe dồi dào và luôn giữ nụ cười trên môi! 😄</p>\n  <p style=\"margin-top: 20px;\">🎁💐🎊</p>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        40,
+        -20
+      ],
+      "id": "1ffbd8de-5d2a-4cf5-9483-bc2f9ddddde2",
+      "name": "Send Email",
+      "webhookId": "71f91212-2527-46d2-ac91-5702d76eaed0",
+      "credentials": {
+        "smtp": {
+          "id": "5Fl2YsA0ewxt7p31",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "723385cc-5066-4118-8fdb-9561f130881d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ce230667c1acec7215bde346169ee08dc2a0f12b160bcac6321e48058c1b01b2"
+  },
+  "id": "Fq8znn9kX5dh7sJr",
+  "tags": []
+}

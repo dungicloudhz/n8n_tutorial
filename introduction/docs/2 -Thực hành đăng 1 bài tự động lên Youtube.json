@@ -1,0 +1,110 @@
+{
+  "name": "My workflow 6",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://drive.google.com/file/d/19GK6YD9frrD-dLseuvTWVE0TJbSbf-VF/view?usp=drive_link",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -280,
+        -40
+      ],
+      "id": "53958f0d-f98c-44be-9e06-eac0c138b867",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VBKLnV5CrXtBLyv1",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "test n8n",
+        "regionCode": "VN",
+        "categoryId": "1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        -40
+      ],
+      "id": "ec957d57-9a97-4f34-a6f1-65f86969e438",
+      "name": "YouTube",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "THDb3NEp28WG5Lc7",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -500,
+        -40
+      ],
+      "id": "2ca32c02-0391-4cfe-863f-262bf8f23f4c",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b0d73ba5-eb09-4c35-8683-d44295bce60e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ce230667c1acec7215bde346169ee08dc2a0f12b160bcac6321e48058c1b01b2"
+  },
+  "id": "puzyx5TN4ikZJ0NM",
+  "tags": []
+}

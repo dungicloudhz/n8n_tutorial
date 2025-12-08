@@ -1,0 +1,314 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "jiraVersion": "serverPat",
+        "events": [
+          "jira:issue_created"
+        ],
+        "additionalFields": {
+          "filter": "Project = ES"
+        }
+      },
+      "type": "n8n-nodes-base.jiraTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -440,
+        -80
+      ],
+      "id": "22adc89c-784f-41c2-99e0-cd2f7ff9e705",
+      "name": "Jira Trigger",
+      "webhookId": "04d0715b-e53e-4870-b19f-adc5cee244c1",
+      "credentials": {
+        "jiraSoftwareServerPatApi": {
+          "id": "oz7KxJmlX5RtVuWw",
+          "name": "Jira bản 26 06"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "11kIl296bboh2OpWCixvn-mAFglgbCVjZrzOlkE3Iiyo",
+          "mode": "list",
+          "cachedResultName": "Danh sách khách hàng chiến lược",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11kIl296bboh2OpWCixvn-mAFglgbCVjZrzOlkE3Iiyo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Siêu VIP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11kIl296bboh2OpWCixvn-mAFglgbCVjZrzOlkE3Iiyo/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -220,
+        -80
+      ],
+      "id": "38ef758a-97c1-471f-96f9-673b1e9df639",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m0wdJhnpRIt1PpKG",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// === Lấy dữ liệu từ Jira ===\nconst reporter = $('Jira Trigger').first().json.issue.fields.reporter;\nconst reporterEmail = reporter && typeof reporter === 'object' ? reporter.emailAddress : reporter;\nconst normalizedReporterEmail = String(reporterEmail || \"\").trim().toLowerCase();\n\nconst phoneFromJira = String($('Jira Trigger').first().json.issue.fields.customfield_12814 || \"\").trim();\nconst orgName = String($('Jira Trigger').first().json.issue.fields.customfield_10710 || \"\").trim().toLowerCase();\nconst summary = String($('Jira Trigger').first().json.issue.fields.summary || \"\").trim().toLowerCase();\nconst description = String($('Jira Trigger').first().json.issue.fields.description || \"\").trim().toLowerCase();\nconst issueKey = $('Jira Trigger').first().json.issue.key;\n\n// === Hàm chuẩn hóa domain ===\nconst cleanDomain = (val) =>\n  String(val || \"\")\n    .replace(/^@/, '') // Bỏ dấu @ nếu có\n    .trim()\n    .toLowerCase();\n\n// === Lặp qua từng dòng từ Google Sheets ===\nconst rows = $input.all();\n\nfor (const row of rows) {\n  const data = row.json;\n\n  const email1 = String(data['Email 1'] || \"\").trim().toLowerCase();\n  const email2 = String(data['Email 2'] || \"\").trim().toLowerCase();\n  const domain1 = cleanDomain(data['Email Domain 1']);\n  const domain2 = cleanDomain(data['Email Domain 2']);\n  const phone1 = String(data['Phone Number 1'] || \"\").trim();\n  const phone2 = String(data['Phone Number 2'] || \"\").trim();\n  const hotelName = String(data['Hotel name'] || \"\").trim().toLowerCase();\n\n  // 1. Email chính xác\n  if (normalizedReporterEmail && (normalizedReporterEmail === email1 || normalizedReporterEmail === email2)) {\n    return {\n      json: {\n        result: 'VIP1',\n        matchedBy: 'Email',\n        issueKey\n      }\n    };\n  }\n\n  // 2. Email domain\n  if (normalizedReporterEmail.includes('@')) {\n    const domainFromJira = normalizedReporterEmail.split('@')[1];\n    if (\n      domainFromJira &&\n      (domainFromJira === domain1 || domainFromJira === domain2)\n    ) {\n      return {\n        json: {\n          result: 'VIP1',\n          matchedBy: 'Email Domain',\n          issueKey\n        }\n      };\n    }\n  }\n\n  // 3. Số điện thoại\n  if (phoneFromJira && (phoneFromJira === phone1 || phoneFromJira === phone2)) {\n    return {\n      json: {\n        result: 'VIP1',\n        matchedBy: 'Phone Number',\n        issueKey\n      }\n    };\n  }\n\n  // 4. Hotel name khớp orgName, summary, hoặc description\n  if (\n    hotelName &&\n    (\n      hotelName === orgName ||\n      hotelName === summary ||\n      hotelName === description\n    )\n  ) {\n    return {\n      json: {\n        result: 'VIP1',\n        matchedBy: 'Hotel name',\n        issueKey\n      }\n    };\n  }\n}\n\n// ❌ Không khớp → không trả ra item nào\nreturn [{\n  json: {\n    result: 'Chuyển sang luồng tiếp theo',\n    matchedBy: '',\n    issueKey\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -80
+      ],
+      "id": "0e9443a2-97a9-40d6-8bb7-7a8464a9f714",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3fb24a77-b0a1-46df-bd98-6d58ec647bc1",
+              "leftValue": "={{$json.result}}",
+              "rightValue": "VIP 1",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        -80
+      ],
+      "id": "09e5bc78-81de-40d6-960b-c91560c5f8ea",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jiraVersion": "serverPat",
+        "operation": "update",
+        "issueKey": "={{ $('Code').item.json.issueKey }}",
+        "updateFields": {
+          "customFieldsUi": {
+            "customFieldsValues": [
+              {
+                "fieldId": {
+                  "__rl": true,
+                  "value": "customfield_15718",
+                  "mode": "id"
+                },
+                "fieldValue": "Siêu VIP"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.jira",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -180
+      ],
+      "id": "523627d2-eac5-4b6f-b17b-d3fb71e38527",
+      "name": "Jira Software",
+      "credentials": {
+        "jiraSoftwareServerPatApi": {
+          "id": "oz7KxJmlX5RtVuWw",
+          "name": "Jira bản 26 06"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "11kIl296bboh2OpWCixvn-mAFglgbCVjZrzOlkE3Iiyo",
+          "mode": "list",
+          "cachedResultName": "Danh sách khách hàng chiến lược",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11kIl296bboh2OpWCixvn-mAFglgbCVjZrzOlkE3Iiyo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2092909054,
+          "mode": "list",
+          "cachedResultName": "VIP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11kIl296bboh2OpWCixvn-mAFglgbCVjZrzOlkE3Iiyo/edit#gid=2092909054"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        440,
+        20
+      ],
+      "id": "3496249f-9af2-40c1-9c6f-1db79831f2e0",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m0wdJhnpRIt1PpKG",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// === Lấy dữ liệu từ Jira ===\nconst reporter = $('Jira Trigger').first().json.issue.fields.reporter;\nconst reporterEmail = reporter && typeof reporter === 'object' ? reporter.emailAddress : reporter;\nconst normalizedReporterEmail = String(reporterEmail || \"\").trim().toLowerCase();\n\nconst phoneFromJira = String($('Jira Trigger').first().json.issue.fields.customfield_12814 || \"\").trim();\nconst orgName = String($('Jira Trigger').first().json.issue.fields.customfield_10710 || \"\").trim().toLowerCase();\nconst summary = String($('Jira Trigger').first().json.issue.fields.summary || \"\").trim().toLowerCase();\nconst description = String($('Jira Trigger').first().json.issue.fields.description || \"\").trim().toLowerCase();\nconst issueKey = $('Jira Trigger').first().json.issue.key;\n\n// === Hàm chuẩn hóa domain ===\nconst cleanDomain = (val) =>\n  String(val || \"\")\n    .replace(/^@/, '') // Bỏ dấu @ nếu có\n    .trim()\n    .toLowerCase();\n\n// === Lặp qua từng dòng từ Google Sheets ===\nconst rows = $input.all();\n\nfor (const row of rows) {\n  const data = row.json;\n\n  const email1 = String(data['Email 1'] || \"\").trim().toLowerCase();\n  const email2 = String(data['Email 2'] || \"\").trim().toLowerCase();\n  const domain1 = cleanDomain(data['Email Domain 1']);\n  const domain2 = cleanDomain(data['Email Domain 2']);\n  const phone1 = String(data['Phone Number 1'] || \"\").trim();\n  const phone2 = String(data['Phone Number 2'] || \"\").trim();\n  const hotelName = String(data['Hotel name'] || \"\").trim().toLowerCase();\n\n  // 1. Email chính xác\n  if (normalizedReporterEmail && (normalizedReporterEmail === email1 || normalizedReporterEmail === email2)) {\n    return {\n      json: {\n        result: 'VIP2',\n        matchedBy: 'Email',\n        issueKey\n      }\n    };\n  }\n\n  // 2. Email domain\n  if (normalizedReporterEmail.includes('@')) {\n    const domainFromJira = normalizedReporterEmail.split('@')[1];\n    if (\n      domainFromJira &&\n      (domainFromJira === domain1 || domainFromJira === domain2)\n    ) {\n      return {\n        json: {\n          result: 'VIP2',\n          matchedBy: 'Email Domain',\n          issueKey\n        }\n      };\n    }\n  }\n\n  // 3. Số điện thoại\n  if (phoneFromJira && (phoneFromJira === phone1 || phoneFromJira === phone2)) {\n    return {\n      json: {\n        result: 'VIP2',\n        matchedBy: 'Phone Number',\n        issueKey\n      }\n    };\n  }\n\n  // 4. Hotel name khớp orgName, summary, hoặc description\n  if (\n    hotelName &&\n    (\n      hotelName === orgName ||\n      hotelName === summary ||\n      hotelName === description\n    )\n  ) {\n    return {\n      json: {\n        result: 'VIP2',\n        matchedBy: 'Hotel name',\n        issueKey\n      }\n    };\n  }\n}\n\n// ❌ Không khớp → không trả ra item nào\nreturn [];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        20
+      ],
+      "id": "eacf9e91-49cf-4980-ace7-310c22ad2a00",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jiraVersion": "serverPat",
+        "operation": "update",
+        "issueKey": "={{ $json.issueKey }}",
+        "updateFields": {
+          "customFieldsUi": {
+            "customFieldsValues": [
+              {
+                "fieldId": {
+                  "__rl": true,
+                  "value": "customfield_15718",
+                  "mode": "id"
+                },
+                "fieldValue": "VIP"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.jira",
+      "typeVersion": 1,
+      "position": [
+        860,
+        20
+      ],
+      "id": "93994667-ab5d-4dd5-9793-efb1b5712a07",
+      "name": "Jira Software1",
+      "credentials": {
+        "jiraSoftwareServerPatApi": {
+          "id": "oz7KxJmlX5RtVuWw",
+          "name": "Jira bản 26 06"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Jira Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Jira Software",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Jira Software1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f1560ef2-f410-4ae2-a652-63e510ba7a88",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ce230667c1acec7215bde346169ee08dc2a0f12b160bcac6321e48058c1b01b2"
+  },
+  "id": "G1yvMq5RXcsUwDrS",
+  "tags": []
+}

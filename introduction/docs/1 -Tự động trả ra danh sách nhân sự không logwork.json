@@ -1,0 +1,262 @@
+{
+  "name": "2. Tự động log NC khi không logwork",
+  "nodes": [
+    {
+      "parameters": {
+        "functionCode": "// Lấy timestamp hiện tại từ Schedule Trigger\nconst timestamp = $('Schedule Trigger').first().json.timestamp;\n\n// Tạo đối tượng Date từ timestamp đầu vào\nconst now = new Date(timestamp);\n\n// Điều chỉnh sang múi giờ GMT+7\nconst timezoneOffset = 7 * 60 * 60 * 1000;\nconst localTime = new Date(now.getTime() + timezoneOffset);\n\n// Trừ 1 ngày\nlocalTime.setDate(localTime.getDate() - 1);\n\n// Đặt về 00:00:00 để lấy timestamp đầu ngày hôm qua\nlocalTime.setHours(0, 0, 0, 0);\n\n// Lấy timestamp dạng số nguyên\nconst timestampYesterday = localTime.getTime();\n\n// Trả ra kết quả\nreturn [{ json: { date: timestampYesterday } }];\n"
+      },
+      "name": "Set Yesterday Date",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        320,
+        60
+      ],
+      "id": "c778fb4c-017d-41ea-a28e-d84f6fcd8623"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "11kIl296bboh2OpWCixvn-mAFglgbCVjZrzOlkE3Iiyo",
+          "mode": "list",
+          "cachedResultName": "Danh sách khách hàng chiến lược",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11kIl296bboh2OpWCixvn-mAFglgbCVjZrzOlkE3Iiyo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1970589127,
+          "mode": "list",
+          "cachedResultName": "Danh sách account Jira",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11kIl296bboh2OpWCixvn-mAFglgbCVjZrzOlkE3Iiyo/edit#gid=1970589127"
+        },
+        "options": {}
+      },
+      "name": "Get Sheet Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [
+        520,
+        60
+      ],
+      "id": "e78024d0-584a-41a6-9172-43ca93c6c605",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Wk2vZC5l9tH2sPVY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 8 * * 2-6"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        120,
+        60
+      ],
+      "id": "2a760ff7-075a-4fa9-84e7-a392c66c4175",
+      "name": "Schedule Trigger",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "url": "=https://jira.ezcloudhotel.com/rest/api/2/search?jql=worklogDate=-1d&fields=key&maxResults=1000",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{ \"Accept\": \"application/json\" }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        60
+      ],
+      "id": "41c4e3f4-4275-445c-94bc-e1cc14ffae24",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Q4hteGKjSaZBuz8J",
+          "name": "Kết nối Jira 2805"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://jira.ezcloudhotel.com/rest/api/2/issue/{{ $json.key }}/worklog?maxResults=1000",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1160,
+        60
+      ],
+      "id": "d932410a-1ece-4e76-b722-9c9f3c3f7f4f",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Q4hteGKjSaZBuz8J",
+          "name": "Kết nối Jira 2805"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Lấy tất cả dòng từ Google Sheet\nconst sheetRows = $items(\"Get Sheet Data\", 0); // node: Get Sheet Data\n\n// 2. Lấy tất cả worklogs từ HTTP responses\nconst allWorklogs = $input.all().flatMap(i => i.json.worklogs || []);\n\n// 3. Tập hợp account (author.name) đã log work\nconst loggedAccounts = new Set();\nfor (const log of allWorklogs) {\n  const account = log.author?.name?.trim().toLowerCase();\n  if (account) {\n    loggedAccounts.add(account);\n  }\n}\n\n// 4. Lấy ngày kiểm tra từ node \"Set Yesterday Date\" và format về yyyy-mm-dd\nconst timestamp = $('Set Yesterday Date').first().json.date;\nconst checkDate = new Date(timestamp).toISOString().split(\"T\")[0]; // \"yyyy-mm-dd\"\n\n// 5. So sánh và trả ra danh sách chưa log work\nconst result = [];\n\nfor (const row of sheetRows) {\n  const account = (row.json.account || \"\").trim().toLowerCase();\n  const name = row.json.name || \"\";\n  const email = row.json.email || \"\";\n\n  if (account && !loggedAccounts.has(account)) {\n    result.push({\n      json: {\n        account,\n        name,\n        email,\n        checkDate\n      }\n    });\n  }\n}\n\nreturn result;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        60
+      ],
+      "id": "20fe35d6-dff7-4cda-bd96-f497303d9297",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $json.issues.map(issue => {\n  return { json: issue };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        940,
+        60
+      ],
+      "id": "44c97c90-a6a8-4481-a7bb-304ef950e86d",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://jira.ezcloudhotel.com/rest/api/2/issue",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"fields\": {\n    \"project\": {\n      \"key\": \"NCT\"\n    },\n    \"summary\": \"NC tự động from n8n: Không logwork ngày {{ $json.checkDate }}\",\n    \"issuetype\": {\n      \"name\": \"Nonconformity\"\n    },\n    \"assignee\": {\n      \"name\": \"{{ $json.account }}\"\n    },\n    \"customfield_13428\": \"{{ $json.checkDate }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1660,
+        60
+      ],
+      "id": "aada9187-6b43-4934-9b34-860ac9c55d63",
+      "name": "HTTP Request3",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "Q4hteGKjSaZBuz8J",
+          "name": "Kết nối Jira 2805"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Yesterday Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Yesterday Date": {
+      "main": [
+        [
+          {
+            "node": "Get Sheet Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Sheet Data": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ef7a7440-c69c-4c2c-b102-17282af41155",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "13b2b2194b9345d89f84307e594631e06e7c33486f6b0c841c9f8d968de524b3"
+  },
+  "id": "aGrY30CPpr06HQNK",
+  "tags": []
+}

@@ -1,0 +1,367 @@
+{
+  "name": "3. Update CV từ mail tuyển dụng",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1N-FGbdJOMI2rTYwBNL7cY3dxq6rZVkcAO-qZowXboKc",
+          "mode": "list",
+          "cachedResultName": "Tuyển dụng",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N-FGbdJOMI2rTYwBNL7cY3dxq6rZVkcAO-qZowXboKc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Link CV ứng viên",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1N-FGbdJOMI2rTYwBNL7cY3dxq6rZVkcAO-qZowXboKc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Message ID": "={{ $json['Message ID'] }}",
+            "Ngày nhận": "={{ $json['Ngày nhận'] }}",
+            "\tNgười gửi (From)": "={{ $json['Người gửi'] }}",
+            "\tTên người gửi": "={{ $json['Tên người gửi'] }}",
+            "Subject (Tiêu đề)": "={{ $json['Tiêu đề'] }}",
+            "Nội dung tóm tắt / Mô tả": "={{ $json['Nội dung tóm tắt'] }}",
+            "Tên file đính kèm": "={{ $json['Tên file CV'] }}",
+            "Link CV ứng viên": "={{ $json['Link CV'] }}",
+            "Trạng thái xử lý": "Chưa xử lý"
+          },
+          "matchingColumns": [
+            "Message ID"
+          ],
+          "schema": [
+            {
+              "id": "Message ID",
+              "displayName": "Message ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Ngày nhận",
+              "displayName": "Ngày nhận",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "\tNgười gửi (From)",
+              "displayName": "\tNgười gửi (From)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "\tTên người gửi",
+              "displayName": "\tTên người gửi",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Subject (Tiêu đề)",
+              "displayName": "Subject (Tiêu đề)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nội dung tóm tắt / Mô tả",
+              "displayName": "Nội dung tóm tắt / Mô tả",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tên file đính kèm",
+              "displayName": "Tên file đính kèm",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Link CV ứng viên",
+              "displayName": "Link CV ứng viên",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Trạng thái xử lý",
+              "displayName": "Trạng thái xử lý",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "\tGhi chú",
+              "displayName": "\tGhi chú",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        680,
+        -100
+      ],
+      "id": "05e9f032-2188-457f-ac04-f314bb940abf",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WwrP44IO6aJudA8B",
+          "name": "gg sheet TA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -440,
+        -100
+      ],
+      "id": "25bc8f9e-5399-4134-9d83-2490867fa668",
+      "name": "Hẹn lịch check mail"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 2,
+        "simple": false,
+        "filters": {
+          "includeSpamTrash": false
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -200,
+        -100
+      ],
+      "id": "8d39dc5a-6d96-408f-a884-f09f59b5e1b0",
+      "name": "Lấy thông tin CV ứng viên từ mail",
+      "webhookId": "dad3b85f-1805-4cbe-b387-d8916332b526",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GamwSBHNKJX5dkxb",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = [];\n\nfor (const email of $items(\"Lấy thông tin CV ứng viên từ mail\")) {\n  const attachments = Object.keys(email.binary || {}).filter(key =>\n    key.startsWith(\"attachment_\")\n  );\n\n  if (attachments.length === 0) {\n    continue; // Không có file, bỏ qua\n  }\n\n  for (const attKey of attachments) {\n    output.push({\n      binary: {\n        data: email.binary[attKey]\n      },\n      json: {\n        messageId: email.json.id,\n        emailDate: email.json.date,\n        from: email.json.from?.value?.[0]?.address || \"\",\n        subject: email.json.subject || \"\",\n        attachmentKey: attKey // để biết đây là attachment số mấy\n      }\n    });\n  }\n}\n\nreturn output;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        20,
+        -100
+      ],
+      "id": "0fe1e67e-c178-4fae-ab25-df22906dc563",
+      "name": "Tách mỗi CV kèm với 1 messageID riêng biệt"
+    },
+    {
+      "parameters": {
+        "name": "={{ $binary.data.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/folders/1DGPVdFq474xkDh9ArcnlHtDx1qiVR6bF",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        260,
+        -100
+      ],
+      "id": "bc5917dd-5254-41d2-b9c9-d1e7584688e1",
+      "name": "Upload CV vào gg drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1HmXsuskdyzUHDxM",
+          "name": "Kết nối drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lấy tất cả emails\nconst emails = $items(\"Lấy thông tin CV ứng viên từ mail\");\n\n// Lấy tất cả files upload\nconst files = $items(\"Upload CV vào gg drive\");\n\nconst output = [];\n\n// Ghép theo index\nfor (let i = 0; i < emails.length; i++) {\n  const email = emails[i].json;\n  const file = files[i]?.json;\n\n  output.push({\n    json: {\n      \"Message ID\": email.id,\n      \"Ngày nhận\": email.date,\n      \"Người gửi\": email.from?.value?.[0]?.address || \"\",\n      \"Tên người gửi\": email.from?.value?.[0]?.name || \"\",\n      \"Tiêu đề\": email.subject,\n      \"Nội dung tóm tắt\": email.text || \"\",   // <<--- Thêm dòng này\n      \"Tên file CV\": file?.name || \"\",\n      \"Link CV\": file?.webViewLink || \"\"\n    }\n  });\n}\n\nreturn output;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        -100
+      ],
+      "id": "e5b0c9df-15ec-4af3-b2c4-e88830aa92aa",
+      "name": "Trả ra các dữ liệu cần"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Người gửi'] }}",
+        "subject": "=Re: {{ $json[\"Tiêu đề\"] || \"Hồ sơ ứng tuyển\" }}",
+        "message": "=<p>Kính chào {{ $json[\"Tên người gửi\"] || \"Bạn\" }},</p>  <p>Chúng tôi đã nhận được hồ sơ ứng tuyển của bạn cho vị trí <strong>{{ $json[\"Tiêu đề\"] || \"tuyển dụng\" }}</strong>.</p>  <p>Phòng Tuyển dụng xin chân thành cảm ơn bạn đã dành thời gian quan tâm và gửi CV cho chúng tôi.</p>  <p>Chúng tôi sẽ xem xét hồ sơ của bạn và sẽ liên hệ lại trong thời gian sớm nhất nếu hồ sơ phù hợp với yêu cầu tuyển dụng.</p>  <p>Trân trọng,<br> Phòng Tuyển dụng</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        720,
+        100
+      ],
+      "id": "eceb9f1e-6e20-4f78-9dd6-c2576bb98a7e",
+      "name": "Gửi phản hồi lại email ứng viên",
+      "webhookId": "a1bf59a0-6957-4eb1-aca3-e082612208f6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GamwSBHNKJX5dkxb",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets": {
+      "main": [
+        []
+      ]
+    },
+    "Hẹn lịch check mail": {
+      "main": [
+        [
+          {
+            "node": "Lấy thông tin CV ứng viên từ mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lấy thông tin CV ứng viên từ mail": {
+      "main": [
+        [
+          {
+            "node": "Tách mỗi CV kèm với 1 messageID riêng biệt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tách mỗi CV kèm với 1 messageID riêng biệt": {
+      "main": [
+        [
+          {
+            "node": "Upload CV vào gg drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload CV vào gg drive": {
+      "main": [
+        [
+          {
+            "node": "Trả ra các dữ liệu cần",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trả ra các dữ liệu cần": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gửi phản hồi lại email ứng viên",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "25068e8c-f5fd-4b82-9ad4-55e9f623a696",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ce230667c1acec7215bde346169ee08dc2a0f12b160bcac6321e48058c1b01b2"
+  },
+  "id": "23CM0ngdYSFAoU83",
+  "tags": []
+}

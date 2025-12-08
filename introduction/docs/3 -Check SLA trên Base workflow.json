@@ -1,0 +1,208 @@
+{
+  "name": "1. Check QT Đánh giá nhân sự trước khi ký hợp đồng lao động mới",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://workflow.base.vn/extapi/v1/workflow/jobs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "3563-SCDULB6AH26HPXNVBSWGN6KC946NKXH6-GPNYUJY7G2SBEAPL8WV6QWXFXYXRY4H9"
+            },
+            {
+              "name": "id",
+              "value": "6572"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        -80
+      ],
+      "id": "49e2e306-42e0-4570-b1aa-cb86036342b9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 9 * * 2-6"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        840,
+        -80
+      ],
+      "id": "692d4032-bdef-4809-a662-1b2877b0f3ae",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://account.base.vn/extapi/v1/users",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "3563-CJCR5MHDSFZ2JZYBDFYXFH2ULK92WWQK-NYP22FXZALX3UNA9KNTTC5JJUKHWSWQD"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1280,
+        -80
+      ],
+      "id": "7a42f6e1-dab1-4069-aafe-49804c3490f0",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const jobs = $('HTTP Request').first().json.jobs || [];        // từ workflow\nconst users = $input.first().json.users || [];                 // từ account\nconst output = [];\n\nfor (const job of jobs) {\n  const username = job.username;\n  const matchedUser = users.find(user => user.username === username);\n\n  output.push({\n    json: {\n      username: username,\n      email: matchedUser ? matchedUser.email : 'Không tìm thấy'\n    }\n  });\n}\n\nreturn output;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        -80
+      ],
+      "id": "0cdd1e36-236f-4a17-bbcd-8c40daa844a8",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst checkDate = now.toISOString().split('T')[0];\nconst output = [];\n\nconst workflow = $('HTTP Request').first().json.workflow;\nconst workflowName = workflow.name;\nconst jobs = $('HTTP Request').first().json.jobs;\n\nfor (const job of jobs) {\n  const stepName = job.stage_export?.name || 'Không rõ';\n\n  if ([\"Done\", \"Failed\"].includes(stepName)) {\n    continue;\n  }\n\n  const assignees = job.username || 'Không rõ';\n  const email = $items(\"HTTP Request2\")[0].json.users.find(u => u.username === assignees)?.email || 'Không tìm thấy';\n\n  let accountId = null;\n  if (email === \"duc.bui@ezcloud.vn\") {\n    accountId = \"ducb\";\n  } else if (email === \"dung.nguyen@ezcloud.vn\") {\n    accountId = \"dungnn\";\n  } else if (email === \"hanhlt2@ezcloud.vn\") {\n    accountId = \"cfo\";\n  } else if (email === \"bdm2.hcm@ezcloud.vn\") {\n    accountId = \"nhundb\";\n  } else if (email.includes(\"@\")) {\n    accountId = email.split(\"@\")[0].trim();\n  }\n\n  const stageStartEpoch = Number(job.moves?.find(m => m.stage_id === job.stage_id)?.stage_start || 0);\n  const currentStageId = job.stage_id;\n  const currentMove = job.moves?.find(m => m.stage_id === currentStageId);\n  const rawDurationSeconds = Number(currentMove?.actual_duration || 0);\n\n  if (!stageStartEpoch || rawDurationSeconds <= 0) {\n    continue;\n  }\n\n  const estimatedTimestamp = stageStartEpoch + rawDurationSeconds + 7 * 3600;\n  const estimatedDate = new Date(estimatedTimestamp * 1000);\n\n  const isOverdue = estimatedDate < now ? 'Quá hạn' : 'Không quá hạn';\n\n  // ❌ Bỏ qua nếu không quá hạn\n  if (isOverdue !== 'Quá hạn') {\n    continue;\n  }\n\n  const yyyy = estimatedDate.getFullYear();\n  const mm = String(estimatedDate.getMonth() + 1).padStart(2, '0');\n  const dd = String(estimatedDate.getDate()).padStart(2, '0');\n  const hh = String(estimatedDate.getHours()).padStart(2, '0');\n  const min = String(estimatedDate.getMinutes()).padStart(2, '0');\n\n  const estimatedDeadline = `${yyyy}-${mm}-${dd} ${hh}:${min}`;\n\n  output.push({\n    json: {\n      ten_luong_cong_viec: workflowName,\n      ten_giai_doan: stepName,\n      nguoi_thuc_hien: assignees,\n      email: email,\n      accountId: accountId,\n      thoi_gian_du_kien_gio: rawDurationSeconds || 'Không có',\n      deadline_uoc_tinh: estimatedDeadline,\n      trang_thai_qua_han: isOverdue,\n      ngay_check: checkDate\n    }\n  });\n}\n\nreturn output;\n"
+      },
+      "name": "Code - Email Only",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1740,
+        -80
+      ],
+      "id": "bdf1c1ec-8d6a-4707-a6f9-4b563a42844f"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://jira.ezcloudhotel.com/rest/api/2/issue",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"fields\": {\n    \"project\": {\n      \"key\": \"NCT\"\n    },\n    \"summary\": \"NC tự động: Trễ hạn Quy trình {{ $json.ten_luong_cong_viec }}\",\n    \"issuetype\": {\n      \"name\": \"Nonconformity\"\n    },\n    \"assignee\": {\n      \"name\": \"{{ $json.accountId }}\"\n    },\n    \"customfield_13428\": \"{{ $json.ngay_check }}\",\n    \"description\": \"Trễ hạn stage {{ $json.ten_giai_doan }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1960,
+        -80
+      ],
+      "id": "d55beb49-5738-43ef-af05-54564da34d89",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "hhNPGQ5DCH4CAL3L",
+          "name": "Kết nối Jira 28/05"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Code - Email Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Email Only": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "06db8148-763b-4f5b-a285-11425947a229",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "55f263c672c090888f832ce451f0323a8b1a9a374531283e733f12a918840bd3"
+  },
+  "id": "ZoGGa1vaOCyr42CB",
+  "tags": []
+}

@@ -1,0 +1,157 @@
+{
+  "name": "3. Check SLA phản hồi lần đầu tiên",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 6,10,14,18,22 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -600,
+        -80
+      ],
+      "id": "1a6b61f6-9d23-40fa-8607-e04e39bcc700",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "jsCode": "const issues = $input.all()[0].json.issues;\nconst now = new Date();\n\n// Cấu hình múi giờ Việt Nam\nconst vnTimeOptions = {\n  timeZone: 'Asia/Ho_Chi_Minh',\n  year: 'numeric',\n  month: '2-digit',\n  day: '2-digit',\n  hour: '2-digit',\n  minute: '2-digit',\n  second: '2-digit',\n  hour12: false\n};\n\n// SLA cấu hình (giờ)\nconst slaTimes = {\n  \"Siêu VIP\":   { Block: 0.5, High: 0.5, Medium: 1,   Low: 1 },\n  \"VIP\":        { Block: 1,   High: 1,   Medium: 2,   Low: 2 },\n  \"Bình thường\":{ Block: 2,   High: 2,   Medium: 2,   Low: 2 },\n};\n\nreturn issues.map(issue => {\n  const created = new Date(issue.fields.created);\n\n  const createdVN = created.toLocaleString('vi-VN', vnTimeOptions);\n\n  // Chuyển về dạng YYYY-MM-DD theo múi giờ +7\n  const recordDate = created.toLocaleDateString('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });\n\n  // Nhóm khách hàng\n  let customerType = issue.fields.customfield_15718;\n  if (typeof customerType === 'object' && customerType?.value) {\n    customerType = customerType.value;\n  }\n  customerType = customerType || 'Bình thường';\n\n  // Ưu tiên\n  const priority = issue.fields.priority?.name || 'Medium';\n  const allowedHours = slaTimes[customerType]?.[priority] ?? 2;\n  const allowedMinutes = allowedHours * 60;\n\n  // Comment\n  const comments = issue.fields.comment?.comments || [];\n  const hasAnyComment = comments.length > 0;\n\n  let firstCommentTime = null;\n  let firstCommentTimeVN = null;\n  let firstCommentBody = null;\n  let firstCommentAuthor = null;\n\n  if (hasAnyComment) {\n    const sorted = [...comments].sort((a, b) => new Date(a.created) - new Date(b.created));\n    const first = sorted[0];\n    firstCommentTime = new Date(first.created);\n    firstCommentTimeVN = firstCommentTime.toLocaleString('vi-VN', vnTimeOptions);\n    firstCommentBody = first.body || '';\n    firstCommentAuthor = first.author?.displayName || first.author?.emailAddress || '';\n  }\n\n  const compareTime = firstCommentTime || now;\n  const diffMinutes = (compareTime - created) / 60000;\n\n  let slaViolated = false;\n  let reason = '';\n  if (diffMinutes > allowedMinutes) {\n    slaViolated = true;\n    reason = firstCommentTime\n      ? `Tiếp nhận lần đầu trễ (${Math.round(diffMinutes)} phút > ${allowedMinutes} phút)`\n      : `Chưa có comment sau ${Math.round(diffMinutes)} phút`;\n  }\n\n  // Assignee\n  const assignee = issue.fields.assignee || {};\n  const assigneeName = assignee.displayName || '';\n  const assigneeEmail = assignee.emailAddress || '';\n\n  // 👉 accountId từ email (lấy phần trước dấu @)\n  const accountId = assigneeEmail.includes('@')\n    ? assigneeEmail.split('@')[0]\n    : '';\n\n  return {\n    json: {\n      issueKey: issue.key,\n      customerType,\n      priority,\n      created: createdVN,\n      recordDate,\n      firstCommentTime: firstCommentTimeVN,\n      diffMinutes: Math.round(diffMinutes),\n      allowedMinutes,\n      slaViolated,\n      reason,\n      firstCommentBody,\n      firstCommentAuthor,\n      assigneeName,\n      assigneeEmail,\n      accountId\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        -80
+      ],
+      "id": "a36e703e-71aa-4436-8c75-ec4631f62f5f",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "url": "https://jira.ezcloudhotel.com/rest/api/2/search?jql=project%3D%22ezCloud%20Support%20Team%22%20AND%20created%20%3E%3D%20-4h%20AND%20statusCategory%20!%3D%20Done%20AND%20status%20NOT%20IN%20(%22Canceled%22%2C%20%22Cancelled%22%2C%20%22Duplicated%22%2C%20%22Resolved%22%2C%20%22Closed%22)&fields=comment,created,priority,customfield_15718,assignee",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -380,
+        -80
+      ],
+      "id": "e55cd9f1-50ff-49d4-b73e-20a87263f587",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "UgNXMT7b6xSettFt",
+          "name": "Jira dùng bản này"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n// Giữ lại toàn bộ thông tin nhưng chỉ trả ra những issue vi phạm SLA\nreturn items.filter(item => item.json?.slaViolated === true).map(item => {\n  return {\n    json: {\n      ...item.json\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        40,
+        -80
+      ],
+      "id": "1e32fbca-c47c-457c-98e9-f61e4a8b5507",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://jira.ezcloudhotel.com/rest/api/2/issue",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"fields\": {\n    \"project\": {\n      \"key\": \"NCT\"\n    },\n    \"summary\": \"NC tự động: Vi phạm SLA tiếp nhận issue lần đầu\",\n    \"issuetype\": {\n      \"name\": \"Nonconformity\"\n    },\n    \"assignee\": {\n      \"name\": \"{{ $json.accountId }}\"\n    },\n    \"customfield_13428\": \"{{ $json.recordDate }}\",\n    \"description\": \"Link issue: https://jira.ezcloudhotel.com/browse/{{ $json.issueKey }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        -80
+      ],
+      "id": "30877903-0e9e-46d7-8d3c-c2675bfc90e6",
+      "name": "Tạo NC trên Jira",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "UgNXMT7b6xSettFt",
+          "name": "Jira dùng bản này"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Tạo NC trên Jira",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f7d286ae-eff3-4953-85d5-6dcdf0ed5cde",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "01aecb8d14f5dc03609dc7f1a0354fcd58e3ab6d3d5a143f0a047830f1a2bbff"
+  },
+  "id": "rTw4cbfJlwyFIoa6",
+  "tags": []
+}

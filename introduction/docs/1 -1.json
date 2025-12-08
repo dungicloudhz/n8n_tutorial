@@ -1,0 +1,142 @@
+{
+  "name": "1. Tự động gửi email Chúc mừng sinh nhật CBNV",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1-7"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        460,
+        -220
+      ],
+      "id": "b41cd91f-d279-49ac-a960-46dae861706c",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "15dkjx_HA9D3MzFdTvbtMvuTHl0sJGAXZeMPokszxsqo",
+          "mode": "list",
+          "cachedResultName": "Danh sách ngày sinh nhật của CBNV",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15dkjx_HA9D3MzFdTvbtMvuTHl0sJGAXZeMPokszxsqo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "DS ngày sinh",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15dkjx_HA9D3MzFdTvbtMvuTHl0sJGAXZeMPokszxsqo/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        680,
+        -220
+      ],
+      "id": "66836283-b18d-405f-a8ab-0e2b8ab61929",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WwrP44IO6aJudA8B",
+          "name": "gg sheet TA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date();\nconst currentDay = today.getDate();\nconst currentMonth = today.getMonth() + 1;\n\nconst matched = items.filter(item => {\n  const data = item.json;\n  \n  const dobDay = parseInt(data[\"Ngày sinh\"]);\n  const dobMonth = parseInt(data[\"Tháng sinh\"]);\n\n  return dobDay === currentDay && dobMonth === currentMonth;\n});\n\nreturn matched.length > 0\n  ? matched\n  : [{ json: { message: \"Không có ai sinh nhật hôm nay\" } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        -220
+      ],
+      "id": "4ea1975b-fea7-400f-8a62-c87ae250a153",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "fromEmail": "anhbt@ezcloud.vn",
+        "toEmail": "={{ $json.Email }}",
+        "subject": "=Chúc mừng sinh nhật  {{ $json['Họ và tên'] }}!",
+        "html": "=<div style=\"font-family: Arial, sans-serif; padding: 20px; background-color: #fef3c7; border-radius: 10px;\">\n  <h2 style=\"color: #f59e0b;\">🎂 Chúc mừng sinh nhật {{ $json['Họ và tên'] }}!</h2>\n  <p>Chúc bạn có một ngày sinh nhật thật đặc biệt, ngập tràn niềm vui và hạnh phúc.</p>\n  <p>Hy vọng bạn sẽ có một tuổi mới nhiều thành công, sức khỏe dồi dào và luôn giữ nụ cười trên môi! 😄</p>\n  <p style=\"margin-top: 20px;\">🎁💐🎊</p>\n</div>\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        -220
+      ],
+      "id": "569f76ab-ee81-47de-a695-bf2c30664acc",
+      "name": "Send Email",
+      "webhookId": "35f2a4d0-33af-4bf9-b915-6bc8be8314b8",
+      "credentials": {
+        "smtp": {
+          "id": "5Fl2YsA0ewxt7p31",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "de377af9-e43e-4ef8-969a-e13c01d8fe19",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ce230667c1acec7215bde346169ee08dc2a0f12b160bcac6321e48058c1b01b2"
+  },
+  "id": "Fq8znn9kX5dh7sJr",
+  "tags": []
+}

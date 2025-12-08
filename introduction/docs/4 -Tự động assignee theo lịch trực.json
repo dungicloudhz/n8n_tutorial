@@ -1,0 +1,213 @@
+{
+  "name": "2. Tự động assigne theo lịch trực",
+  "nodes": [
+    {
+      "parameters": {
+        "jiraVersion": "serverPat",
+        "events": [
+          "jira:issue_created"
+        ],
+        "additionalFields": {
+          "filter": "project = \"ezCloud Support Team\""
+        }
+      },
+      "type": "n8n-nodes-base.jiraTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        180,
+        200
+      ],
+      "id": "ee53f8c8-98c9-44be-ba40-abca4a7e18ee",
+      "name": "Jira Trigger",
+      "webhookId": "webhook-id-placeholder",
+      "credentials": {
+        "jiraSoftwareServerPatApi": {
+          "id": "YyS6xls5vUu96lAJ",
+          "name": "Kết nối với Jira dùng bản này"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst locale = 'vi-VN';\nconst timeZone = 'Asia/Ho_Chi_Minh';\n\nconst vnTime = now.toLocaleString('en-US', {\n  timeZone,\n  hour: '2-digit',\n  minute: '2-digit',\n  hour12: false\n});\n\nconst vnDate = now.toLocaleDateString(locale, {\n  timeZone,\n  day: '2-digit',\n  month: '2-digit',\n  year: 'numeric'\n});\n\nconst vnWeekday = now.toLocaleDateString('en-US', { weekday: 'long', timeZone });\n\nconst [hourStr, minuteStr] = vnTime.split(':');\nconst hour = parseInt(hourStr, 10);\nconst minute = parseInt(minuteStr, 10);\nconst totalMinutes = hour * 60 + minute;\n\nconst isWeekend = (vnWeekday === 'Saturday' || vnWeekday === 'Sunday');\n\nlet shifts = [];\nlet shiftCodes = [];\n\nif (!isWeekend) {\n  if (totalMinutes >= 0 && totalMinutes < 930) {\n    shifts.push('Ca sáng');\n    shiftCodes.push('S');\n  }\n  if (totalMinutes >= 780 && totalMinutes < 1440) {\n    shifts.push('Ca chiều');\n    shiftCodes.push('C');\n  }\n  if (totalMinutes >= 510 && totalMinutes < 1080) {\n    shifts.push('Ca hành chính');\n    shiftCodes.push('HC');\n  }\n} else {\n  if (totalMinutes >= 0 && totalMinutes < 900) {\n    shifts.push('Ca sáng');\n    shiftCodes.push('S');\n  }\n  if (totalMinutes >= 810 && totalMinutes < 1440) {\n    shifts.push('Ca chiều');\n    shiftCodes.push('C');\n  }\n  if (totalMinutes >= 510 && totalMinutes < 1080) {\n    shifts.push('Ca hành chính');\n    shiftCodes.push('HC');\n  }\n}\n\nif (shifts.length === 0) {\n  shifts.push('Ngoài giờ');\n  shiftCodes.push('-');\n}\n\nreturn [{\n  json: {\n    currentDate: vnDate,\n    currentTime: `${hourStr}:${minuteStr}`,\n    weekday: vnWeekday,\n    isWeekend,\n    matchedShifts: shifts,\n    matchedShiftCodes: shiftCodes\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        420,
+        200
+      ],
+      "id": "4cbd0ecc-8dca-4e35-a716-a8215eb21371",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1Zz8sf9hlZGXB4XSpMXpP2HbioliVgBpjwPPT-PooAAA/edit?pli=1&gid=286790173#gid=286790173",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 286790173,
+          "mode": "list",
+          "cachedResultName": "Lịch update N8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Zz8sf9hlZGXB4XSpMXpP2HbioliVgBpjwPPT-PooAAA/edit#gid=286790173"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        640,
+        200
+      ],
+      "id": "cad76956-f5ef-4684-8801-1fa775e22cd8",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5BDlZFHwqpzUYdEN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lấy dữ liệu từ node Google Sheets\nconst rows = $input.all().map(e => e.json);\n\n// Thiết lập ngày cần kiểm tra và các ca cần đối chiếu\nconst targetDate = $('Code1').first().json.currentDate;\nconst matchedShiftCodes = $('Code1').first().json.matchedShiftCodes;\n\n// Mảng kết quả\nconst result = [];\n\nfor (const row of rows) {\n  const shift = row[targetDate];\n  if (matchedShiftCodes.includes(shift)) {\n    const name = row['Tên nhân viên'];\n    const email = row['accountID']; // Trường này là accountID, không phải email nữa\n    const accountId = row['accountID'];\n    if (name && name.trim() !== '') {\n      result.push({\n        name: name.trim(),\n        shift: shift,\n        date: targetDate,\n        email: email?.trim() || '',\n        accountId: accountId || ''\n      });\n    }\n  }\n}\n\nreturn result;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        860,
+        200
+      ],
+      "id": "9c949f22-1b04-45e4-aed2-45f488ea113b",
+      "name": "Lọc người trực"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://jira.ezcloudhotel.com/rest/api/2/issue/{{ $json.issueKey }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type\t",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"fields\": {\n    \"assignee\": {\n      \"name\": \"{{ $json.accountId }}\"\n    }\n  }\n}\n",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1300,
+        200
+      ],
+      "id": "d34a664b-d0e2-43aa-b31d-3f7777e0afd8",
+      "name": "HTTP Request",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "UgNXMT7b6xSettFt",
+          "name": "Jira dùng bản này"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const inputs = $input.all().map(item => item.json);\n\n// Tách issueKey và thông tin từ Jira Trigger\nconst jiraTriggerData = $('Jira Trigger').first().json;\nconst issueKey = jiraTriggerData.issue?.key || '';\nconst phuongThucObj = jiraTriggerData.issue?.fields?.customfield_11644 || {};\n\n// Lấy giá trị value bên trong customfield_11644\nconst phuongThucTiepNhan = phuongThucObj.value || '';\n\n// Kiểm tra nếu phương thức tiếp nhận nằm trong danh sách loại trừ\nconst phuongThucLoaiTru = ['Tổng đài', 'Live chat', 'Call CSKH'];\nif (phuongThucLoaiTru.includes(phuongThucTiepNhan.trim())) {\n  return []; // Không trả kết quả nếu bị loại\n}\n\n// Tách dữ liệu lưu index (có field \"data\")\nconst storageItem = inputs.find(item => Object.keys(item).includes('data'));\nconst lastIndex = parseInt(storageItem?.data ?? '-1', 10);\n\n// Tách danh sách người trực (không có 'issueKey' và 'data')\nconst people = inputs.filter(item =>\n  !Object.keys(item).includes('data') &&\n  !Object.keys(item).includes('issueKey')\n);\n\n// Tính người kế tiếp (quay vòng)\nconst nextIndex = (lastIndex + 1) % people.length;\nconst assignee = people[nextIndex];\n\n// Trả kết quả gồm: người được chọn, index mới, issueKey và phương thức tiếp nhận\nreturn [\n  {\n    json: {\n      ...assignee,\n      assigneeIndex: nextIndex,\n      issueKey: issueKey,\n      phuongThucTiepNhan: phuongThucTiepNhan\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1080,
+        200
+      ],
+      "id": "5070c720-34c6-4279-9fb1-34f816c5537a",
+      "name": "Trả ra danh sách người trực random và issue"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Jira Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Lọc người trực",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lọc người trực": {
+      "main": [
+        [
+          {
+            "node": "Trả ra danh sách người trực random và issue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trả ra danh sách người trực random và issue": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "99598956-3d4d-4e03-a531-707d6922e0fd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "01aecb8d14f5dc03609dc7f1a0354fcd58e3ab6d3d5a143f0a047830f1a2bbff"
+  },
+  "id": "sNB0s2OYcX2le0tm",
+  "tags": []
+}

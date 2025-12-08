@@ -1,0 +1,247 @@
+{
+  "name": "2. Tự động tạo NC khi chưa nộp đủ hồ sơ nhân sự",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 17 * * 6"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1320,
+        -300
+      ],
+      "id": "74a8bedb-3cb5-4a94-b2e6-ffb98e79b5d9",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://onboard.base.vn/extapi/v1/record/list",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "3563-ZDSKLD24TJ3UBDBR46M69THZZMHFNMYXWTWTLM5KU6WQTU8S26ED65XU9Y6ATZ8T-GFUXVLRWPJD99XD26PBNXMTUG94AWMJVXAWALVRZNPYSFABUS3GRD9A4Q4ZHHTRW"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1100,
+        -300
+      ],
+      "id": "0cca6b80-7e81-4cd7-93df-7abbe75b0706",
+      "name": "Lấy dữ liệu từ Base Onboard"
+    },
+    {
+      "parameters": {
+        "jsCode": "const result = [];\n\nfunction formatDate(unixTimestamp) {\n  const date = new Date(unixTimestamp * 1000);\n  const day = ('0' + date.getDate()).slice(-2);\n  const month = ('0' + (date.getMonth() + 1)).slice(-2);\n  const year = String(date.getFullYear()).slice(-2);\n  return `${day}/${month}/${year}`;\n}\n\n// Giả sử records nằm trong items[0].json.records\nconst rawRecords = items[0].json.records;\n\nfor (const record of rawRecords) {\n  const checklist = record.checklist || [];\n\n  // Lọc danh sách giấy tờ chưa nộp (checked = 0)\n  const missingDocs = checklist\n    .filter(doc => doc.checked === 0)\n    .map(doc => doc.label); // chỉ lấy tên giấy tờ\n\n  if (missingDocs.length > 0) {\n    result.push({\n      json: {\n        name: `${record.last_name} ${record.first_name}`,\n        title: record.title || '',\n        onboard: formatDate(record.onboard_time),\n        email: record.email || '',\n        code: record.code || '',  // ✅ thêm dòng này để lấy mã nhân sự\n        missing_documents: missingDocs\n      }\n    });\n  }\n}\n\nreturn result;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -880,
+        -300
+      ],
+      "id": "bd3e2566-fcf2-49a6-bb75-f9a2d7c7b319",
+      "name": "Trả ra danh sách nhân sự thiếu hồ sơ"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hrm.base.vn/extapi/v1/employee/list",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "3563-CTV4MBFF6NL8746CFPWP7XBTJT3AWFR67RGKTBWHC4A6E6UXRG9522QV6Q5HQMKP-KKCJ89X8ZV9PPDSC3PNZ5YMDNPQC489B6BKQYPCH5HBLWBTQRVCKSAJPJRE8LH6U"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1100,
+        -100
+      ],
+      "id": "580b43bd-9797-477c-a4d1-e6e302df1d96",
+      "name": "Lấy dữ liệu từ Base HRM"
+    },
+    {
+      "parameters": {
+        "jsCode": "const employees = items[0].json.employees;\n\nreturn employees\n  .filter(emp => emp.status === 'official') // ✅ Lọc nhân sự đang chính thức làm việc\n  .map(emp => ({\n    json: {\n      name: `${emp.last_name} ${emp.first_name}`,\n      email: emp.email || '',\n      code: emp.code || ''\n    }\n  }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -900,
+        -100
+      ],
+      "id": "dd7685ad-ecb7-4abb-9b83-5d470a0fe31d",
+      "name": "Trả ra danh sách nhân sự đang còn làm việc tại cty"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -640,
+        -220
+      ],
+      "id": "a8ac7b12-1589-4bb6-a6ef-2a4b6acd39d1",
+      "name": "Gộp thông tin trả ra của 2 hệ thống"
+    },
+    {
+      "parameters": {
+        "jsCode": "const mergedItems = items;\n\n// ✅ Lấy ngày hiện tại (định dạng YYYY-MM-DD)\nconst now = new Date();\nconst record_date = now.toISOString().split(\"T\")[0];\n\n// Gom nhóm theo mã nhân sự (code)\nconst grouped = {};\n\nfor (const item of mergedItems) {\n  const code = item.json.code;\n  if (!grouped[code]) {\n    grouped[code] = [item.json];\n  } else {\n    grouped[code].push(item.json);\n  }\n}\n\n// Xử lý từng nhóm có code trùng nhau\nconst result = [];\n\nfor (const [code, group] of Object.entries(grouped)) {\n  if (group.length > 1) {\n    // Tìm email có đuôi @ezcloud.vn\n    const ezEmailObj = group.find(entry => entry.email && entry.email.endsWith('@ezcloud.vn'));\n\n    if (!ezEmailObj) {\n      continue;\n    }\n\n    const email = ezEmailObj.email;\n\n    // ✅ Gán accountID đặc biệt nếu đúng email\n    let accountID = '';\n    if (email === 'bdm2.hcm@ezcloud.vn') {\n      accountID = 'nhundb';\n    } else {\n      accountID = email.split('@')[0] || '';\n    }\n\n    // Lấy name bất kỳ\n    const nameObj = group.find(entry => entry.name);\n    const name = nameObj?.name || '';\n\n    // Gộp tất cả missing_documents\n    const allMissingDocs = group\n      .filter(entry => entry.missing_documents && Array.isArray(entry.missing_documents))\n      .flatMap(entry => entry.missing_documents);\n\n    const uniqueMissingDocs = [...new Set(allMissingDocs)];\n\n    result.push({\n      json: {\n        code,\n        name,\n        email,\n        accountID,\n        record_date,\n        missing_documents: uniqueMissingDocs\n      }\n    });\n  }\n}\n\nreturn result;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -420,
+        -220
+      ],
+      "id": "91e5371e-e8e0-442c-84db-caa5653b9187",
+      "name": "Lọc danh sách nhân sự đang làm việc tại cty và thiếu hồ sơ"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://jira.ezcloudhotel.com/rest/api/2/issue",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"fields\": {\n    \"project\": {\n      \"key\": \"NCT\"\n    },\n    \"summary\": \"NC tự động: Thiếu hồ sơ nhân sự\",\n    \"issuetype\": {\n      \"name\": \"Nonconformity\"\n    },\n    \"assignee\": {\n      \"name\": \"{{ $json.accountID }}\"\n    },\n    \"customfield_13428\": \"{{ $json.record_date }}\",\n    \"description\": \"Danh sách hồ sơ nhân sự bị thiếu: {{ $json.missing_documents }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -200,
+        -220
+      ],
+      "id": "b622770b-39d3-4c25-bcdf-aa9b5de68b30",
+      "name": "Tạo NC trên Jira",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "4OjndrEQJjGlJkUr",
+          "name": "Kết nối tài khoản Jira"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Lấy dữ liệu từ Base Onboard",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Lấy dữ liệu từ Base HRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lấy dữ liệu từ Base Onboard": {
+      "main": [
+        [
+          {
+            "node": "Trả ra danh sách nhân sự thiếu hồ sơ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trả ra danh sách nhân sự thiếu hồ sơ": {
+      "main": [
+        [
+          {
+            "node": "Gộp thông tin trả ra của 2 hệ thống",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lấy dữ liệu từ Base HRM": {
+      "main": [
+        [
+          {
+            "node": "Trả ra danh sách nhân sự đang còn làm việc tại cty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trả ra danh sách nhân sự đang còn làm việc tại cty": {
+      "main": [
+        [
+          {
+            "node": "Gộp thông tin trả ra của 2 hệ thống",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Gộp thông tin trả ra của 2 hệ thống": {
+      "main": [
+        [
+          {
+            "node": "Lọc danh sách nhân sự đang làm việc tại cty và thiếu hồ sơ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lọc danh sách nhân sự đang làm việc tại cty và thiếu hồ sơ": {
+      "main": [
+        [
+          {
+            "node": "Tạo NC trên Jira",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8a7906ee-396d-42ca-a3e3-5c15188afce7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ce230667c1acec7215bde346169ee08dc2a0f12b160bcac6321e48058c1b01b2"
+  },
+  "id": "xtMMJNbHsB8ysl51",
+  "tags": []
+}
