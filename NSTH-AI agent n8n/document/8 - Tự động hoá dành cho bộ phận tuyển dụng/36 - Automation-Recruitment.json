@@ -1,0 +1,307 @@
+{
+  "name": "Automation Recruitment",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "subject:application"
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        -120
+      ],
+      "id": "2ad6698a-4c29-4ae4-a3c2-bb67ca3c0a3e",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PhtcT7m6k8fWrbOj",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Read the attachment of CV, summarize cadidate information in the following structure: {\"fullname\": , \"dateofbirth\": , \"email\": , \"address\":, \"phone\": , \"highest_degree\", \"year_experience\", \"match_score\": , \"explanation\": }. Do not create json, explain or add any further text.\n{{ $json.text }}\n",
+        "options": {
+          "systemMessage": "You are a helpful HR assistant. Rate candidate in the scale of 100. Here is the selection criteria:\nKey Responsibilities:\n\nLead GenAI and Agentic AI Initiatives: Drive the expansion and adoption of Generative AI and Agentic AI solutions within retail banking. Optimize product offerings, enhance customer experiences, and simplify internal processes through the design, development, and integration of these AI technologies.\nEnable the RBS AI Team as a Gen AI Centre of Excellence: Upskill RBS data science practitioners and enhance capabilities in key techniques such as prompt design and engineering, RAG, multi-shot prompting, and fine-tuning. Ensure expertise in tools like LangChain and LangGraph, and establish best practices for monitoring, testing, and validating GenAI solutions.\nDevelop Transferrable and Re-usable Frameworks and Architectures: Collaborate with technology and engineering teams to design and build standardized Gen AI assets applicable across the Retail Bank. Formulate key architectural design patterns that can be adopted and leveraged by all RBS domains.\nDesired Skills and Experience:\n\nLeadership and Coordination:\n\nProven experience in leading high-performing multidisciplinary teams with Gen AI, data science, and software engineering skill sets.\nDemonstrated capability in driving reusable outcomes that can be leveraged across the group.\nProficiency in risk management strategies to identify, mitigate, and manage data-related risks.\nTechnical Skills and Tools:\n\nGenerative AI Hands-On Delivery Experience: Demonstrated hands-on experience as a data scientist and engineer, with recent successful applications of Generative AI in a business context. Expertise includes prompt engineering, RAG, guardrail design, orchestration design, and tools like LangChain and LangGraph.\nMachine Learning: Expertise in designing and constructing machine learning models, including feature engineering, model selection, hyperparameter tuning, model evaluation, and deployment of predictive models.\nVersion Control and CI/CD: Experience with version control and CI/CD pipelines such as GitHub.\nTooling: Hands-on experience with GenAI and data science tools such as Spark, Python, R, TensorFlow, PyTorch, SQL, and key AWS integration packages.\nData Engineering: Knowledge of ETL processes and data pipeline construction to ensure efficient data flow and integration.\nDeployment: Extensive experience with Docker for containerization and deployment of applications.\nCloud Architecture: Demonstrated experience in developing, deploying, and monitoring GenAI and AI models on AWS infrastructures, including Bedrock, SageMaker, Knowledge Base, and OpenSearch."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        240,
+        -100
+      ],
+      "id": "dcac096a-8470-45b2-9a82-036217da1059",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        120
+      ],
+      "id": "0f2061fa-a854-4316-bb16-37ec78d77c7f",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "yR0jiPLYZSr22k9g",
+          "name": "OpenAi account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "attachment_0",
+        "name": "=File CV of {{ $json.from.value[0].address }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "root",
+          "mode": "list",
+          "cachedResultName": "/ (Root folder)",
+          "cachedResultUrl": "https://drive.google.com/drive"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        0,
+        -160
+      ],
+      "id": "c42dbe84-79ce-4666-9b5a-2601ef36527a",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3NDdn5b4dAS46TGD",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "attachment_0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        0,
+        60
+      ],
+      "id": "82849f3c-0c81-4785-aab7-e54a1a3c9585",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1RFA92XfqhCAlpgXX1BzYhG8bHWST0nh424V7jSBzRp4",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RFA92XfqhCAlpgXX1BzYhG8bHWST0nh424V7jSBzRp4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.output.parseJson().fullname }}",
+            "Email": "={{ $json.output.parseJson().email }}",
+            "Score": "={{ $json.output.parseJson().match_score }}",
+            "Explanation": "={{ $json.output.parseJson().explanation }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Score",
+              "displayName": "Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Explanation",
+              "displayName": "Explanation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        620,
+        -40
+      ],
+      "id": "4171c931-f562-4ffc-a588-4fd6b454766b",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "F9je49zuEPzjmQm9",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        640,
+        220
+      ],
+      "id": "264d4164-b42e-4ec1-9d0e-ac523f85e8fe",
+      "name": "Gmail",
+      "webhookId": "d357bc19-d95b-4a98-8ef2-08e44e107f2a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Fx6whMhGC8ISTwRK",
+          "name": "Gmail account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        []
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fab1bf97-9be2-44df-99c0-b8092c0f86bc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6c2b4fd81715f0f5ce2fbc49a03cf4e3cd4b1946dc2fbb217dec2ac50f3806a1"
+  },
+  "id": "tfJurx2oSZ8va994",
+  "tags": []
+}

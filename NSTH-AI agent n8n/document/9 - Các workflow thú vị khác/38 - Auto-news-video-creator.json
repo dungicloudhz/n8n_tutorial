@@ -1,0 +1,378 @@
+{
+  "name": "Auto news video creator",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Get one latest news about AI and IT. Return in the following format: {\"title\": , \"link\":  }. No explanation or additional information. ",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a helpful assistant"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -240,
+        -100
+      ],
+      "id": "37ac94d5-278c-4f54-92d5-1c649ff18a54",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -440,
+        220
+      ],
+      "id": "02519e84-9beb-441a-9d9b-767fd9f81e15",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "yR0jiPLYZSr22k9g",
+          "name": "OpenAi account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Get latest news about AI and IT",
+        "url": "https://www.artificialintelligence-news.com/artificial-intelligence-news/",
+        "optimizeResponse": true,
+        "responseType": "html",
+        "onlyContent": true,
+        "truncateResponse": true,
+        "maxLength": 5000
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        220
+      ],
+      "id": "b12987a2-fd6b-4694-b6cd-e88c0b19b59f",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Bạn là một phóng viên mảng công nghệ. Viết một bản tin bằng tiếng Việt khoảng 500 từ dựa trên bài báo sau đây. Đồng thời lấy các liên kết tới hình ảnh trong bài báo. Output như sau: {\"summary\": , \"image_urls\": []}. Không giải thích gì thêm\n\n {{ $json.data }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        540,
+        -100
+      ],
+      "id": "a0043e57-2cee-4c72-8fbb-a7e9a31947e5",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.output.parseJson().link }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        200,
+        -100
+      ],
+      "id": "75e57e87-c3e9-4c55-b97f-5830eee93aea",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        160
+      ],
+      "id": "cbc1ba14-9fc2-4598-a8f1-aa8a627b2707",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "yR0jiPLYZSr22k9g",
+          "name": "OpenAi account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.voiceslab.org/convert",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.output.parseJson().summary }}"
+            },
+            {
+              "name": "language",
+              "value": "vi"
+            },
+            {
+              "name": "speed",
+              "value": "1.25"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        -100
+      ],
+      "id": "23ae5f32-d1f9-4ebe-ba6d-218b733d0356",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.text2video.uk/convert",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "audio_url",
+              "value": "={{ $json.audio_url }}"
+            },
+            {
+              "name": "image_urls",
+              "value": "={{ $('AI Agent1').item.json.output.parseJson().image_urls }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1180,
+        -100
+      ],
+      "id": "05a0b326-4454-4767-88bf-4424be4a32ff",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "postAs": "organization",
+        "organization": "105933834",
+        "text": "={{ $('AI Agent1').item.json.output.parseJson().summary }}",
+        "shareMediaCategory": "ARTICLE",
+        "additionalFields": {
+          "originalUrl": "={{ $('AI Agent').item.json.output.parseJson().link }}"
+        }
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        -100
+      ],
+      "id": "38de9be3-de7b-4df1-b010-840c4eb0b39f",
+      "name": "LinkedIn",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "2toTX01E7zPRMIS7",
+          "name": "LinkedIn account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{ $('AI Agent').item.json.output.parseJson().title }}",
+        "regionCode": "VN",
+        "categoryId": "28",
+        "options": {
+          "description": "={{ $('AI Agent1').item.json.output.parseJson().summary }}"
+        }
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        140
+      ],
+      "id": "4b7a5662-a4aa-43f4-9b6f-0ec4a51c281b",
+      "name": "YouTube",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "I53oqQzBWVpwXU4h",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -540,
+        -80
+      ],
+      "id": "b57492ad-d1dc-4e7d-a5f6-bef6ad605890",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn": {
+      "main": [
+        []
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4e59ba24-7de3-4d9f-bf67-2bf31f07ce7b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6c2b4fd81715f0f5ce2fbc49a03cf4e3cd4b1946dc2fbb217dec2ac50f3806a1"
+  },
+  "id": "D4nEbuVr9UnPc2cq",
+  "tags": []
+}
