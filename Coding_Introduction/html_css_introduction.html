@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hướng Dẫn HTML & CSS</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0d14;
+      --surface: #13131f;
+      --surface2: #1a1a2e;
+      --surface3: #1f1f30;
+      --border: #2a2a40;
+      --border2: #34344e;
+      --text: #e8e8f0;
+      --muted: #8888a8;
+      --light: #4a4a68;
+      --html: #ff6b35;
+      --html-dim: rgba(255, 107, 53, .12);
+      --css: #4ecdc4;
+      --css-dim: rgba(78, 205, 196, .12);
+      --tip: #a78bfa;
+      --tip-dim: rgba(167, 139, 250, .12);
+      --js: #ffe66d;
+      --js-dim: rgba(255, 230, 109, .12);
+      --green: #52c788;
+      --red: #f87171;
+      --cb: #07070f;
+      /* syntax */
+      --st: #ff6b35;
+      --sa: #4ecdc4;
+      --sv: #ffe66d;
+      --sc: #3a3a58;
+      --sp: #86efac;
+      --sk: #f87171;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border2);
+      border-radius: 4px
+    }
+
+    /* ══ SIDEBAR ══ */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 260px;
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      z-index: 200
+    }
+
+    .sb-logo {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 10px
+    }
+
+    .sb-logo h2 {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -.3px
+    }
+
+    .logo-h {
+      color: var(--html)
+    }
+
+    .logo-c {
+      color: var(--css)
+    }
+
+    .sb-logo p {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px
+    }
+
+    .nav-sec {
+      padding: 8px 12px 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted)
+    }
+
+    .nav-a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      border-left: 2px solid transparent;
+      transition: all .2s
+    }
+
+    .nav-a:hover,
+    .nav-a.act {
+      color: var(--text);
+      background: var(--surface2);
+      border-left-color: var(--css)
+    }
+
+    .nav-a.html-lnk:hover {
+      border-left-color: var(--html)
+    }
+
+    .nav-a .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .4;
+      flex-shrink: 0
+    }
+
+    /* ══ MAIN ══ */
+    .main {
+      margin-left: 260px;
+      min-height: 100vh
+    }
+
+    /* ══ HERO ══ */
+    .hero {
+      padding: 76px 60px 60px;
+      background: linear-gradient(135deg, #0d0d14 0%, #1a0a2e 55%, #0d1a2e 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden
+    }
+
+    .hero::before {
+      content: '</>';
+      position: absolute;
+      right: 52px;
+      bottom: -10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 190px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .02);
+      pointer-events: none;
+      line-height: 1
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--css-dim);
+      border: 1px solid rgba(78, 205, 196, .3);
+      color: var(--css);
+      padding: 4px 13px;
+      border-radius: 100px;
+      font-size: 11.5px;
+      font-weight: 700;
+      margin-bottom: 20px
+    }
+
+    .hero h1 {
+      font-size: 50px;
+      font-weight: 800;
+      letter-spacing: -1.8px;
+      line-height: 1.1;
+      margin-bottom: 14px
+    }
+
+    .hl-h {
+      color: var(--html)
+    }
+
+    .hl-c {
+      color: var(--css)
+    }
+
+    .hero p {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 500px;
+      line-height: 1.7
+    }
+
+    .hero-tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 26px;
+      flex-wrap: wrap
+    }
+
+    .htag {
+      padding: 5px 13px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700
+    }
+
+    .t-h {
+      background: var(--html-dim);
+      color: var(--html)
+    }
+
+    .t-c {
+      background: var(--css-dim);
+      color: var(--css)
+    }
+
+    .t-t {
+      background: var(--tip-dim);
+      color: var(--tip)
+    }
+
+    /* ══ CONTENT ══ */
+    .content {
+      padding: 50px 60px;
+      max-width: 960px
+    }
+
+    /* ══ SECTION ══ */
+    .section {
+      margin-bottom: 64px
+    }
+
+    .sec-hdr {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .sec-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0
+    }
+
+    .i-h {
+      background: var(--html-dim)
+    }
+
+    .i-c {
+      background: var(--css-dim)
+    }
+
+    .i-t {
+      background: var(--tip-dim)
+    }
+
+    .sec-hdr h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.5px
+    }
+
+    .badge {
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-left: auto
+    }
+
+    .b-h {
+      background: var(--html-dim);
+      color: var(--html)
+    }
+
+    .b-c {
+      background: var(--css-dim);
+      color: var(--css)
+    }
+
+    /* ══ SUBSECTION ══ */
+    .sub {
+      margin-bottom: 36px
+    }
+
+    .sub h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      padding-left: 12px;
+      border-left: 3px solid var(--css)
+    }
+
+    .sub.hs h3 {
+      border-left-color: var(--html)
+    }
+
+    .sub p,
+    .sub ul,
+    .sub ol {
+      color: var(--muted);
+      font-size: 13.5px;
+      margin-bottom: 12px
+    }
+
+    .sub ul,
+    .sub ol {
+      padding-left: 20px
+    }
+
+    .sub li {
+      margin-bottom: 4px
+    }
+
+    /* ══ LIVE RUNNER ══ */
+    .runner {
+      margin: 14px 0;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border)
+    }
+
+    .run-hdr {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #0b0b16;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .dots {
+      display: flex;
+      gap: 5px
+    }
+
+    .d {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%
+    }
+
+    .dr {
+      background: #ff5f56
+    }
+
+    .dy {
+      background: #febc2e
+    }
+
+    .dg {
+      background: #28c840
+    }
+
+    .file-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-left: 4px
+    }
+
+    .run-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 6px
+    }
+
+    .btn-run {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--html);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 4px 12px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .btn-run:hover {
+      filter: brightness(1.15);
+      transform: scale(1.04)
+    }
+
+    .btn-run svg {
+      width: 10px;
+      height: 10px;
+      fill: #fff
+    }
+
+    .btn-run.css-run {
+      background: var(--css);
+      color: #0d0d14
+    }
+
+    .btn-run.css-run svg {
+      fill: #0d0d14
+    }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 5px;
+      padding: 4px 10px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .btn-reset:hover {
+      border-color: var(--muted);
+      color: var(--text)
+    }
+
+    /* editor textarea */
+    .code-ed {
+      display: block;
+      width: 100%;
+      background: var(--cb);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.75;
+      color: #c8c8d8;
+      border: none;
+      outline: none;
+      resize: vertical;
+      min-height: 60px;
+      padding: 18px 20px;
+      tab-size: 2;
+    }
+
+    /* preview panel */
+    .preview-panel {
+      border-top: 1px solid var(--border);
+      display: none
+    }
+
+    .prev-hdr {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .5px
+    }
+
+    .prev-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 1.4s infinite
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    .prev-clear {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-weight: 600
+    }
+
+    .prev-clear:hover {
+      color: var(--red)
+    }
+
+    iframe.preview-frame {
+      display: block;
+      width: 100%;
+      border: none;
+      background: #fff;
+      min-height: 120px
+    }
+
+    /* ══ SYNTAX HIGHLIGHT ══ */
+    .code-ed {
+      white-space: pre;
+      overflow-x: auto
+    }
+
+    .th {
+      color: var(--st)
+    }
+
+    /* tag */
+    .ta {
+      color: var(--sa)
+    }
+
+    /* attr */
+    .tv {
+      color: var(--sv)
+    }
+
+    /* val */
+    .tc {
+      color: var(--sc);
+      font-style: italic
+    }
+
+    /* comment */
+    .tp {
+      color: var(--sp)
+    }
+
+    /* prop */
+    .ts {
+      color: var(--tip)
+    }
+
+    /* selector */
+    .tn {
+      color: var(--tip)
+    }
+
+    /* number */
+    .tk {
+      color: var(--sk)
+    }
+
+    /* keyword */
+
+    /* ══ INFO BOXES ══ */
+    .info {
+      border-radius: 8px;
+      padding: 13px 16px;
+      font-size: 13.5px;
+      margin: 14px 0;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start
+    }
+
+    .info-icon {
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 1px
+    }
+
+    .i-tip {
+      background: var(--css-dim);
+      border: 1px solid rgba(78, 205, 196, .25);
+      color: #39b0a8
+    }
+
+    .i-warn {
+      background: var(--js-dim);
+      border: 1px solid rgba(255, 230, 109, .25);
+      color: #c8aa00
+    }
+
+    .i-note {
+      background: var(--tip-dim);
+      border: 1px solid rgba(167, 139, 250, .25);
+      color: #9b77e8
+    }
+
+    /* ══ TABLE ══ */
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 12px 0
+    }
+
+    .tbl th {
+      background: var(--surface2);
+      padding: 9px 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .tbl td {
+      padding: 9px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+      color: var(--muted)
+    }
+
+    .tbl tr:hover td {
+      background: rgba(255, 255, 255, .02)
+    }
+
+    .tbl code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: var(--cb);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--css)
+    }
+
+    /* ══ CARD GRID ══ */
+    .cg {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 11px;
+      margin: 14px 0
+    }
+
+    .cc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 15px;
+      transition: border-color .2s
+    }
+
+    .cc:hover {
+      border-color: var(--css)
+    }
+
+    .cc .ci {
+      font-size: 22px;
+      margin-bottom: 7px
+    }
+
+    .cc .ct {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 3px
+    }
+
+    .cc .cd {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    /* ══ BOX MODEL ══ */
+    .bm {
+      background: var(--cb);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 26px;
+      text-align: center;
+      margin: 14px 0
+    }
+
+    .bm-mg {
+      border: 2px dashed #3a3a58;
+      border-radius: 8px;
+      padding: 14px;
+      position: relative
+    }
+
+    .bm-bd {
+      border: 2px solid var(--html);
+      border-radius: 6px;
+      padding: 14px;
+      position: relative
+    }
+
+    .bm-pd {
+      border: 2px dashed var(--css);
+      border-radius: 4px;
+      padding: 14px;
+      position: relative
+    }
+
+    .bm-ct {
+      background: var(--tip-dim);
+      border: 2px solid var(--tip);
+      border-radius: 4px;
+      padding: 10px;
+      color: var(--tip);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600
+    }
+
+    .bm-lbl {
+      position: absolute;
+      top: -9px;
+      left: 10px;
+      background: var(--cb);
+      padding: 0 6px;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace
+    }
+
+    .lm {
+      color: var(--muted)
+    }
+
+    .lb {
+      color: var(--html)
+    }
+
+    .lp {
+      color: var(--css)
+    }
+
+    /* ══ ROADMAP ══ */
+    .rm {
+      display: flex;
+      flex-direction: column;
+      margin: 16px 0
+    }
+
+    .rmi {
+      display: flex;
+      gap: 16px
+    }
+
+    .rml {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 32px;
+      flex-shrink: 0
+    }
+
+    .rmn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0
+    }
+
+    .rmln {
+      width: 2px;
+      flex: 1;
+      background: var(--border);
+      margin: 4px 0;
+      min-height: 16px
+    }
+
+    .rmc {
+      padding: 3px 0 24px
+    }
+
+    .rmc h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 3px
+    }
+
+    .rmc p {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    /* ══ INLINE CODE ══ */
+    p code,
+    li code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: var(--css-dim);
+      color: var(--css);
+      padding: 2px 6px;
+      border-radius: 4px
+    }
+
+    hr.dv {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 52px 0
+    }
+
+    /* ══ FOOTER ══ */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 60px;
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 16px
+    }
+
+    .footer a {
+      color: var(--css);
+      text-decoration: none
+    }
+
+    .footer a:hover {
+      text-decoration: underline
+    }
+
+    @media(max-width:900px) {
+      .sidebar {
+        display: none
+      }
+
+      .main {
+        margin-left: 0
+      }
+
+      .hero,
+      .content {
+        padding-left: 22px;
+        padding-right: 22px
+      }
+
+      .hero {
+        padding-top: 40px
+      }
+
+      .hero h1 {
+        font-size: 32px
+      }
+
+      .footer {
+        padding: 22px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ════ SIDEBAR ════ -->
+  <nav class="sidebar">
+    <div class="sb-logo">
+      <h2><span class="logo-h">&lt;HTML&gt;</span> <span class="logo-c">&amp; {CSS}</span></h2>
+      <p>Hướng dẫn cho người mới bắt đầu</p>
+    </div>
+    <div class="nav-sec">HTML Cơ Bản</div>
+    <a href="#s-intro" class="nav-a html-lnk"><span class="dot"></span>Giới thiệu HTML</a>
+    <a href="#s-struct" class="nav-a html-lnk"><span class="dot"></span>Cấu trúc cơ bản</a>
+    <a href="#s-text" class="nav-a html-lnk"><span class="dot"></span>Tiêu đề &amp; Văn bản</a>
+    <a href="#s-links" class="nav-a html-lnk"><span class="dot"></span>Link &amp; Hình ảnh</a>
+    <a href="#s-lists" class="nav-a html-lnk"><span class="dot"></span>Danh sách</a>
+    <a href="#s-table" class="nav-a html-lnk"><span class="dot"></span>Bảng (Table)</a>
+    <a href="#s-form" class="nav-a html-lnk"><span class="dot"></span>Form</a>
+    <a href="#s-semantic" class="nav-a html-lnk"><span class="dot"></span>Layout &amp; Semantic</a>
+    <div class="nav-sec" style="margin-top:10px">CSS Cơ Bản</div>
+    <a href="#s-css" class="nav-a"><span class="dot"></span>Giới thiệu CSS</a>
+    <a href="#s-sel" class="nav-a"><span class="dot"></span>Selectors</a>
+    <a href="#s-box" class="nav-a"><span class="dot"></span>Box Model</a>
+    <a href="#s-color" class="nav-a"><span class="dot"></span>Màu sắc &amp; Nền</a>
+    <a href="#s-font" class="nav-a"><span class="dot"></span>Font &amp; Text</a>
+    <a href="#s-flex" class="nav-a"><span class="dot"></span>Flexbox</a>
+    <a href="#s-grid" class="nav-a"><span class="dot"></span>CSS Grid</a>
+    <a href="#s-resp" class="nav-a"><span class="dot"></span>Responsive</a>
+    <a href="#s-anim" class="nav-a"><span class="dot"></span>Animation</a>
+    <div class="nav-sec" style="margin-top:10px">Tổng kết</div>
+    <a href="#s-card" class="nav-a"><span class="dot"></span>Ví dụ — Card</a>
+    <a href="#s-road" class="nav-a"><span class="dot"></span>Lộ trình học</a>
+  </nav>
+
+  <!-- ════ MAIN ════ -->
+  <div class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-badge">📘 Dành cho người mới bắt đầu · Có thể chạy thử trực tiếp</div>
+      <h1>Hướng dẫn<br><span class="hl-h">HTML</span> &amp; <span class="hl-c">CSS</span><br>toàn tập</h1>
+      <p>Từ cấu trúc trang web cơ bản đến thiết kế giao diện hiện đại. Mỗi ví dụ đều có nút <strong
+          style="color:var(--html)">▶ Chạy</strong> để xem kết quả ngay.</p>
+      <div class="hero-tags">
+        <span class="htag t-h">🏗️ HTML5</span>
+        <span class="htag t-c">🎨 CSS3</span>
+        <span class="htag t-c">▶ Chạy trực tiếp</span>
+        <span class="htag t-t">✨ Flexbox &amp; Grid</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══════════════════════════════════════
+     PHẦN 1 — HTML
+══════════════════════════════════════ -->
+      <div class="section" id="s-intro">
+        <div class="sec-hdr">
+          <div class="sec-icon i-h">🏗️</div>
+          <h2>Phần 1 — HTML</h2>
+          <span class="badge b-h">HTML5</span>
+        </div>
+
+        <div class="sub hs">
+          <h3>HTML là gì?</h3>
+          <p>HTML (HyperText Markup Language) là ngôn ngữ đánh dấu để tạo <strong>cấu trúc</strong> trang web. Trình
+            duyệt đọc HTML và hiển thị nội dung. HTML không phải ngôn ngữ lập trình — nó định nghĩa <em>cái gì</em> xuất
+            hiện trên trang.</p>
+          <div class="cg">
+            <div class="cc">
+              <div class="ci">📄</div>
+              <div class="ct">Cấu trúc</div>
+              <div class="cd">Tiêu đề, đoạn văn, hình ảnh, link...</div>
+            </div>
+            <div class="cc">
+              <div class="ci">🔗</div>
+              <div class="ct">Hyperlink</div>
+              <div class="cd">Liên kết các trang với nhau</div>
+            </div>
+            <div class="cc">
+              <div class="ci">📦</div>
+              <div class="ct">Thẻ (Tag)</div>
+              <div class="cd">Nội dung bọc trong &lt;mở&gt; và &lt;/đóng&gt;</div>
+            </div>
+            <div class="cc">
+              <div class="ci">🌐</div>
+              <div class="ct">Nền tảng</div>
+              <div class="cd">Mọi trang web đều bắt đầu từ HTML</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CẤU TRÚC CƠ BẢN ── -->
+        <div class="sub hs" id="s-struct">
+          <h3>Cấu trúc cơ bản của một trang HTML</h3>
+          <p>Nhấn <strong style="color:var(--html)">▶ Chạy</strong> để xem trang hiển thị trong trình duyệt mini bên
+            dưới. Bạn có thể sửa code rồi chạy lại!</p>
+
+          <div class="runner" id="r-struct">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">index.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-struct')">↺ Reset</button>
+                <button class="btn-run" onclick="runHTML('r-struct')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-struct-ed" rows="14">&lt;!DOCTYPE html&gt;
+&lt;html lang="vi"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Trang đầu tiên của tôi&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Xin chào thế giới! 🌍&lt;/h1&gt;
+  &lt;p&gt;Đây là đoạn văn đầu tiên của tôi.&lt;/p&gt;
+  &lt;p&gt;HTML thật &lt;strong&gt;dễ học&lt;/strong&gt; và &lt;em&gt;thú vị&lt;/em&gt;!&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+            <div class="preview-panel" id="r-struct-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview &nbsp;·&nbsp; Kết quả hiển thị<button class="prev-clear"
+                  onclick="closePreview('r-struct')">✕ Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-struct-frame"></iframe>
+            </div>
+          </div>
+
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Thẻ</th>
+                <th>Ý nghĩa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>&lt;!DOCTYPE html&gt;</code></td>
+                <td>Khai báo đây là tài liệu HTML5</td>
+              </tr>
+              <tr>
+                <td><code>&lt;html&gt;</code></td>
+                <td>Thẻ gốc bao toàn bộ trang</td>
+              </tr>
+              <tr>
+                <td><code>&lt;head&gt;</code></td>
+                <td>Thông tin meta, title, CSS (không hiển thị)</td>
+              </tr>
+              <tr>
+                <td><code>&lt;body&gt;</code></td>
+                <td>Nội dung hiển thị trên trang</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ── TIÊU ĐỀ & VĂN BẢN ── -->
+        <div class="sub hs" id="s-text">
+          <h3>Tiêu đề &amp; Văn bản</h3>
+          <div class="runner" id="r-text">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">headings.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-text')">↺ Reset</button>
+                <button class="btn-run" onclick="runHTML('r-text')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-text-ed" rows="16">&lt;!-- Tiêu đề h1 → h6 --&gt;
+&lt;h1&gt;Tiêu đề H1 — Lớn nhất&lt;/h1&gt;
+&lt;h2&gt;Tiêu đề H2&lt;/h2&gt;
+&lt;h3&gt;Tiêu đề H3&lt;/h3&gt;
+
+&lt;!-- Đoạn văn & định dạng --&gt;
+&lt;p&gt;Đây là &lt;strong&gt;chữ đậm&lt;/strong&gt; và &lt;em&gt;chữ nghiêng&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Văn bản &lt;mark&gt;được tô sáng&lt;/mark&gt; và &lt;del&gt;bị gạch ngang&lt;/del&gt;.&lt;/p&gt;
+&lt;p&gt;Dòng 1&lt;br&gt;Dòng 2 (sau &lt;br&gt;)&lt;/p&gt;
+
+&lt;!-- Đường kẻ ngang --&gt;
+&lt;hr&gt;
+&lt;p&gt;Văn bản sau đường kẻ.&lt;/p&gt;</textarea>
+            <div class="preview-panel" id="r-text-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview<button class="prev-clear" onclick="closePreview('r-text')">✕
+                  Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-text-frame"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── LINK & ẢNH ── -->
+        <div class="sub hs" id="s-links">
+          <h3>Liên kết &amp; Hình ảnh</h3>
+          <div class="runner" id="r-links">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">links.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-links')">↺ Reset</button>
+                <button class="btn-run" onclick="runHTML('r-links')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-links-ed" rows="14">&lt;!-- Liên kết --&gt;
+&lt;p&gt;&lt;a href="https://google.com"&gt;Đến Google&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://google.com" target="_blank"&gt;Mở tab mới ↗&lt;/a&gt;&lt;/p&gt;
+
+&lt;!-- Hình ảnh --&gt;
+&lt;img src="https://picsum.photos/300/150?random=1"
+     alt="Ảnh ngẫu nhiên"
+     width="300"&gt;
+
+&lt;p&gt;Ảnh có thể vừa là link:&lt;/p&gt;
+&lt;a href="https://picsum.photos" target="_blank"&gt;
+  &lt;img src="https://picsum.photos/200/80?random=2"
+       alt="Nhấn vào ảnh" style="border:3px solid #4ecdc4"&gt;
+&lt;/a&gt;</textarea>
+            <div class="preview-panel" id="r-links-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview<button class="prev-clear" onclick="closePreview('r-links')">✕
+                  Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-links-frame"></iframe>
+            </div>
+          </div>
+          <div class="info i-tip"><span class="info-icon">💡</span><span>Thuộc tính <code>alt</code> rất quan trọng —
+              hiển thị khi ảnh lỗi và giúp người khiếm thị. <code>target="_blank"</code> mở link ở tab mới.</span></div>
+        </div>
+
+        <!-- ── DANH SÁCH ── -->
+        <div class="sub hs" id="s-lists">
+          <h3>Danh sách</h3>
+          <div class="runner" id="r-lists">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">lists.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-lists')">↺ Reset</button>
+                <button class="btn-run" onclick="runHTML('r-lists')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-lists-ed" rows="22">&lt;!-- Danh sách không thứ tự (bullet) --&gt;
+&lt;h3&gt;Đồ uống yêu thích:&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;☕ Cà phê&lt;/li&gt;
+  &lt;li&gt;🍵 Trà xanh&lt;/li&gt;
+  &lt;li&gt;🧋 Trà sữa&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- Danh sách có thứ tự (1, 2, 3...) --&gt;
+&lt;h3&gt;Các bước học web:&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;Học HTML cấu trúc&lt;/li&gt;
+  &lt;li&gt;Học CSS trang trí&lt;/li&gt;
+  &lt;li&gt;Học JavaScript&lt;/li&gt;
+  &lt;li&gt;Làm dự án thực tế&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!-- Danh sách lồng nhau --&gt;
+&lt;ul&gt;
+  &lt;li&gt;Frontend
+    &lt;ul&gt;&lt;li&gt;HTML&lt;/li&gt;&lt;li&gt;CSS&lt;/li&gt;&lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Backend&lt;/li&gt;
+&lt;/ul&gt;</textarea>
+            <div class="preview-panel" id="r-lists-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview<button class="prev-clear" onclick="closePreview('r-lists')">✕
+                  Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-lists-frame"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── BẢNG ── -->
+        <div class="sub hs" id="s-table">
+          <h3>Bảng (Table)</h3>
+          <div class="runner" id="r-table">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">table.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-table')">↺ Reset</button>
+                <button class="btn-run" onclick="runHTML('r-table')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-table-ed" rows="22">&lt;style&gt;
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #ccc; padding: 10px 14px; text-align: left; }
+  th { background: #f0f0f0; font-weight: bold; }
+  tr:nth-child(even) { background: #fafafa; }
+&lt;/style&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Tên&lt;/th&gt;
+      &lt;th&gt;Tuổi&lt;/th&gt;
+      &lt;th&gt;Thành phố&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Minh&lt;/td&gt;&lt;td&gt;25&lt;/td&gt;&lt;td&gt;Hà Nội&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Lan&lt;/td&gt;&lt;td&gt;23&lt;/td&gt;&lt;td&gt;TP.HCM&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Hùng&lt;/td&gt;&lt;td&gt;28&lt;/td&gt;&lt;td&gt;Đà Nẵng&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</textarea>
+            <div class="preview-panel" id="r-table-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview<button class="prev-clear" onclick="closePreview('r-table')">✕
+                  Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-table-frame"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── FORM ── -->
+        <div class="sub hs" id="s-form">
+          <h3>Form (Biểu mẫu)</h3>
+          <div class="runner" id="r-form">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">form.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-form')">↺ Reset</button>
+                <button class="btn-run" onclick="runHTML('r-form')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-form-ed" rows="30">&lt;style&gt;
+  body { font-family: Arial; padding: 16px; max-width: 400px; }
+  label { display: block; margin-top: 12px; font-weight: bold; font-size: 13px; }
+  input, select, textarea {
+    width: 100%; padding: 8px 10px; margin-top: 5px;
+    border: 1px solid #ccc; border-radius: 5px; font-size: 13px;
+    box-sizing: border-box;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none; border-color: #4ecdc4;
+    box-shadow: 0 0 0 3px rgba(78,205,196,0.2);
+  }
+  button { margin-top: 16px; padding: 10px 24px; background: #4ecdc4;
+    color: white; border: none; border-radius: 6px; cursor: pointer;
+    font-size: 14px; font-weight: bold; }
+&lt;/style&gt;
+
+&lt;h3&gt;📝 Đăng ký tài khoản&lt;/h3&gt;
+&lt;label for="ten"&gt;Họ tên&lt;/label&gt;
+&lt;input type="text" id="ten" placeholder="Nguyễn Văn A"&gt;
+
+&lt;label for="email"&gt;Email&lt;/label&gt;
+&lt;input type="email" id="email" placeholder="name@email.com"&gt;
+
+&lt;label for="pass"&gt;Mật khẩu&lt;/label&gt;
+&lt;input type="password" id="pass" placeholder="Ít nhất 8 ký tự"&gt;
+
+&lt;label&gt;Giới tính&lt;/label&gt;
+&lt;label&gt;&lt;input type="radio" name="gt" value="nam"&gt; Nam&lt;/label&gt;
+&lt;label&gt;&lt;input type="radio" name="gt" value="nu"&gt; Nữ&lt;/label&gt;
+
+&lt;label for="tp"&gt;Thành phố&lt;/label&gt;
+&lt;select id="tp"&gt;
+  &lt;option&gt;Hà Nội&lt;/option&gt;
+  &lt;option&gt;TP.HCM&lt;/option&gt;
+  &lt;option&gt;Đà Nẵng&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;label&gt;&lt;input type="checkbox"&gt; Tôi đồng ý điều khoản&lt;/label&gt;
+&lt;button type="submit"&gt;Đăng ký →&lt;/button&gt;</textarea>
+            <div class="preview-panel" id="r-form-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview — Thử điền vào form!<button class="prev-clear"
+                  onclick="closePreview('r-form')">✕ Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-form-frame" style="min-height:380px"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SEMANTIC ── -->
+        <div class="sub hs" id="s-semantic">
+          <h3>Layout &amp; Semantic HTML5</h3>
+          <div class="runner" id="r-sem">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">semantic.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-sem')">↺ Reset</button>
+                <button class="btn-run" onclick="runHTML('r-sem')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-sem-ed" rows="30">&lt;style&gt;
+  * { box-sizing: border-box; font-family: Arial; margin: 4px 0; }
+  header { background: #333; color: white; padding: 12px 16px; border-radius: 6px; }
+  nav { background: #555; color: white; padding: 8px 16px; border-radius: 6px; }
+  nav a { color: #4ecdc4; margin-right: 12px; text-decoration: none; }
+  .layout { display: flex; gap: 10px; margin: 6px 0; }
+  main { background: #f9f9f9; padding: 14px; border-radius: 6px; flex: 1; }
+  aside { background: #e8f4f8; padding: 14px; border-radius: 6px; width: 150px; }
+  footer { background: #333; color: #aaa; padding: 10px 16px; border-radius: 6px; font-size: 12px; }
+  article { background: white; border: 1px solid #ddd; padding: 10px; border-radius: 5px; margin: 6px 0; }
+&lt;/style&gt;
+
+&lt;header&gt;
+  &lt;h2&gt;🌐 Logo &amp; Tên trang&lt;/h2&gt;
+&lt;/header&gt;
+
+&lt;nav&gt;
+  &lt;a href="#"&gt;Trang chủ&lt;/a&gt;
+  &lt;a href="#"&gt;Bài viết&lt;/a&gt;
+  &lt;a href="#"&gt;Liên hệ&lt;/a&gt;
+&lt;/nav&gt;
+
+&lt;div class="layout"&gt;
+  &lt;main&gt;
+    &lt;h3&gt;Nội dung chính&lt;/h3&gt;
+    &lt;article&gt;&lt;strong&gt;Bài viết 1&lt;/strong&gt; — Mô tả ngắn...&lt;/article&gt;
+    &lt;article&gt;&lt;strong&gt;Bài viết 2&lt;/strong&gt; — Mô tả ngắn...&lt;/article&gt;
+  &lt;/main&gt;
+  &lt;aside&gt;
+    &lt;h4&gt;Sidebar&lt;/h4&gt;
+    &lt;p&gt;Widget, quảng cáo...&lt;/p&gt;
+  &lt;/aside&gt;
+&lt;/div&gt;
+
+&lt;footer&gt;© 2025 Tên trang web&lt;/footer&gt;</textarea>
+            <div class="preview-panel" id="r-sem-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview — Layout thực tế<button class="prev-clear"
+                  onclick="closePreview('r-sem')">✕ Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-sem-frame" style="min-height:300px"></iframe>
+            </div>
+          </div>
+        </div>
+      </div><!-- /HTML section -->
+
+      <hr class="dv">
+
+      <!-- ══════════════════════════════════════
+     PHẦN 2 — CSS
+══════════════════════════════════════ -->
+      <div class="section" id="s-css">
+        <div class="sec-hdr">
+          <div class="sec-icon i-c">🎨</div>
+          <h2>Phần 2 — CSS</h2>
+          <span class="badge b-c">CSS3</span>
+        </div>
+
+        <div class="sub">
+          <h3 id="s-css">CSS là gì? — 3 cách viết</h3>
+          <p>CSS (Cascading Style Sheets) định dạng giao diện: màu, font, bố cục... CSS quyết định trang trông <em>như
+              thế nào</em>.</p>
+
+          <div class="runner" id="r-css-intro">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">css-intro.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-css-intro')">↺ Reset</button>
+                <button class="btn-run css-run" onclick="runHTML('r-css-intro')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-css-intro-ed" rows="18">&lt;!-- Cách 2: Internal CSS (trong &lt;style&gt;) --&gt;
+&lt;style&gt;
+  h2 { color: #ff6b35; font-family: Arial; }
+  p  { color: #555; font-size: 15px; line-height: 1.6; }
+  .noi-bat { background: #fff3cd; padding: 8px 12px;
+             border-left: 4px solid #ffc107; border-radius: 4px; }
+&lt;/style&gt;
+
+&lt;h2&gt;Tiêu đề được tô màu bởi CSS 🎨&lt;/h2&gt;
+&lt;p&gt;Đoạn văn bản bình thường với màu xám.&lt;/p&gt;
+
+&lt;!-- Cách 1: Inline CSS (trực tiếp trên thẻ) --&gt;
+&lt;p style="color: #e74c3c; font-weight: bold;"&gt;
+  Inline CSS — màu đỏ trực tiếp
+&lt;/p&gt;
+
+&lt;div class="noi-bat"&gt;
+  Đây là class CSS tự định nghĩa! ✨
+&lt;/div&gt;</textarea>
+            <div class="preview-panel" id="r-css-intro-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview<button class="prev-clear" onclick="closePreview('r-css-intro')">✕
+                  Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-css-intro-frame"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- SELECTORS -->
+        <div class="sub" id="s-sel">
+          <h3>Selectors (Bộ chọn)</h3>
+          <div class="runner" id="r-sel">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">selectors.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-sel')">↺ Reset</button>
+                <button class="btn-run css-run" onclick="runHTML('r-sel')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-sel-ed" rows="28">&lt;style&gt;
+  /* 1. Chọn theo TÊN THẺ */
+  p    { font-family: Arial; color: #333; }
+  h3   { margin-bottom: 8px; }
+
+  /* 2. Chọn theo CLASS (.) — dùng nhiều lần */
+  .xanh  { color: #2196F3; font-weight: bold; }
+  .do    { color: #e74c3c; font-weight: bold; }
+  .hop   { background: #f0f0f0; padding: 10px; border-radius: 6px; margin: 6px 0; }
+
+  /* 3. Chọn theo ID (#) — dùng 1 lần duy nhất */
+  #dac-biet { background: #fff9c4; border: 2px solid #f5c842;
+              padding: 10px; border-radius: 6px; }
+
+  /* 4. Pseudo-class — trạng thái */
+  a        { color: #4ecdc4; text-decoration: none; }
+  a:hover  { color: #ff6b35; text-decoration: underline; }
+
+  /* 5. Chọn phần tử con */
+  .cha &gt; p { border-left: 3px solid #4ecdc4; padding-left: 10px; }
+&lt;/style&gt;
+
+&lt;h3&gt;Các loại selector:&lt;/h3&gt;
+&lt;p&gt;Thẻ &lt;span class="xanh"&gt;class="xanh"&lt;/span&gt;
+   và &lt;span class="do"&gt;class="do"&lt;/span&gt;&lt;/p&gt;
+
+&lt;div id="dac-biet"&gt;⭐ ID duy nhất — id="dac-biet"&lt;/div&gt;
+
+&lt;div class="hop"&gt;
+  &lt;a href="#"&gt;Rê chuột vào link này để thấy :hover&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;div class="cha"&gt;
+  &lt;p&gt;Con trực tiếp của .cha → có viền trái xanh&lt;/p&gt;
+&lt;/div&gt;</textarea>
+            <div class="preview-panel" id="r-sel-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview — Rê chuột vào link để thấy :hover<button class="prev-clear"
+                  onclick="closePreview('r-sel')">✕ Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-sel-frame"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOX MODEL -->
+        <div class="sub" id="s-box">
+          <h3>Box Model — Khái niệm quan trọng nhất!</h3>
+          <p>Mọi phần tử HTML đều là một "hộp" với 4 lớp lồng nhau:</p>
+
+          <div class="bm">
+            <div class="bm-mg" style="position:relative"><span class="bm-lbl lm">margin (khoảng ngoài)</span>
+              <div class="bm-bd" style="position:relative"><span class="bm-lbl lb">border (viền)</span>
+                <div class="bm-pd" style="position:relative"><span class="bm-lbl lp">padding (khoảng trong)</span>
+                  <div class="bm-ct">content (nội dung)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="runner" id="r-box">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">box-model.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-box')">↺ Reset</button>
+                <button class="btn-run css-run" onclick="runHTML('r-box')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-box-ed" rows="24">&lt;style&gt;
+  body { font-family: Arial; padding: 10px; }
+  .hop {
+    width: 260px;
+    padding: 20px;          /* khoảng bên trong */
+    border: 4px solid #ff6b35; /* viền */
+    margin: 20px;           /* khoảng bên ngoài */
+    background: #fff8f4;
+    font-size: 14px;
+  }
+  .hop2 {
+    /* box-sizing: border-box — width BÃO GỒM padding+border */
+    box-sizing: border-box;
+    width: 260px;
+    padding: 20px;
+    border: 4px solid #4ecdc4;
+    margin: 10px;
+    background: #f0fafa;
+    font-size: 14px;
+  }
+&lt;/style&gt;
+
+&lt;div class="hop"&gt;
+  ⚠️ Mặc định: width=260px &lt;br&gt;
+  Nhưng thực tế chiếm 260+40+8 = &lt;b&gt;308px&lt;/b&gt;
+&lt;/div&gt;
+
+&lt;div class="hop2"&gt;
+  ✅ box-sizing: border-box &lt;br&gt;
+  width luôn = &lt;b&gt;260px&lt;/b&gt; (gồm cả padding+border)
+&lt;/div&gt;</textarea>
+            <div class="preview-panel" id="r-box-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview — Quan sát kích thước 2 box<button class="prev-clear"
+                  onclick="closePreview('r-box')">✕ Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-box-frame"></iframe>
+            </div>
+          </div>
+          <div class="info i-warn"><span class="info-icon">⚠️</span><span>Luôn thêm
+              <code>* { box-sizing: border-box }</code> vào đầu CSS — giúp width/height dễ kiểm soát hơn rất
+              nhiều!</span></div>
+        </div>
+
+        <!-- COLORS -->
+        <div class="sub" id="s-color">
+          <h3>Màu sắc &amp; Background</h3>
+          <div class="runner" id="r-color">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">colors.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-color')">↺ Reset</button>
+                <button class="btn-run css-run" onclick="runHTML('r-color')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-color-ed" rows="26">&lt;style&gt;
+  body { font-family: Arial; padding: 14px; }
+  .mau { padding: 10px 14px; border-radius: 7px; margin: 6px 0; font-size: 13px; color: white; font-weight: 600; }
+&lt;/style&gt;
+
+&lt;div class="mau" style="background: red"&gt;red — tên màu&lt;/div&gt;
+&lt;div class="mau" style="background: #3498db"&gt;#3498db — mã HEX&lt;/div&gt;
+&lt;div class="mau" style="background: rgb(46,204,113)"&gt;rgb(46,204,113) — RGB&lt;/div&gt;
+&lt;div class="mau" style="background: rgba(231,76,60,0.7)"&gt;rgba — có độ trong suốt 70%&lt;/div&gt;
+&lt;div class="mau" style="background: hsl(270,60%,50%)"&gt;hsl(270,60%,50%) — HSL&lt;/div&gt;
+
+&lt;!-- Gradient --&gt;
+&lt;div class="mau" style="background: linear-gradient(135deg,#667eea,#764ba2)"&gt;
+  linear-gradient — dải màu ngang
+&lt;/div&gt;
+&lt;div class="mau" style="background: linear-gradient(to right,#f093fb,#f5576c,#fda085)"&gt;
+  gradient 3 màu
+&lt;/div&gt;
+
+&lt;!-- Background ảnh --&gt;
+&lt;div style="height:80px;border-radius:8px;margin-top:10px;
+  background: url('https://picsum.photos/600/200?random=5') center/cover;
+  display:flex;align-items:center;justify-content:center;
+  color:white;font-weight:bold;font-family:Arial;
+  text-shadow:0 1px 4px rgba(0,0,0,0.7)"&gt;
+  background-image + background-size: cover
+&lt;/div&gt;</textarea>
+            <div class="preview-panel" id="r-color-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview<button class="prev-clear" onclick="closePreview('r-color')">✕
+                  Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-color-frame" style="min-height:300px"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- FONT & TEXT -->
+        <div class="sub" id="s-font">
+          <h3>Font chữ &amp; Text</h3>
+          <div class="runner" id="r-font">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">typography.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-font')">↺ Reset</button>
+                <button class="btn-run css-run" onclick="runHTML('r-font')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-font-ed" rows="28">&lt;link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet"&gt;
+&lt;style&gt;
+  body { padding: 14px; }
+  .row { padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+&lt;/style&gt;
+
+&lt;div class="row" style="font-family:'Pacifico',cursive; font-size:22px; color:#e74c3c"&gt;
+  Pacifico — Google Font đẹp ✨
+&lt;/div&gt;
+&lt;div class="row" style="font-family:'Roboto',sans-serif; font-weight:700"&gt;
+  Roboto Bold — font phổ biến
+&lt;/div&gt;
+&lt;div class="row" style="font-size:20px; font-weight:900; letter-spacing:4px; text-transform:uppercase"&gt;
+  letter-spacing + uppercase
+&lt;/div&gt;
+&lt;div class="row" style="text-align:center; font-size:18px; color:#3498db"&gt;
+  text-align: center
+&lt;/div&gt;
+&lt;div class="row" style="line-height:2; color:#555"&gt;
+  line-height: 2 — khoảng cách dòng rộng giúp dễ đọc hơn. Lorem ipsum dolor sit amet consectetur.
+&lt;/div&gt;
+&lt;div class="row" style="text-decoration:underline; color:#9b59b6"&gt;
+  text-decoration: underline
+&lt;/div&gt;
+&lt;div class="row"&gt;
+  &lt;span style="background:linear-gradient(135deg,#667eea,#f5576c);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    font-size:20px;font-weight:900"&gt;Gradient Text ✨&lt;/span&gt;
+&lt;/div&gt;</textarea>
+            <div class="preview-panel" id="r-font-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview<button class="prev-clear" onclick="closePreview('r-font')">✕
+                  Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-font-frame" style="min-height:280px"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- FLEXBOX -->
+        <div class="sub" id="s-flex">
+          <h3>Flexbox — Bố cục 1 chiều</h3>
+          <div class="runner" id="r-flex">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">flexbox.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-flex')">↺ Reset</button>
+                <button class="btn-run css-run" onclick="runHTML('r-flex')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-flex-ed" rows="36">&lt;style&gt;
+  * { box-sizing: border-box; font-family: Arial; font-size: 13px; }
+  .label { font-weight: bold; color: #555; margin: 12px 0 5px; }
+  .box {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 2px dashed #4ecdc4;
+    border-radius: 6px;
+    margin-bottom: 4px;
+  }
+  .item {
+    background: #4ecdc4;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  .item.big { padding: 14px; background: #ff6b35; }
+&lt;/style&gt;
+
+&lt;div class="label"&gt;justify-content: flex-start (mặc định)&lt;/div&gt;
+&lt;div class="box" style="justify-content:flex-start"&gt;
+  &lt;div class="item"&gt;A&lt;/div&gt;&lt;div class="item"&gt;B&lt;/div&gt;&lt;div class="item"&gt;C&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="label"&gt;justify-content: center&lt;/div&gt;
+&lt;div class="box" style="justify-content:center"&gt;
+  &lt;div class="item"&gt;A&lt;/div&gt;&lt;div class="item"&gt;B&lt;/div&gt;&lt;div class="item"&gt;C&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="label"&gt;justify-content: space-between&lt;/div&gt;
+&lt;div class="box" style="justify-content:space-between"&gt;
+  &lt;div class="item"&gt;A&lt;/div&gt;&lt;div class="item"&gt;B&lt;/div&gt;&lt;div class="item"&gt;C&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="label"&gt;align-items: center (chiều cao khác nhau)&lt;/div&gt;
+&lt;div class="box" style="align-items:center; height:70px"&gt;
+  &lt;div class="item"&gt;Nhỏ&lt;/div&gt;
+  &lt;div class="item big"&gt;To&lt;/div&gt;
+  &lt;div class="item"&gt;Nhỏ&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="label"&gt;flex-direction: column&lt;/div&gt;
+&lt;div class="box" style="flex-direction:column; width:fit-content"&gt;
+  &lt;div class="item"&gt;Trên&lt;/div&gt;&lt;div class="item"&gt;Giữa&lt;/div&gt;&lt;div class="item"&gt;Dưới&lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <div class="preview-panel" id="r-flex-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview — Thử thay đổi justify-content, align-items!<button
+                  class="prev-clear" onclick="closePreview('r-flex')">✕ Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-flex-frame" style="min-height:350px"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- CSS GRID -->
+        <div class="sub" id="s-grid">
+          <h3>CSS Grid — Bố cục 2 chiều</h3>
+          <div class="runner" id="r-grid">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">grid.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-grid')">↺ Reset</button>
+                <button class="btn-run css-run" onclick="runHTML('r-grid')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-grid-ed" rows="34">&lt;style&gt;
+  * { box-sizing: border-box; font-family: Arial; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* 3 cột bằng nhau */
+    gap: 10px;
+    padding: 10px;
+  }
+  .cell {
+    background: #a78bfa;
+    color: white;
+    padding: 14px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+  }
+  .span2 { grid-column: span 2; background: #ff6b35; }
+  .span3 { grid-column: span 3; background: #4ecdc4; color: #0d0d14; }
+  .row2  { grid-row: span 2;    background: #f5c842; color: #333; }
+&lt;/style&gt;
+
+&lt;h4 style="font-family:Arial;padding:8px;color:#333"&gt;grid-template-columns: 1fr 1fr 1fr&lt;/h4&gt;
+&lt;div class="grid"&gt;
+  &lt;div class="cell span3"&gt;Header — span 3 cột&lt;/div&gt;
+  &lt;div class="cell row2"&gt;Sidebar (row span 2)&lt;/div&gt;
+  &lt;div class="cell span2"&gt;Main content (col span 2)&lt;/div&gt;
+  &lt;div class="cell"&gt;Article&lt;/div&gt;
+  &lt;div class="cell"&gt;Article&lt;/div&gt;
+  &lt;div class="cell span3"&gt;Footer — span 3 cột&lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <div class="preview-panel" id="r-grid-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview — Thử thay đổi số cột và span!<button class="prev-clear"
+                  onclick="closePreview('r-grid')">✕ Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-grid-frame" style="min-height:260px"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESPONSIVE -->
+        <div class="sub" id="s-resp">
+          <h3>Responsive Design — @media queries</h3>
+          <div class="runner" id="r-resp">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">responsive.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-resp')">↺ Reset</button>
+                <button class="btn-run css-run" onclick="runHTML('r-resp')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-resp-ed" rows="30">&lt;style&gt;
+  * { box-sizing: border-box; font-family: Arial; }
+  body { margin: 0; padding: 12px; }
+  .status { text-align: center; padding: 10px; border-radius: 6px;
+            font-weight: bold; margin-bottom: 12px; }
+  .grid { display: grid; gap: 10px; }
+  .card { background: #f0f0f0; padding: 14px; border-radius: 8px; font-size: 13px; }
+
+  /* Mobile first — 1 cột */
+  .grid { grid-template-columns: 1fr; }
+  .status { background: #ffebee; color: #c62828; }
+  .status::before { content: '📱 Mobile (< 500px)'; }
+
+  /* Tablet — 2 cột */
+  @media (min-width: 500px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+    .status { background: #e8f5e9; color: #2e7d32; }
+    .status::before { content: '📟 Tablet (≥ 500px) — 2 cột'; }
+  }
+
+  /* Desktop — 3 cột */
+  @media (min-width: 700px) {
+    .grid { grid-template-columns: 1fr 1fr 1fr; }
+    .status { background: #e3f2fd; color: #1565c0; }
+    .status::before { content: '🖥️ Desktop (≥ 700px) — 3 cột'; }
+  }
+&lt;/style&gt;
+
+&lt;div class="status"&gt;&lt;/div&gt;
+&lt;div class="grid"&gt;
+  &lt;div class="card"&gt;🃏 Card 1&lt;/div&gt;
+  &lt;div class="card"&gt;🃏 Card 2&lt;/div&gt;
+  &lt;div class="card"&gt;🃏 Card 3&lt;/div&gt;
+  &lt;div class="card"&gt;🃏 Card 4&lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <div class="preview-panel" id="r-resp-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview — Kéo rộng/hẹp cửa sổ trình duyệt để thấy responsive!<button
+                  class="prev-clear" onclick="closePreview('r-resp')">✕ Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-resp-frame" style="min-height:220px"></iframe>
+            </div>
+          </div>
+          <div class="info i-note"><span class="info-icon">💡</span><span>Ví dụ trên dùng breakpoint nhỏ hơn thực tế để
+              dễ test trong khung preview. Thực tế thường dùng 768px (tablet) và 1024px (desktop).</span></div>
+        </div>
+
+        <!-- ANIMATION -->
+        <div class="sub" id="s-anim">
+          <h3>Transition &amp; Animation</h3>
+          <div class="runner" id="r-anim">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">animation.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-anim')">↺ Reset</button>
+                <button class="btn-run css-run" onclick="runHTML('r-anim')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-anim-ed" rows="46">&lt;style&gt;
+  * { box-sizing: border-box; font-family: Arial; }
+  body { padding: 16px; }
+  .label { font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase;
+           letter-spacing: 1px; margin: 16px 0 6px; }
+  /* Transition */
+  .btn {
+    background: #4ecdc4; color: white; border: none;
+    padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  }
+  .btn:hover {
+    background: #ff6b35; transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255,107,53,0.35);
+  }
+  /* Bounce animation */
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-20px); }
+  }
+  .ball {
+    width: 40px; height: 40px; background: #ff6b35; border-radius: 50%;
+    animation: bounce 1s ease-in-out infinite;
+    display: inline-block;
+  }
+  /* Spin */
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .spinner {
+    width: 36px; height: 36px; border: 4px solid #eee;
+    border-top-color: #4ecdc4; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+  }
+  /* Fade pulse */
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.5; transform: scale(0.92); }
+  }
+  .pulse {
+    display: inline-block; width: 16px; height: 16px;
+    background: #a78bfa; border-radius: 50%;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+&lt;/style&gt;
+
+&lt;div class="label"&gt;Transition — rê chuột vào nút&lt;/div&gt;
+&lt;button class="btn"&gt;Rê chuột vào đây 🖱️&lt;/button&gt;
+
+&lt;div class="label"&gt;@keyframes bounce&lt;/div&gt;
+&lt;div class="ball"&gt;&lt;/div&gt;
+
+&lt;div class="label"&gt;@keyframes spin (loading)&lt;/div&gt;
+&lt;div class="spinner"&gt;&lt;/div&gt;
+
+&lt;div class="label"&gt;@keyframes pulse&lt;/div&gt;
+&lt;div class="pulse"&gt;&lt;/div&gt;</textarea>
+            <div class="preview-panel" id="r-anim-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview — Rê chuột vào nút và xem animations!<button class="prev-clear"
+                  onclick="closePreview('r-anim')">✕ Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-anim-frame" style="min-height:240px"></iframe>
+            </div>
+          </div>
+        </div>
+      </div><!-- /CSS section -->
+
+      <hr class="dv">
+
+      <!-- ══ VÍ DỤ CARD ══ -->
+      <div class="section" id="s-card">
+        <div class="sec-hdr">
+          <div class="sec-icon i-t">🃏</div>
+          <h2>Ví dụ tổng hợp — Card Component</h2>
+        </div>
+
+        <div class="sub">
+          <p style="color:var(--muted);font-size:13.5px;margin-bottom:14px">Kết hợp HTML + CSS để tạo card hoàn chỉnh.
+            Thử sửa màu sắc, bo góc, shadow rồi nhấn Chạy!</p>
+          <div class="runner" id="r-card">
+            <div class="run-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">card.html</span>
+              <div class="run-actions">
+                <button class="btn-reset" onclick="resetCode('r-card')">↺ Reset</button>
+                <button class="btn-run" onclick="runHTML('r-card')"><svg viewBox="0 0 16 16">
+                    <path d="M3 2l11 6-11 6V2z" />
+                  </svg> Chạy</button>
+              </div>
+            </div>
+            <textarea class="code-ed" id="r-card-ed" rows="44">&lt;style&gt;
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 30px;
+    flex-wrap: wrap;
+  }
+  .card {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+    width: 240px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+  }
+  .card img { width: 100%; height: 150px; object-fit: cover; }
+  .card-body { padding: 16px; }
+  .tag {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    background: #e8f5e9; color: #2e7d32;
+    padding: 3px 9px; border-radius: 100px; margin-bottom: 8px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: #1a1a2e; }
+  .card-text  { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 14px; }
+  .btn {
+    display: inline-block; background: #4ecdc4; color: white;
+    padding: 8px 18px; border-radius: 7px; text-decoration: none;
+    font-size: 13px; font-weight: 700; transition: background 0.2s;
+  }
+  .btn:hover { background: #38b2ac; }
+&lt;/style&gt;
+
+&lt;div class="card"&gt;
+  &lt;img src="https://picsum.photos/240/150?random=10" alt="Nature"&gt;
+  &lt;div class="card-body"&gt;
+    &lt;span class="tag"&gt;🌿 Thiên nhiên&lt;/span&gt;
+    &lt;div class="card-title"&gt;Khám phá thiên nhiên&lt;/div&gt;
+    &lt;p class="card-text"&gt;Hành trình khám phá những vùng đất mới kỳ diệu quanh ta.&lt;/p&gt;
+    &lt;a href="#" class="btn"&gt;Đọc thêm →&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="card"&gt;
+  &lt;img src="https://picsum.photos/240/150?random=20" alt="Tech"&gt;
+  &lt;div class="card-body"&gt;
+    &lt;span class="tag" style="background:#e3f2fd;color:#1565c0"&gt;💻 Công nghệ&lt;/span&gt;
+    &lt;div class="card-title"&gt;Xu hướng AI 2025&lt;/div&gt;
+    &lt;p class="card-text"&gt;Những công nghệ AI đang thay đổi thế giới trong năm nay.&lt;/p&gt;
+    &lt;a href="#" class="btn" style="background:#4a6fa5"&gt;Đọc thêm →&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</textarea>
+            <div class="preview-panel" id="r-card-prev">
+              <div class="prev-hdr">
+                <div class="prev-dot"></div>Preview — Rê chuột vào card để thấy hover effect!<button class="prev-clear"
+                  onclick="closePreview('r-card')">✕ Đóng</button>
+              </div>
+              <iframe class="preview-frame" id="r-card-frame" style="min-height:320px"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="dv">
+
+      <!-- ══ ROADMAP ══ -->
+      <div class="section" id="s-road">
+        <div class="sec-hdr">
+          <div class="sec-icon i-t">🗺️</div>
+          <h2>Lộ trình học tiếp theo</h2>
+        </div>
+        <div class="rm">
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:var(--html-dim);color:var(--html)">1</div>
+              <div class="rmln"></div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:var(--html)">Luyện HTML + CSS thuần thục</h4>
+              <p>Clone các trang web đơn giản. Tự làm portfolio cá nhân.</p>
+            </div>
+          </div>
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:var(--css-dim);color:var(--css)">2</div>
+              <div class="rmln"></div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:var(--css)">JavaScript cơ bản</h4>
+              <p>Thêm tính năng tương tác: click, form, hiển thị dữ liệu.</p>
+            </div>
+          </div>
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:var(--js-dim);color:var(--js)">3</div>
+              <div class="rmln"></div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:var(--js)">CSS Framework</h4>
+              <p>Tailwind CSS hoặc Bootstrap để xây dựng UI nhanh hơn.</p>
+            </div>
+          </div>
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:var(--tip-dim);color:var(--tip)">4</div>
+              <div class="rmln"></div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:var(--tip)">Git &amp; GitHub</h4>
+              <p>Quản lý code, deploy trang web miễn phí lên GitHub Pages.</p>
+            </div>
+          </div>
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:rgba(82,199,136,.15);color:var(--green)">5</div>
+              <div class="rmln"></div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:var(--green)">React / Vue</h4>
+              <p>Framework JS hiện đại để xây dựng ứng dụng web phức tạp.</p>
+            </div>
+          </div>
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:rgba(255,170,100,.15);color:#ffaa64">6</div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:#ffaa64">Backend (Node.js / Python)</h4>
+              <p>Xử lý dữ liệu, database, API — trở thành Full-stack Developer.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info i-tip" style="margin-top:16px">
+          <span class="info-icon">🔗</span>
+          <div>
+            <strong>Tài nguyên miễn phí:</strong><br>
+            <span style="font-size:12.5px">
+              <a href="https://developer.mozilla.org" style="color:var(--css)">MDN Web Docs</a> ·
+              <a href="https://www.w3schools.com" style="color:var(--css)">W3Schools</a> ·
+              <a href="https://www.freecodecamp.org" style="color:var(--css)">freeCodeCamp</a> ·
+              <a href="https://css-tricks.com" style="color:var(--css)">CSS-Tricks</a>
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+
+    <div class="footer">
+      <span>🏗️ Hướng dẫn HTML &amp; CSS · Nền tối · Có thể chạy thử trực tiếp</span>
+      <span style="margin-left:auto">Phần 1/3 — Bộ học Web cơ bản</span>
+    </div>
+  </div><!-- /main -->
+
+  <!-- ════════════════ ENGINE ════════════════ -->
+  <script>
+    // Lưu code gốc để reset
+    const originals = {};
+    document.querySelectorAll('.code-ed').forEach(ta => {
+      originals[ta.id] = ta.value;
+      // Tab indent
+      ta.addEventListener('keydown', e => {
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          const s = ta.selectionStart, end = ta.selectionEnd;
+          ta.value = ta.value.substring(0, s) + '  ' + ta.value.substring(end);
+          ta.selectionStart = ta.selectionEnd = s + 2;
+        }
+      });
+      // Auto resize
+      ta.addEventListener('input', () => autoResize(ta));
+    });
+
+    function autoResize(ta) {
+      ta.style.height = 'auto';
+      ta.style.height = Math.max(ta.scrollHeight, 80) + 'px';
+    }
+
+    function runHTML(id) {
+      const ed = document.getElementById(id + '-ed');
+      const panel = document.getElementById(id + '-prev');
+      const frame = document.getElementById(id + '-frame');
+      if (!ed || !panel || !frame) return;
+
+      // Build full HTML doc
+      let code = ed.value;
+      let html;
+      if (code.trim().toLowerCase().startsWith('<!doctype') ||
+        code.trim().toLowerCase().startsWith('<html')) {
+        html = code;
+      } else {
+        html = `<!DOCTYPE html><html lang="vi"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>body{margin:10px;font-family:Arial,sans-serif}</style>
+</head><body>${code}</body></html>`;
+      }
+
+      panel.style.display = 'block';
+      frame.srcdoc = html;
+
+      // Auto height after load
+      frame.onload = () => {
+        try {
+          const h = frame.contentDocument.body.scrollHeight;
+          frame.style.minHeight = Math.max(h + 30, 120) + 'px';
+        } catch (e) { }
+      };
+
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function closePreview(id) {
+      const panel = document.getElementById(id + '-prev');
+      if (panel) panel.style.display = 'none';
+    }
+
+    function resetCode(id) {
+      const ed = document.getElementById(id + '-ed');
+      if (ed && originals[id] !== undefined) {
+        ed.value = originals[id];
+        autoResize(ed);
+        closePreview(id);
+      }
+    }
+  </script>
+  <a href="javascript_introduction.html"
+    style="position:fixed;bottom:30px;right:30px;background:var(--js,#f5c842);color:#0d0d14;padding:12px 24px;border-radius:50px;font-weight:700;font-family:'Be Vietnam Pro',sans-serif;font-size:14px;text-decoration:none;box-shadow:0 4px 20px rgba(245,200,66,0.3);z-index:9999;transition:all 0.2s;display:flex;align-items:center;gap:8px"
+    onmouseover="this.style.transform='translateY(-3px) scale(1.02)'" onmouseout="this.style.transform='none'">
+    JavaScript ➔
+  </a>
+</body>
+
+</html>

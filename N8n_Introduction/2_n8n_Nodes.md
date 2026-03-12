@@ -2,7 +2,7 @@
 
 Tài liệu này mô tả các **node phổ biến trong n8n**, được **phân loại theo nhóm chức năng**, giúp bạn dễ hiểu – dễ thiết kế workflow – dễ mở rộng.
 
-![](./4_2_Nodes/Introduction.png)
+![](./Nodes/Introduction.png)
 
 ---
 
@@ -21,7 +21,7 @@ Trigger là **điểm bắt đầu** của mọi workflow. Khi sự kiện xảy
 | **Airtable Trigger** | Kích hoạt khi record thay đổi | Đồng bộ dữ liệu Airtable |
 | **Workflow Trigger** | Workflow này được gọi bởi workflow khác | Gọi lại từ workflow khác |
 
-![](./4_2_Nodes/Trigger_Nodes.png)
+![](./Nodes/Trigger_Nodes.png)
 ---
 
 ## 2️⃣ Action Nodes (Node thao tác với dịch vụ)
@@ -47,7 +47,7 @@ Dùng để **tạo – đọc – cập nhật – xóa dữ liệu** từ các
 - Đồng bộ dữ liệu
 - Gửi thông báo
 
-![](./4_2_Nodes/Action_Nodes.png)
+![](./Nodes/Action_Nodes.png)
 
 ---
 
@@ -68,7 +68,7 @@ Nhóm node dùng để **biến đổi, lọc, gộp, tách dữ liệu**.
 
 👉 **Đây là xương sống logic của workflow**
 
-![](./4_2_Nodes/Data_Processing_Nodes.png)
+![](./Nodes/Data_Processing_Nodes.png)
 ---
 
 ## 4️⃣ Utility / Integration Nodes
@@ -86,7 +86,7 @@ Nhóm node hỗ trợ kết nối và xử lý nâng cao.
 * Tích hợp hệ thống custom
 * Gọi API bên thứ ba
 
-![](./4_2_Nodes/Integration_Nodes.png)
+![](./Nodes/Integration_Nodes.png)
 
 ---
 
@@ -109,7 +109,7 @@ Nhóm node dành cho **AI Agent, LLM, NLP**.
 * AI assistant
 * Tự động phân tích nội dung
 
-![](./4_2_Nodes/AI_LLM_Nodes.png)
+![](./Nodes/AI_LLM_Nodes.png)
 
 ---
 

@@ -1,7 +1,7 @@
-<img src="./9_API/Banner.png" width="900" />
-<img src="./9_API/Communication_intro.png" width="900" />
-<img src="./9_API/Communication_intro_2.png" width="900" />
-<img src="./9_API/API_Example.png" width="900" />
+<img src="./API/Banner.png" width="900" />
+<img src="./API/Communication_intro.png" width="900" />
+<img src="./API/Communication_intro_2.png" width="900" />
+<img src="./API/API_Example.png" width="900" />
 ## 🧪 cURL Basics
 
 | Concept | Explanation | Example | Restaurant Analogy |

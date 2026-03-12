@@ -41,7 +41,7 @@ Trong n8n, **node HTTP Request** là cách phổ quát để kết nối với b
 
 Node này cho phép bạn gọi bất kỳ API nào. Hãy phân tích các tùy chọn của nó.
 
-![Node http in n8n](./9_API/Node_http_n8n.png)
+![Node http in n8n](./API/Node_http_n8n.png)
 
 ### 1. Phương thức (Method)
 - Xác định điều bạn muốn làm.  

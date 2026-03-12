@@ -1,0 +1,2466 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hướng Dẫn JavaScript</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0d14;
+      --surface: #13131f;
+      --surface2: #1a1a2e;
+      --surface3: #1f1f30;
+      --border: #2a2a40;
+      --border2: #34344e;
+      --text: #e8e8f0;
+      --muted: #8888a8;
+      --light: #4a4a68;
+
+      --js: #f5c842;
+      --js-dim: rgba(245, 200, 66, .12);
+      --green: #4ecdc4;
+      --green-dim: rgba(78, 205, 196, .12);
+      --purple: #a78bfa;
+      --purple-dim: rgba(167, 139, 250, .12);
+      --red: #f87171;
+      --red-dim: rgba(248, 113, 113, .12);
+      --orange: #fb923c;
+
+      --cb: #080810;
+      /* code bg */
+
+      /* syntax */
+      --sk: #f87171;
+      /* keyword */
+      --sf: #f5c842;
+      /* function */
+      --ss: #4ecdc4;
+      /* string */
+      --sn: #a78bfa;
+      /* number */
+      --sc: #4a4a68;
+      /* comment */
+      --sv: #93c5fd;
+      /* variable */
+      --sp: #86efac;
+      /* property */
+      --sb: #f87171;
+      /* boolean */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px
+    }
+
+    /* ══ SCROLLBAR ══ */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border2);
+      border-radius: 4px
+    }
+
+    /* ══ SIDEBAR ══ */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 258px;
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      z-index: 200;
+    }
+
+    .sb-logo {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px
+    }
+
+    .sb-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: var(--js);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 14px;
+      color: #0d0d14;
+      margin-bottom: 10px;
+    }
+
+    .sb-logo h2 {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -.3px
+    }
+
+    .sb-logo p {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    .nav-sec {
+      padding: 10px 20px 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--light)
+    }
+
+    .nav-a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 20px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 600;
+      border-left: 2px solid transparent;
+      transition: all .15s;
+    }
+
+    .nav-a:hover {
+      color: var(--js);
+      background: var(--js-dim);
+      border-left-color: var(--js)
+    }
+
+    .nav-a .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .4;
+      flex-shrink: 0
+    }
+
+    /* ══ MAIN ══ */
+    .main {
+      margin-left: 258px;
+      min-height: 100vh
+    }
+
+    /* ══ HERO ══ */
+    .hero {
+      padding: 76px 60px 60px;
+      background: linear-gradient(135deg, #0d0d14 0%, #12102a 55%, #0d1a20 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: 'JS';
+      position: absolute;
+      right: 56px;
+      bottom: -16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 200px;
+      font-weight: 600;
+      color: var(--js);
+      opacity: .06;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 200, 66, .1);
+      border: 1px solid rgba(245, 200, 66, .3);
+      color: var(--js);
+      padding: 4px 13px;
+      border-radius: 100px;
+      font-size: 11.5px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: .3px;
+    }
+
+    .hero h1 {
+      font-size: 50px;
+      font-weight: 800;
+      letter-spacing: -1.8px;
+      line-height: 1.1;
+      margin-bottom: 14px
+    }
+
+    .hero h1 .hl {
+      color: var(--js)
+    }
+
+    .hero p {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 500px;
+      line-height: 1.7
+    }
+
+    .hero-tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 26px;
+      flex-wrap: wrap
+    }
+
+    .htag {
+      padding: 5px 13px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700
+    }
+
+    .t-y {
+      background: rgba(245, 200, 66, .12);
+      color: var(--js)
+    }
+
+    .t-g {
+      background: var(--green-dim);
+      color: var(--green)
+    }
+
+    .t-p {
+      background: var(--purple-dim);
+      color: var(--purple)
+    }
+
+    .t-r {
+      background: var(--red-dim);
+      color: var(--red)
+    }
+
+    /* ══ CONTENT ══ */
+    .content {
+      padding: 50px 60px;
+      max-width: 940px
+    }
+
+    /* ══ SECTION ══ */
+    .section {
+      margin-bottom: 64px
+    }
+
+    .sec-hdr {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 30px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .sec-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--js);
+      background: var(--js-dim);
+      padding: 3px 9px;
+      border-radius: 4px;
+      margin-top: 5px;
+      flex-shrink: 0;
+      letter-spacing: .5px;
+    }
+
+    .sec-hdr h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.5px
+    }
+
+    .sec-hdr p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px
+    }
+
+    /* ══ SUBSECTION ══ */
+    .sub {
+      margin-bottom: 36px
+    }
+
+    .sub h3 {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sub h3::before {
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 3px;
+      background: var(--green);
+      border-radius: 2px;
+      flex-shrink: 0
+    }
+
+    .sub p {
+      color: var(--muted);
+      font-size: 13.5px;
+      margin-bottom: 12px
+    }
+
+    /* ══ CODE BLOCK + RUNNER ══ */
+    .code-wrap {
+      margin: 14px 0;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border)
+    }
+
+    .code-hdr {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #0c0c18;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dots {
+      display: flex;
+      gap: 5px
+    }
+
+    .d {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%
+    }
+
+    .dr {
+      background: #ff5f56
+    }
+
+    .dy {
+      background: #febc2e
+    }
+
+    .dg {
+      background: #28c840
+    }
+
+    .file-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    .run-btn {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--js);
+      color: #0d0d14;
+      border: none;
+      border-radius: 5px;
+      padding: 4px 12px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .15s;
+      flex-shrink: 0;
+    }
+
+    .run-btn:hover {
+      background: #ffd84d;
+      transform: scale(1.04)
+    }
+
+    .run-btn svg {
+      width: 11px;
+      height: 11px;
+      fill: #0d0d14
+    }
+
+    .code-body {
+      background: var(--cb);
+      padding: 18px 20px;
+      overflow-x: auto
+    }
+
+    .code-body pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.75;
+      color: #c8c4bc;
+      tab-size: 2;
+    }
+
+    /* editable textarea */
+    .code-editor {
+      background: var(--cb);
+      padding: 18px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.75;
+      color: #c8c4bc;
+      border: none;
+      outline: none;
+      resize: vertical;
+      min-height: 80px;
+      width: 100%;
+      tab-size: 2;
+      display: none;
+    }
+
+    /* output panel */
+    .output-panel {
+      border-top: 1px solid var(--border);
+      background: #06060f;
+      display: none;
+    }
+
+    .out-hdr {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .5px;
+    }
+
+    .out-hdr .out-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 1.4s infinite
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    .out-clear {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-weight: 600
+    }
+
+    .out-clear:hover {
+      color: var(--red)
+    }
+
+    .out-body {
+      padding: 14px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .out-line {
+      margin-bottom: 3px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start
+    }
+
+    .out-arrow {
+      color: var(--green);
+      flex-shrink: 0;
+      margin-top: 1px
+    }
+
+    .out-arrow.err {
+      color: var(--red)
+    }
+
+    .out-arrow.warn {
+      color: var(--js)
+    }
+
+    .out-val {
+      color: var(--text);
+      word-break: break-all
+    }
+
+    .out-val.err {
+      color: var(--red)
+    }
+
+    .out-val.warn {
+      color: var(--js)
+    }
+
+    /* ══ SYNTAX COLORS ══ */
+    .k {
+      color: var(--sk)
+    }
+
+    .f {
+      color: var(--sf)
+    }
+
+    .s {
+      color: var(--ss)
+    }
+
+    .n {
+      color: var(--sn)
+    }
+
+    .c {
+      color: var(--sc);
+      font-style: italic
+    }
+
+    .v {
+      color: var(--sv)
+    }
+
+    .p {
+      color: var(--sp)
+    }
+
+    .b {
+      color: var(--sb)
+    }
+
+    .o {
+      color: #c8c4bc
+    }
+
+    /* ══ INFO BOXES ══ */
+    .info {
+      border-radius: 8px;
+      padding: 13px 16px;
+      font-size: 13px;
+      margin: 14px 0;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .info-icon {
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 1px
+    }
+
+    .i-tip {
+      background: rgba(245, 200, 66, .07);
+      border: 1px solid rgba(245, 200, 66, .22);
+      color: #c8a832
+    }
+
+    .i-ok {
+      background: var(--green-dim);
+      border: 1px solid rgba(78, 205, 196, .25);
+      color: #39a89f
+    }
+
+    .i-warn {
+      background: var(--red-dim);
+      border: 1px solid rgba(248, 113, 113, .25);
+      color: #d96060
+    }
+
+    /* ══ TABLE ══ */
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 14px 0
+    }
+
+    .tbl th {
+      background: var(--surface2);
+      padding: 9px 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tbl td {
+      padding: 9px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+      color: var(--muted)
+    }
+
+    .tbl tr:hover td {
+      background: rgba(255, 255, 255, .02)
+    }
+
+    .tbl code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      background: var(--cb);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--green);
+    }
+
+    /* ══ OP GRID ══ */
+    .op-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+      gap: 8px;
+      margin: 14px 0
+    }
+
+    .op-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      transition: border-color .2s
+    }
+
+    .op-card:hover {
+      border-color: var(--green)
+    }
+
+    .op-sym {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--js);
+      margin-bottom: 4px;
+      font-weight: 600
+    }
+
+    .op-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px
+    }
+
+    .op-ex {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    /* ══ CARD GRID ══ */
+    .cg {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 10px;
+      margin: 14px 0
+    }
+
+    .cc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 15px;
+      transition: border-color .2s
+    }
+
+    .cc:hover {
+      border-color: var(--green)
+    }
+
+    .cc .ci {
+      font-size: 22px;
+      margin-bottom: 7px
+    }
+
+    .cc .ct {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 3px
+    }
+
+    .cc .cd {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    /* ══ ROADMAP ══ */
+    .rm {
+      display: flex;
+      flex-direction: column
+    }
+
+    .rmi {
+      display: flex;
+      gap: 16px
+    }
+
+    .rml {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 34px;
+      flex-shrink: 0
+    }
+
+    .rmn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0
+    }
+
+    .rmln {
+      width: 2px;
+      flex: 1;
+      background: var(--border);
+      margin: 4px 0;
+      min-height: 18px
+    }
+
+    .rmc {
+      padding: 3px 0 26px
+    }
+
+    .rmc h4 {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 3px
+    }
+
+    .rmc p {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    /* ══ INLINE CODE ══ */
+    p code,
+    li code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: var(--green-dim);
+      color: var(--green);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* ══ DIVIDER ══ */
+    hr.div {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 52px 0
+    }
+
+    /* ══ FOOTER ══ */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 60px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer a {
+      color: var(--green);
+      text-decoration: none
+    }
+
+    .footer a:hover {
+      text-decoration: underline
+    }
+
+    /* ══ DEMO LIVE ══ */
+    .demo-live {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 14px 0;
+    }
+
+    .demo-live-hdr {
+      padding: 9px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .demo-live-hdr .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green)
+    }
+
+    .demo-live-body {
+      padding: 18px 20px
+    }
+
+    /* flex demo */
+    .fdemo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      background: var(--green-dim);
+      border: 1px dashed rgba(78, 205, 196, .3);
+      border-radius: 6px
+    }
+
+    .fitem {
+      background: rgba(78, 205, 196, .2);
+      border: 1px solid rgba(78, 205, 196, .4);
+      color: var(--green);
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600
+    }
+
+    @media(max-width:880px) {
+      .sidebar {
+        display: none
+      }
+
+      .main {
+        margin-left: 0
+      }
+
+      .hero,
+      .content {
+        padding-left: 22px;
+        padding-right: 22px
+      }
+
+      .hero {
+        padding-top: 40px
+      }
+
+      .hero h1 {
+        font-size: 32px
+      }
+
+      .footer {
+        padding: 22px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ════════════════ SIDEBAR ════════════════ -->
+  <nav class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-badge">JS</div>
+      <h2>JavaScript</h2>
+      <p>Hướng dẫn cho người mới bắt đầu</p>
+    </div>
+
+    <div class="nav-sec">Cơ bản</div>
+    <a href="#s01" class="nav-a"><span class="dot"></span>JS là gì?</a>
+    <a href="#s02" class="nav-a"><span class="dot"></span>Biến &amp; Kiểu dữ liệu</a>
+    <a href="#s03" class="nav-a"><span class="dot"></span>Toán tử</a>
+    <a href="#s04" class="nav-a"><span class="dot"></span>Chuỗi (String)</a>
+    <a href="#s05" class="nav-a"><span class="dot"></span>Mảng (Array)</a>
+    <a href="#s06" class="nav-a"><span class="dot"></span>Object</a>
+
+    <div class="nav-sec" style="margin-top:8px">Điều khiển</div>
+    <a href="#s07" class="nav-a"><span class="dot"></span>Điều kiện if/else</a>
+    <a href="#s08" class="nav-a"><span class="dot"></span>Vòng lặp</a>
+
+    <div class="nav-sec" style="margin-top:8px">Hàm &amp; Nâng cao</div>
+    <a href="#s09" class="nav-a"><span class="dot"></span>Hàm (Function)</a>
+    <a href="#s10" class="nav-a"><span class="dot"></span>DOM — Tương tác HTML</a>
+    <a href="#s11" class="nav-a"><span class="dot"></span>Sự kiện (Events)</a>
+    <a href="#s12" class="nav-a"><span class="dot"></span>Bất đồng bộ</a>
+
+    <div class="nav-sec" style="margin-top:8px">Tổng kết</div>
+    <a href="#s13" class="nav-a"><span class="dot"></span>Ví dụ To-do List</a>
+    <a href="#s14" class="nav-a"><span class="dot"></span>Lộ trình học</a>
+  </nav>
+
+  <!-- ════════════════ MAIN ════════════════ -->
+  <div class="main">
+
+    <!-- ══ HERO ══ -->
+    <div class="hero">
+      <div class="hero-badge">⚡ Phần 3 trong bộ học Web</div>
+      <h1>Học <span class="hl">JavaScript</span><br>từ con số 0</h1>
+      <p>Ngôn ngữ lập trình của web — biến trang tĩnh thành ứng dụng sống động. Mỗi ví dụ đều có thể <strong
+          style="color:var(--js)">chạy thử ngay</strong> trên trang này.</p>
+      <div class="hero-tags">
+        <span class="htag t-y">⚡ ES6+</span>
+        <span class="htag t-g">▶ Chạy trực tiếp</span>
+        <span class="htag t-p">🌐 DOM</span>
+        <span class="htag t-r">⏳ Async/Await</span>
+      </div>
+    </div>
+
+    <!-- ══ CONTENT ══ -->
+    <div class="content">
+
+      <!-- ────────────────────────────────────────
+     SECTION 01 — INTRO
+──────────────────────────────────────── -->
+      <div class="section" id="s01">
+        <div class="sec-hdr">
+          <span class="sec-num">01</span>
+          <div>
+            <h2>JavaScript là gì?</h2>
+            <p>Ngôn ngữ làm cho web "sống"</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <p>Nếu HTML là <strong>xương</strong> và CSS là <strong>da thịt</strong>, thì JavaScript là <strong>não
+              bộ</strong> của trang web — cho phép trang phản ứng với người dùng, tính toán, lấy dữ liệu và cập nhật
+            giao diện.</p>
+          <div class="cg">
+            <div class="cc">
+              <div class="ci">🖱️</div>
+              <div class="ct">Tương tác</div>
+              <div class="cd">Xử lý click, nhập liệu, cuộn trang</div>
+            </div>
+            <div class="cc">
+              <div class="ci">🔄</div>
+              <div class="ct">Cập nhật động</div>
+              <div class="cd">Thay đổi nội dung không cần reload</div>
+            </div>
+            <div class="cc">
+              <div class="ci">🌐</div>
+              <div class="ct">Gọi API</div>
+              <div class="cd">Lấy dữ liệu từ server, xây dựng app</div>
+            </div>
+            <div class="cc">
+              <div class="ci">✅</div>
+              <div class="ct">Kiểm tra Form</div>
+              <div class="cd">Validate dữ liệu trước khi gửi</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sub">
+          <h3>Hello World đầu tiên</h3>
+          <p>Nhấn <strong style="color:var(--js)">▶ Chạy</strong> để xem kết quả ngay bên dưới!</p>
+
+          <!-- RUNNER 01 -->
+          <div class="code-wrap" data-runner="r01">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">script.js</span>
+              <button class="run-btn" onclick="runCode('r01')">
+                <svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy
+              </button>
+            </div>
+            <div class="code-body">
+              <pre id="r01-pre"><span class="c">// console.log() — in ra màn hình (F12 → Console)</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'Xin chào JavaScript!'</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="n">42</span> + <span class="n">8</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="b">true</span>, <span class="b">false</span>);
+<span class="f">console</span>.<span class="p">log</span>([<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>]);
+<span class="f">console</span>.<span class="p">warn</span>(<span class="s">'Đây là cảnh báo!'</span>);
+<span class="f">console</span>.<span class="p">error</span>(<span class="s">'Đây là lỗi!'</span>);</pre>
+            </div>
+            <textarea class="code-editor" id="r01-ed">console.log('Xin chào JavaScript!');
+console.log(42 + 8);
+console.log(true, false);
+console.log([1, 2, 3]);
+console.warn('Đây là cảnh báo!');
+console.error('Đây là lỗi!');</textarea>
+            <div class="output-panel" id="r01-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r01')">Xóa</button>
+              </div>
+              <div class="out-body" id="r01-body"></div>
+            </div>
+          </div>
+          <div class="info i-tip"><span class="info-icon">💡</span><span>Nhấn <strong>Chạy</strong> để thực thi code.
+              Bạn có thể <strong>sửa code</strong> trong ô bên dưới (click vào vùng code) rồi chạy lại!</span></div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 02 — VARIABLES
+──────────────────────────────────────── -->
+      <div class="section" id="s02">
+        <div class="sec-hdr">
+          <span class="sec-num">02</span>
+          <div>
+            <h2>Biến &amp; Kiểu dữ liệu</h2>
+            <p>Lưu trữ và phân loại thông tin</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <h3>Khai báo biến</h3>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Từ khóa</th>
+                <th>Thay đổi được?</th>
+                <th>Phạm vi</th>
+                <th>Khi nào dùng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>let</code></td>
+                <td style="color:var(--green)">✅ Có</td>
+                <td>Block {}</td>
+                <td>Giá trị có thể thay đổi</td>
+              </tr>
+              <tr>
+                <td><code>const</code></td>
+                <td style="color:var(--red)">❌ Không</td>
+                <td>Block {}</td>
+                <td>Hằng số, mảng, object</td>
+              </tr>
+              <tr>
+                <td><code>var</code></td>
+                <td style="color:var(--js)">⚠️ Có</td>
+                <td>Function</td>
+                <td>Tránh dùng (cách cũ)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- RUNNER 02 -->
+          <div class="code-wrap" data-runner="r02">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">variables.js</span>
+              <button class="run-btn" onclick="runCode('r02')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy</button>
+            </div>
+            <div class="code-body">
+              <pre
+                id="r02-pre"><span class="k">let</span> <span class="v">tuoi</span> = <span class="n">25</span>;
+<span class="v">tuoi</span> = <span class="n">26</span>;                    <span class="c">// ✅ let có thể thay đổi</span>
+
+<span class="k">const</span> <span class="v">PI</span> = <span class="n">3.14159</span>;           <span class="c">// ❌ const không thể gán lại</span>
+
+<span class="c">// 7 kiểu dữ liệu cơ bản</span>
+<span class="k">const</span> <span class="v">soNguyen</span>   = <span class="n">42</span>;
+<span class="k">const</span> <span class="v">soThuc</span>     = <span class="n">3.14</span>;
+<span class="k">const</span> <span class="v">chuoi</span>      = <span class="s">'Xin chào'</span>;
+<span class="k">const</span> <span class="v">bool</span>       = <span class="b">true</span>;
+<span class="k">const</span> <span class="v">rong</span>       = <span class="b">null</span>;
+<span class="k">let</span>   <span class="v">chuaGan</span>;                  <span class="c">// undefined</span>
+<span class="k">const</span> <span class="v">mang</span>       = [<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>];
+
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'tuoi:'</span>, <span class="v">tuoi</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'PI:'</span>, <span class="v">PI</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'typeof chuoi:'</span>, <span class="k">typeof</span> <span class="v">chuoi</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'typeof bool:'</span>, <span class="k">typeof</span> <span class="v">bool</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'typeof chuaGan:'</span>, <span class="k">typeof</span> <span class="v">chuaGan</span>);</pre>
+            </div>
+            <textarea class="code-editor" id="r02-ed">let tuoi = 25;
+tuoi = 26;
+
+const PI = 3.14159;
+
+const soNguyen   = 42;
+const soThuc     = 3.14;
+const chuoi      = 'Xin chào';
+const bool       = true;
+const rong       = null;
+let   chuaGan;
+const mang       = [1, 2, 3];
+
+console.log('tuoi:', tuoi);
+console.log('PI:', PI);
+console.log('typeof chuoi:', typeof chuoi);
+console.log('typeof bool:', typeof bool);
+console.log('typeof chuaGan:', typeof chuaGan);</textarea>
+            <div class="output-panel" id="r02-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r02')">Xóa</button>
+              </div>
+              <div class="out-body" id="r02-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 03 — OPERATORS
+──────────────────────────────────────── -->
+      <div class="section" id="s03">
+        <div class="sec-hdr">
+          <span class="sec-num">03</span>
+          <div>
+            <h2>Toán tử (Operators)</h2>
+            <p>Tính toán và so sánh giá trị</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <div class="op-grid">
+            <div class="op-card">
+              <div class="op-sym">+ - * /</div>
+              <div class="op-name">Số học cơ bản</div>
+              <div class="op-ex">5 + 3 → 8</div>
+            </div>
+            <div class="op-card">
+              <div class="op-sym">%</div>
+              <div class="op-name">Chia lấy dư</div>
+              <div class="op-ex">10 % 3 → 1</div>
+            </div>
+            <div class="op-card">
+              <div class="op-sym">**</div>
+              <div class="op-name">Lũy thừa</div>
+              <div class="op-ex">2 ** 3 → 8</div>
+            </div>
+            <div class="op-card">
+              <div class="op-sym">===</div>
+              <div class="op-name">Bằng (nghiêm ngặt)</div>
+              <div class="op-ex">5 === '5' → false</div>
+            </div>
+            <div class="op-card">
+              <div class="op-sym">!==</div>
+              <div class="op-name">Khác nhau</div>
+              <div class="op-ex">5 !== 6 → true</div>
+            </div>
+            <div class="op-card">
+              <div class="op-sym">&amp;&amp; || !</div>
+              <div class="op-name">Logic AND/OR/NOT</div>
+              <div class="op-ex">true &amp;&amp; false → false</div>
+            </div>
+          </div>
+
+          <!-- RUNNER 03 -->
+          <div class="code-wrap" data-runner="r03">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">operators.js</span>
+              <button class="run-btn" onclick="runCode('r03')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy</button>
+            </div>
+            <div class="code-body">
+              <pre
+                id="r03-pre"><span class="c">// Số học</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'10 + 3 ='</span>, <span class="n">10</span> + <span class="n">3</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'10 % 3 ='</span>, <span class="n">10</span> % <span class="n">3</span>);    <span class="c">// chia lấy dư</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'2 ** 8 ='</span>, <span class="n">2</span> ** <span class="n">8</span>);    <span class="c">// lũy thừa</span>
+
+<span class="c">// So sánh — luôn dùng === thay ==</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'5 == "5"  :'</span>, <span class="n">5</span> == <span class="s">'5'</span>);     <span class="c">// true  (nguy hiểm!)</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'5 === "5" :'</span>, <span class="n">5</span> === <span class="s">'5'</span>);    <span class="c">// false (an toàn ✅)</span>
+
+<span class="c">// Logic</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="b">true</span> && <span class="b">false</span>);   <span class="c">// AND</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="b">true</span> || <span class="b">false</span>);   <span class="c">// OR</span>
+<span class="f">console</span>.<span class="p">log</span>(!<span class="b">true</span>);            <span class="c">// NOT</span>
+
+<span class="c">// Toán tử 3 ngôi</span>
+<span class="k">const</span> <span class="v">diem</span> = <span class="n">75</span>;
+<span class="k">const</span> <span class="v">xepLoai</span> = <span class="v">diem</span> >= <span class="n">50</span> ? <span class="s">'Đậu ✅'</span> : <span class="s">'Rớt ❌'</span>;
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'Kết quả:'</span>, <span class="v">xepLoai</span>);</pre>
+            </div>
+            <textarea class="code-editor" id="r03-ed">// Số học
+console.log('10 + 3 =', 10 + 3);
+console.log('10 % 3 =', 10 % 3);
+console.log('2 ** 8 =', 2 ** 8);
+
+// So sánh
+console.log('5 == "5"  :', 5 == '5');
+console.log('5 === "5" :', 5 === '5');
+
+// Logic
+console.log(true && false);
+console.log(true || false);
+console.log(!true);
+
+// Toán tử 3 ngôi
+const diem = 75;
+const xepLoai = diem >= 50 ? 'Đậu ✅' : 'Rớt ❌';
+console.log('Kết quả:', xepLoai);</textarea>
+            <div class="output-panel" id="r03-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r03')">Xóa</button>
+              </div>
+              <div class="out-body" id="r03-body"></div>
+            </div>
+          </div>
+          <div class="info i-warn"><span class="info-icon">⚠️</span><span>Luôn dùng <code>===</code> thay vì
+              <code>==</code>. Toán tử <code>==</code> tự ép kiểu có thể gây bug khó tìm!</span></div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 04 — STRINGS
+──────────────────────────────────────── -->
+      <div class="section" id="s04">
+        <div class="sec-hdr">
+          <span class="sec-num">04</span>
+          <div>
+            <h2>Chuỗi (String)</h2>
+            <p>Làm việc với văn bản</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <!-- RUNNER 04 -->
+          <div class="code-wrap" data-runner="r04">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">strings.js</span>
+              <button class="run-btn" onclick="runCode('r04')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy</button>
+            </div>
+            <div class="code-body">
+              <pre id="r04-pre"><span class="k">const</span> <span class="v">ten</span> = <span class="s">'  Nguyễn Minh  '</span>;
+
+<span class="c">// Các phương thức hay dùng</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">ten</span>.<span class="p">trim</span>());              <span class="c">// Xóa khoảng trắng 2 đầu</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">ten</span>.<span class="p">trim</span>().<span class="p">toUpperCase</span>()); <span class="c">// NGUYỄN MINH</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">ten</span>.<span class="p">trim</span>().<span class="p">length</span>);       <span class="c">// độ dài</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">ten</span>.<span class="p">includes</span>(<span class="s">'Minh'</span>));    <span class="c">// có chứa không?</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">ten</span>.<span class="p">trim</span>().<span class="p">slice</span>(<span class="n">0</span>, <span class="n">7</span>));  <span class="c">// Cắt chuỗi</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">ten</span>.<span class="p">trim</span>().<span class="p">split</span>(<span class="s">' '</span>));   <span class="c">// Tách thành mảng</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">ten</span>.<span class="p">replace</span>(<span class="s">'Minh'</span>, <span class="s">'Nam'</span>));<span class="c">// Thay thế</span>
+
+<span class="c">// Template Literal — dùng backtick `</span>
+<span class="k">const</span> <span class="v">tuoi</span> = <span class="n">25</span>;
+<span class="k">const</span> <span class="v">gioi_thieu</span> = <span class="s">`Tôi là ${<span class="v">ten</span>.<span class="p">trim</span>()}, ${<span class="v">tuoi</span>} tuổi.`</span>;
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">gioi_thieu</span>);</pre>
+            </div>
+            <textarea class="code-editor" id="r04-ed">const ten = '  Nguyễn Minh  ';
+
+console.log(ten.trim());
+console.log(ten.trim().toUpperCase());
+console.log(ten.trim().length);
+console.log(ten.includes('Minh'));
+console.log(ten.trim().slice(0, 7));
+console.log(ten.trim().split(' '));
+console.log(ten.replace('Minh', 'Nam'));
+
+const tuoi = 25;
+const gioi_thieu = `Tôi là ${ten.trim()}, ${tuoi} tuổi.`;
+console.log(gioi_thieu);</textarea>
+            <div class="output-panel" id="r04-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r04')">Xóa</button>
+              </div>
+              <div class="out-body" id="r04-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 05 — ARRAYS
+──────────────────────────────────────── -->
+      <div class="section" id="s05">
+        <div class="sec-hdr">
+          <span class="sec-num">05</span>
+          <div>
+            <h2>Mảng (Array)</h2>
+            <p>Lưu danh sách các giá trị</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <!-- RUNNER 05 -->
+          <div class="code-wrap" data-runner="r05">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">arrays.js</span>
+              <button class="run-btn" onclick="runCode('r05')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy</button>
+            </div>
+            <div class="code-body">
+              <pre
+                id="r05-pre"><span class="k">const</span> <span class="v">fruits</span> = [<span class="s">'xoài'</span>, <span class="s">'cam'</span>, <span class="s">'táo'</span>, <span class="s">'chuối'</span>];
+
+<span class="c">// Truy cập (index bắt đầu từ 0)</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">fruits</span>[<span class="n">0</span>]);             <span class="c">// 'xoài'</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">fruits</span>.<span class="p">length</span>);          <span class="c">// 4</span>
+
+<span class="c">// Thêm / xóa</span>
+<span class="v">fruits</span>.<span class="p">push</span>(<span class="s">'nho'</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'Sau push:'</span>, <span class="v">fruits</span>);
+
+<span class="k">const</span> <span class="v">cuoi</span> = <span class="v">fruits</span>.<span class="p">pop</span>();
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'Đã pop:'</span>, <span class="v">cuoi</span>, <span class="s">'| còn:'</span>, <span class="v">fruits</span>);
+
+<span class="c">// map — tạo mảng mới</span>
+<span class="k">const</span> <span class="v">viethoa</span> = <span class="v">fruits</span>.<span class="p">map</span>(<span class="v">f</span> => <span class="v">f</span>.<span class="p">toUpperCase</span>());
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'map:'</span>, <span class="v">viethoa</span>);
+
+<span class="c">// filter — lọc theo điều kiện</span>
+<span class="k">const</span> <span class="v">so</span> = [<span class="n">1</span>,<span class="n">2</span>,<span class="n">3</span>,<span class="n">4</span>,<span class="n">5</span>,<span class="n">6</span>];
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'Số chẵn:'</span>, <span class="v">so</span>.<span class="p">filter</span>(<span class="v">n</span> => <span class="v">n</span> % <span class="n">2</span> === <span class="n">0</span>));
+
+<span class="c">// reduce — tính tổng</span>
+<span class="k">const</span> <span class="v">tong</span> = <span class="v">so</span>.<span class="p">reduce</span>((<span class="v">acc</span>, <span class="v">n</span>) => <span class="v">acc</span> + <span class="v">n</span>, <span class="n">0</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'Tổng 1→6:'</span>, <span class="v">tong</span>);
+
+<span class="c">// includes & find</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'Có cam?'</span>, <span class="v">fruits</span>.<span class="p">includes</span>(<span class="s">'cam'</span>));
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'find >3:'</span>, <span class="v">so</span>.<span class="p">find</span>(<span class="v">n</span> => <span class="v">n</span> > <span class="n">3</span>));</pre>
+            </div>
+            <textarea class="code-editor" id="r05-ed">const fruits = ['xoài', 'cam', 'táo', 'chuối'];
+
+console.log(fruits[0]);
+console.log(fruits.length);
+
+fruits.push('nho');
+console.log('Sau push:', fruits);
+
+const cuoi = fruits.pop();
+console.log('Đã pop:', cuoi, '| còn:', fruits);
+
+const viethoa = fruits.map(f => f.toUpperCase());
+console.log('map:', viethoa);
+
+const so = [1,2,3,4,5,6];
+console.log('Số chẵn:', so.filter(n => n % 2 === 0));
+
+const tong = so.reduce((acc, n) => acc + n, 0);
+console.log('Tổng 1→6:', tong);
+
+console.log('Có cam?', fruits.includes('cam'));
+console.log('find >3:', so.find(n => n > 3));</textarea>
+            <div class="output-panel" id="r05-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r05')">Xóa</button>
+              </div>
+              <div class="out-body" id="r05-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 06 — OBJECTS
+──────────────────────────────────────── -->
+      <div class="section" id="s06">
+        <div class="sec-hdr">
+          <span class="sec-num">06</span>
+          <div>
+            <h2>Object (Đối tượng)</h2>
+            <p>Nhóm các thuộc tính liên quan lại</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <!-- RUNNER 06 -->
+          <div class="code-wrap" data-runner="r06">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">objects.js</span>
+              <button class="run-btn" onclick="runCode('r06')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy</button>
+            </div>
+            <div class="code-body">
+              <pre
+                id="r06-pre"><span class="k">const</span> <span class="v">nguoi</span> = {
+  <span class="p">ten</span>: <span class="s">'Minh'</span>,
+  <span class="p">tuoi</span>: <span class="n">25</span>,
+  <span class="p">thanhPho</span>: <span class="s">'Hà Nội'</span>,
+  <span class="p">hobbies</span>: [<span class="s">'code'</span>, <span class="s">'đọc sách'</span>],
+  <span class="p">chaoHoi</span>() {
+    <span class="k">return</span> <span class="s">`Tôi là ${<span class="k">this</span>.<span class="p">ten</span>}, ${<span class="k">this</span>.<span class="p">tuoi</span>} tuổi`</span>;
+  }
+};
+
+<span class="c">// Truy cập</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">nguoi</span>.<span class="p">ten</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">nguoi</span>[<span class="s">'tuoi'</span>]);
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">nguoi</span>.<span class="p">chaoHoi</span>());
+
+<span class="c">// Thêm / sửa / xóa</span>
+<span class="v">nguoi</span>.<span class="p">email</span> = <span class="s">'minh@email.com'</span>;
+<span class="v">nguoi</span>.<span class="p">tuoi</span>  = <span class="n">26</span>;
+<span class="k">delete</span> <span class="v">nguoi</span>.<span class="p">thanhPho</span>;
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">nguoi</span>);
+
+<span class="c">// Destructuring — gán nhanh</span>
+<span class="k">const</span> { <span class="v">ten</span>, <span class="v">tuoi</span> } = <span class="v">nguoi</span>;
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'Destructure:'</span>, <span class="v">ten</span>, <span class="v">tuoi</span>);
+
+<span class="c">// Spread — sao chép / gộp</span>
+<span class="k">const</span> <span class="v">ban</span> = { ...<span class="v">nguoi</span>, <span class="p">ten</span>: <span class="s">'Nam'</span> };
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'Spread copy:'</span>, <span class="v">ban</span>.<span class="p">ten</span>, <span class="v">ban</span>.<span class="p">tuoi</span>);</pre>
+            </div>
+            <textarea class="code-editor" id="r06-ed">const nguoi = {
+  ten: 'Minh',
+  tuoi: 25,
+  thanhPho: 'Hà Nội',
+  hobbies: ['code', 'đọc sách'],
+  chaoHoi() {
+    return `Tôi là ${this.ten}, ${this.tuoi} tuổi`;
+  }
+};
+
+console.log(nguoi.ten);
+console.log(nguoi['tuoi']);
+console.log(nguoi.chaoHoi());
+
+nguoi.email = 'minh@email.com';
+nguoi.tuoi  = 26;
+delete nguoi.thanhPho;
+console.log(nguoi);
+
+const { ten, tuoi } = nguoi;
+console.log('Destructure:', ten, tuoi);
+
+const ban = { ...nguoi, ten: 'Nam' };
+console.log('Spread copy:', ban.ten, ban.tuoi);</textarea>
+            <div class="output-panel" id="r06-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r06')">Xóa</button>
+              </div>
+              <div class="out-body" id="r06-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 07 — CONDITIONS
+──────────────────────────────────────── -->
+      <div class="section" id="s07">
+        <div class="sec-hdr">
+          <span class="sec-num">07</span>
+          <div>
+            <h2>Điều kiện if / else</h2>
+            <p>Rẽ nhánh logic theo điều kiện</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <!-- RUNNER 07 -->
+          <div class="code-wrap" data-runner="r07">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">conditions.js</span>
+              <button class="run-btn" onclick="runCode('r07')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy</button>
+            </div>
+            <div class="code-body">
+              <pre
+                id="r07-pre"><span class="k">const</span> <span class="v">diem</span> = <span class="n">75</span>; <span class="c">// Thử đổi giá trị này!</span>
+
+<span class="c">// if / else if / else</span>
+<span class="k">if</span> (<span class="v">diem</span> >= <span class="n">90</span>) {
+  <span class="f">console</span>.<span class="p">log</span>(<span class="s">'🏆 Xuất sắc'</span>);
+} <span class="k">else if</span> (<span class="v">diem</span> >= <span class="n">70</span>) {
+  <span class="f">console</span>.<span class="p">log</span>(<span class="s">'✅ Khá'</span>);
+} <span class="k">else if</span> (<span class="v">diem</span> >= <span class="n">50</span>) {
+  <span class="f">console</span>.<span class="p">log</span>(<span class="s">'📝 Trung bình'</span>);
+} <span class="k">else</span> {
+  <span class="f">console</span>.<span class="p">log</span>(<span class="s">'❌ Yếu'</span>);
+}
+
+<span class="c">// Switch — nhiều trường hợp cụ thể</span>
+<span class="k">const</span> <span class="v">thu</span> = <span class="s">'Thứ Hai'</span>; <span class="c">// Thử đổi!</span>
+<span class="k">switch</span> (<span class="v">thu</span>) {
+  <span class="k">case</span> <span class="s">'Thứ Hai'</span>: <span class="f">console</span>.<span class="p">log</span>(<span class="s">'Đầu tuần 😩'</span>); <span class="k">break</span>;
+  <span class="k">case</span> <span class="s">'Thứ Sáu'</span>: <span class="f">console</span>.<span class="p">log</span>(<span class="s">'Sắp cuối tuần 🎉'</span>); <span class="k">break</span>;
+  <span class="k">case</span> <span class="s">'Chủ Nhật'</span>: <span class="f">console</span>.<span class="p">log</span>(<span class="s">'Nghỉ ngơi 😴'</span>); <span class="k">break</span>;
+  <span class="k">default</span>: <span class="f">console</span>.<span class="p">log</span>(<span class="s">'Ngày thường 💼'</span>);
+}
+
+<span class="c">// Optional chaining ?. — tránh lỗi null</span>
+<span class="k">const</span> <span class="v">user</span> = { <span class="p">profile</span>: { <span class="p">name</span>: <span class="s">'Minh'</span> } };
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">user</span>?.<span class="p">profile</span>?.<span class="p">name</span>);    <span class="c">// 'Minh'</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="v">user</span>?.<span class="p">address</span>?.<span class="p">city</span>);    <span class="c">// undefined (không lỗi)</span></pre>
+            </div>
+            <textarea class="code-editor" id="r07-ed">const diem = 75; // Thử đổi giá trị này!
+
+if (diem >= 90) {
+  console.log('🏆 Xuất sắc');
+} else if (diem >= 70) {
+  console.log('✅ Khá');
+} else if (diem >= 50) {
+  console.log('📝 Trung bình');
+} else {
+  console.log('❌ Yếu');
+}
+
+const thu = 'Thứ Hai';
+switch (thu) {
+  case 'Thứ Hai': console.log('Đầu tuần 😩'); break;
+  case 'Thứ Sáu': console.log('Sắp cuối tuần 🎉'); break;
+  case 'Chủ Nhật': console.log('Nghỉ ngơi 😴'); break;
+  default: console.log('Ngày thường 💼');
+}
+
+const user = { profile: { name: 'Minh' } };
+console.log(user?.profile?.name);
+console.log(user?.address?.city);</textarea>
+            <div class="output-panel" id="r07-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r07')">Xóa</button>
+              </div>
+              <div class="out-body" id="r07-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 08 — LOOPS
+──────────────────────────────────────── -->
+      <div class="section" id="s08">
+        <div class="sec-hdr">
+          <span class="sec-num">08</span>
+          <div>
+            <h2>Vòng lặp (Loops)</h2>
+            <p>Lặp đi lặp lại các tác vụ</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <!-- RUNNER 08 -->
+          <div class="code-wrap" data-runner="r08">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">loops.js</span>
+              <button class="run-btn" onclick="runCode('r08')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy</button>
+            </div>
+            <div class="code-body">
+              <pre id="r08-pre"><span class="c">// for — biết trước số lần lặp</span>
+<span class="k">for</span> (<span class="k">let</span> <span class="v">i</span> = <span class="n">1</span>; <span class="v">i</span> <= <span class="n">5</span>; <span class="v">i</span>++) {
+  <span class="f">console</span>.<span class="p">log</span>(<span class="s">`Lần ${<span class="v">i</span>}: ${'⭐'.repeat(<span class="v">i</span>)}`</span>);
+}
+
+<span class="c">// for...of — duyệt mảng (hiện đại ✅)</span>
+<span class="k">const</span> <span class="v">fruits</span> = [<span class="s">'🥭 xoài'</span>, <span class="s">'🍊 cam'</span>, <span class="s">'🍎 táo'</span>];
+<span class="k">for</span> (<span class="k">const</span> <span class="v">f</span> <span class="k">of</span> <span class="v">fruits</span>) {
+  <span class="f">console</span>.<span class="p">log</span>(<span class="v">f</span>);
+}
+
+<span class="c">// for...in — duyệt object</span>
+<span class="k">const</span> <span class="v">nguoi</span> = { <span class="p">ten</span>: <span class="s">'Minh'</span>, <span class="p">tuoi</span>: <span class="n">25</span>, <span class="p">tp</span>: <span class="s">'HN'</span> };
+<span class="k">for</span> (<span class="k">const</span> <span class="v">key</span> <span class="k">in</span> <span class="v">nguoi</span>) {
+  <span class="f">console</span>.<span class="p">log</span>(<span class="s">`${<span class="v">key</span>} → ${<span class="v">nguoi</span>[<span class="v">key</span>]}`</span>);
+}
+
+<span class="c">// break & continue</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'--- break/continue ---'</span>);
+<span class="k">for</span> (<span class="k">let</span> <span class="v">i</span> = <span class="n">1</span>; <span class="v">i</span> <= <span class="n">8</span>; <span class="v">i</span>++) {
+  <span class="k">if</span> (<span class="v">i</span> === <span class="n">4</span>) { <span class="f">console</span>.<span class="p">log</span>(<span class="s">'Bỏ qua 4'</span>); <span class="k">continue</span>; }
+  <span class="k">if</span> (<span class="v">i</span> === <span class="n">7</span>) { <span class="f">console</span>.<span class="p">log</span>(<span class="s">'Dừng tại 7'</span>); <span class="k">break</span>; }
+  <span class="f">console</span>.<span class="p">log</span>(<span class="v">i</span>);
+}</pre>
+            </div>
+            <textarea class="code-editor" id="r08-ed">// for — biết trước số lần lặp
+for (let i = 1; i <= 5; i++) {
+  console.log(`Lần ${i}: ${'⭐'.repeat(i)}`);
+}
+
+// for...of — duyệt mảng
+const fruits = ['🥭 xoài', '🍊 cam', '🍎 táo'];
+for (const f of fruits) {
+  console.log(f);
+}
+
+// for...in — duyệt object
+const nguoi = { ten: 'Minh', tuoi: 25, tp: 'HN' };
+for (const key in nguoi) {
+  console.log(`${key} → ${nguoi[key]}`);
+}
+
+// break & continue
+console.log('--- break/continue ---');
+for (let i = 1; i <= 8; i++) {
+  if (i === 4) { console.log('Bỏ qua 4'); continue; }
+  if (i === 7) { console.log('Dừng tại 7'); break; }
+  console.log(i);
+}</textarea>
+            <div class="output-panel" id="r08-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r08')">Xóa</button>
+              </div>
+              <div class="out-body" id="r08-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 09 — FUNCTIONS
+──────────────────────────────────────── -->
+      <div class="section" id="s09">
+        <div class="sec-hdr">
+          <span class="sec-num">09</span>
+          <div>
+            <h2>Hàm (Functions)</h2>
+            <p>Đóng gói và tái sử dụng code</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <!-- RUNNER 09 -->
+          <div class="code-wrap" data-runner="r09">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">functions.js</span>
+              <button class="run-btn" onclick="runCode('r09')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy</button>
+            </div>
+            <div class="code-body">
+              <pre
+                id="r09-pre"><span class="c">// 1. Khai báo hàm thông thường</span>
+<span class="k">function</span> <span class="f">chaoHoi</span>(<span class="v">ten</span> = <span class="s">'bạn'</span>) {
+  <span class="k">return</span> <span class="s">`Xin chào, ${<span class="v">ten</span>}! 👋`</span>;
+}
+<span class="f">console</span>.<span class="p">log</span>(<span class="f">chaoHoi</span>(<span class="s">'Minh'</span>));
+<span class="f">console</span>.<span class="p">log</span>(<span class="f">chaoHoi</span>());           <span class="c">// dùng giá trị mặc định</span>
+
+<span class="c">// 2. Arrow Function — cú pháp hiện đại ✅</span>
+<span class="k">const</span> <span class="f">nhan</span> = (<span class="v">a</span>, <span class="v">b</span>) => <span class="v">a</span> * <span class="v">b</span>;    <span class="c">// return ngầm</span>
+<span class="k">const</span> <span class="f">luyThua</span> = (<span class="v">a</span>, <span class="v">b</span>) => {
+  <span class="k">const</span> <span class="v">kq</span> = <span class="v">a</span> ** <span class="v">b</span>;
+  <span class="k">return</span> <span class="s">`${<span class="v">a</span>}^${<span class="v">b</span>} = ${<span class="v">kq</span>}`</span>;
+};
+<span class="f">console</span>.<span class="p">log</span>(<span class="f">nhan</span>(<span class="n">6</span>, <span class="n">7</span>));
+<span class="f">console</span>.<span class="p">log</span>(<span class="f">luyThua</span>(<span class="n">2</span>, <span class="n">10</span>));
+
+<span class="c">// 3. Rest params — nhận N tham số</span>
+<span class="k">const</span> <span class="f">tong</span> = (...<span class="v">nums</span>) =>
+  <span class="v">nums</span>.<span class="p">reduce</span>((<span class="v">a</span>, <span class="v">b</span>) => <span class="v">a</span> + <span class="v">b</span>, <span class="n">0</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'Tổng:'</span>, <span class="f">tong</span>(<span class="n">1</span>,<span class="n">2</span>,<span class="n">3</span>,<span class="n">4</span>,<span class="n">5</span>));
+
+<span class="c">// 4. Higher-order function — hàm nhận hàm</span>
+<span class="k">const</span> <span class="f">apDung2Lan</span> = (<span class="v">fn</span>, <span class="v">x</span>) => <span class="v">fn</span>(<span class="v">fn</span>(<span class="v">x</span>));
+<span class="f">console</span>.<span class="p">log</span>(<span class="f">apDung2Lan</span>(<span class="v">x</span> => <span class="v">x</span> * <span class="n">2</span>, <span class="n">3</span>));  <span class="c">// 3→6→12</span></pre>
+            </div>
+            <textarea class="code-editor" id="r09-ed">// 1. Khai báo hàm
+function chaoHoi(ten = 'bạn') {
+  return `Xin chào, ${ten}! 👋`;
+}
+console.log(chaoHoi('Minh'));
+console.log(chaoHoi());
+
+// 2. Arrow Function
+const nhan = (a, b) => a * b;
+const luyThua = (a, b) => {
+  const kq = a ** b;
+  return `${a}^${b} = ${kq}`;
+};
+console.log(nhan(6, 7));
+console.log(luyThua(2, 10));
+
+// 3. Rest params
+const tong = (...nums) =>
+  nums.reduce((a, b) => a + b, 0);
+console.log('Tổng:', tong(1,2,3,4,5));
+
+// 4. Higher-order function
+const apDung2Lan = (fn, x) => fn(fn(x));
+console.log(apDung2Lan(x => x * 2, 3));</textarea>
+            <div class="output-panel" id="r09-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r09')">Xóa</button>
+              </div>
+              <div class="out-body" id="r09-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 10 — DOM
+──────────────────────────────────────── -->
+      <div class="section" id="s10">
+        <div class="sec-hdr">
+          <span class="sec-num">10</span>
+          <div>
+            <h2>DOM — Tương tác với HTML</h2>
+            <p>Điều khiển trang web bằng JavaScript</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <p>DOM (Document Object Model) là cách JS "nhìn thấy" trang HTML. Mỗi thẻ HTML là một node có thể đọc và thay
+            đổi.</p>
+
+          <!-- RUNNER 10 -->
+          <div class="code-wrap" data-runner="r10">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">dom.js</span>
+              <button class="run-btn" onclick="runCode('r10')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy</button>
+            </div>
+            <div class="code-body">
+              <pre
+                id="r10-pre"><span class="c">// Tạo và thêm phần tử vào DOM demo bên dưới</span>
+<span class="k">const</span> <span class="v">box</span> = <span class="f">document</span>.<span class="p">getElementById</span>(<span class="s">'dom-demo'</span>);
+<span class="v">box</span>.<span class="p">innerHTML</span> = <span class="s">''</span>; <span class="c">// Xóa nội dung cũ</span>
+
+<span class="c">// Tạo tiêu đề</span>
+<span class="k">const</span> <span class="v">h</span> = <span class="f">document</span>.<span class="p">createElement</span>(<span class="s">'h4'</span>);
+<span class="v">h</span>.<span class="p">textContent</span> = <span class="s">'📦 Phần tử được tạo bởi JS!'</span>;
+<span class="v">h</span>.<span class="p">style</span>.<span class="p">color</span> = <span class="s">'#f5c842'</span>;
+<span class="v">box</span>.<span class="p">appendChild</span>(<span class="v">h</span>);
+
+<span class="c">// Tạo danh sách</span>
+<span class="k">const</span> <span class="v">fruits</span> = [<span class="s">'🥭 Xoài'</span>, <span class="s">'🍊 Cam'</span>, <span class="s">'🍎 Táo'</span>];
+<span class="k">const</span> <span class="v">ul</span> = <span class="f">document</span>.<span class="p">createElement</span>(<span class="s">'ul'</span>);
+<span class="v">ul</span>.<span class="p">style</span>.<span class="p">cssText</span> = <span class="s">'list-style:none;padding:0;margin:10px 0'</span>;
+
+<span class="v">fruits</span>.<span class="p">forEach</span>((<span class="v">fruit</span>, <span class="v">i</span>) => {
+  <span class="k">const</span> <span class="v">li</span> = <span class="f">document</span>.<span class="p">createElement</span>(<span class="s">'li'</span>);
+  <span class="v">li</span>.<span class="p">textContent</span> = <span class="v">fruit</span>;
+  <span class="v">li</span>.<span class="p">style</span>.<span class="p">cssText</span> = <span class="s">`padding:6px 10px;margin:4px 0;
+    background:rgba(78,205,196,0.1);border-radius:5px;cursor:pointer;
+    color:#4ecdc4;animation:fadeIn .3s ${<span class="v">i</span>*<span class="n">0.1</span>}s both`</span>;
+  <span class="v">li</span>.<span class="p">onclick</span> = () => <span class="v">li</span>.<span class="p">style</span>.<span class="p">textDecoration</span> =
+    <span class="v">li</span>.<span class="p">style</span>.<span class="p">textDecoration</span> ? <span class="s">''</span> : <span class="s">'line-through'</span>;
+  <span class="v">ul</span>.<span class="p">appendChild</span>(<span class="v">li</span>);
+});
+
+<span class="v">box</span>.<span class="p">appendChild</span>(<span class="v">ul</span>);
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'DOM đã được cập nhật! Click vào items bên dưới 👇'</span>);</pre>
+            </div>
+            <textarea class="code-editor" id="r10-ed">const box = document.getElementById('dom-demo');
+box.innerHTML = '';
+
+const h = document.createElement('h4');
+h.textContent = '📦 Phần tử được tạo bởi JS!';
+h.style.color = '#f5c842';
+box.appendChild(h);
+
+const fruits = ['🥭 Xoài', '🍊 Cam', '🍎 Táo'];
+const ul = document.createElement('ul');
+ul.style.cssText = 'list-style:none;padding:0;margin:10px 0';
+
+fruits.forEach((fruit, i) => {
+  const li = document.createElement('li');
+  li.textContent = fruit;
+  li.style.cssText = `padding:6px 10px;margin:4px 0;background:rgba(78,205,196,0.1);border-radius:5px;cursor:pointer;color:#4ecdc4`;
+  li.onclick = () => li.style.textDecoration =
+    li.style.textDecoration ? '' : 'line-through';
+  ul.appendChild(li);
+});
+
+box.appendChild(ul);
+console.log('DOM đã được cập nhật! Click vào items bên dưới 👇');</textarea>
+            <div class="output-panel" id="r10-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r10')">Xóa</button>
+              </div>
+              <div class="out-body" id="r10-body"></div>
+            </div>
+          </div>
+
+          <!-- DOM LIVE PREVIEW -->
+          <div class="demo-live">
+            <div class="demo-live-hdr">
+              <div class="live-dot"></div>DOM Preview — Kết quả hiển thị tại đây
+            </div>
+            <div class="demo-live-body">
+              <div id="dom-demo" style="min-height:60px;color:var(--muted);font-size:13px">
+                ← Nhấn <strong style="color:var(--js)">Chạy</strong> để xem kết quả
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 11 — EVENTS
+──────────────────────────────────────── -->
+      <div class="section" id="s11">
+        <div class="sec-hdr">
+          <span class="sec-num">11</span>
+          <div>
+            <h2>Sự kiện (Events)</h2>
+            <p>Phản ứng với hành động của người dùng</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <!-- RUNNER 11 -->
+          <div class="code-wrap" data-runner="r11">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">events.js</span>
+              <button class="run-btn" onclick="runCode('r11')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy</button>
+            </div>
+            <div class="code-body">
+              <pre
+                id="r11-pre"><span class="c">// Gắn sự kiện vào các nút demo bên dưới</span>
+<span class="k">const</span> <span class="v">btnClick</span> = <span class="f">document</span>.<span class="p">getElementById</span>(<span class="s">'ev-click'</span>);
+<span class="k">const</span> <span class="v">inp</span>      = <span class="f">document</span>.<span class="p">getElementById</span>(<span class="s">'ev-input'</span>);
+<span class="k">const</span> <span class="v">evLog</span>    = <span class="f">document</span>.<span class="p">getElementById</span>(<span class="s">'ev-log'</span>);
+<span class="k">let</span> <span class="v">dem</span> = <span class="n">0</span>;
+
+<span class="k">const</span> <span class="f">log</span> = (<span class="v">msg</span>) => {
+  <span class="v">evLog</span>.<span class="p">innerHTML</span> = <span class="s">`<span class="p">&lt;span style="color:var(--green)"&gt;</span>${<span class="v">msg</span>}<span class="p">&lt;/span&gt;</span>`</span>;
+};
+
+<span class="c">// click event</span>
+<span class="v">btnClick</span>.<span class="p">addEventListener</span>(<span class="s">'click'</span>, () => {
+  <span class="v">dem</span>++;
+  <span class="f">log</span>(<span class="s">`🖱️ Click số ${<span class="v">dem</span>}!`</span>);
+  <span class="f">console</span>.<span class="p">log</span>(<span class="s">'Click!'</span>, <span class="v">dem</span>);
+});
+
+<span class="c">// input event — gõ từng ký tự</span>
+<span class="v">inp</span>.<span class="p">addEventListener</span>(<span class="s">'input'</span>, (<span class="v">e</span>) => {
+  <span class="f">log</span>(<span class="s">`⌨️ Đang gõ: "${<span class="v">e</span>.<span class="p">target</span>.<span class="p">value</span>}" (${<span class="v">e</span>.<span class="p">target</span>.<span class="p">value</span>.<span class="p">length</span>} ký tự)`</span>);
+  <span class="f">console</span>.<span class="p">log</span>(<span class="s">'input:'</span>, <span class="v">e</span>.<span class="p">target</span>.<span class="p">value</span>);
+});
+
+<span class="c">// keydown — phím nào được nhấn</span>
+<span class="v">inp</span>.<span class="p">addEventListener</span>(<span class="s">'keydown'</span>, (<span class="v">e</span>) => {
+  <span class="k">if</span> (<span class="v">e</span>.<span class="p">key</span> === <span class="s">'Enter'</span>) <span class="f">log</span>(<span class="s">'⏎ Bạn nhấn Enter!'</span>);
+});
+
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'✅ Events đã được gắn! Thử tương tác bên dưới 👇'</span>);</pre>
+            </div>
+            <textarea class="code-editor" id="r11-ed">const btnClick = document.getElementById('ev-click');
+const inp      = document.getElementById('ev-input');
+const evLog    = document.getElementById('ev-log');
+let dem = 0;
+
+const log = (msg) => {
+  evLog.innerHTML = `<span style="color:var(--green)">${msg}</span>`;
+};
+
+btnClick.addEventListener('click', () => {
+  dem++;
+  log(`🖱️ Click số ${dem}!`);
+  console.log('Click!', dem);
+});
+
+inp.addEventListener('input', (e) => {
+  log(`⌨️ Đang gõ: "${e.target.value}" (${e.target.value.length} ký tự)`);
+  console.log('input:', e.target.value);
+});
+
+inp.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') log('⏎ Bạn nhấn Enter!');
+});
+
+console.log('✅ Events đã được gắn! Thử tương tác bên dưới 👇');</textarea>
+            <div class="output-panel" id="r11-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r11')">Xóa</button>
+              </div>
+              <div class="out-body" id="r11-body"></div>
+            </div>
+          </div>
+
+          <!-- EVENTS LIVE DEMO -->
+          <div class="demo-live">
+            <div class="demo-live-hdr">
+              <div class="live-dot"></div>Events Demo — Chạy code trước rồi thử tương tác
+            </div>
+            <div class="demo-live-body" style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                <button id="ev-click"
+                  style="background:var(--js);color:#0d0d14;border:none;padding:9px 20px;border-radius:6px;font-weight:700;font-size:13px;cursor:pointer;font-family:'Be Vietnam Pro',sans-serif">
+                  🖱️ Nhấn tôi
+                </button>
+                <input id="ev-input" placeholder="Gõ gì đó vào đây..."
+                  style="flex:1;min-width:180px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:6px;font-size:13px;font-family:'Be Vietnam Pro',sans-serif;outline:none">
+              </div>
+              <div id="ev-log"
+                style="font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace;min-height:22px">
+                ← Chạy code để kích hoạt events
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 12 — ASYNC
+──────────────────────────────────────── -->
+      <div class="section" id="s12">
+        <div class="sec-hdr">
+          <span class="sec-num">12</span>
+          <div>
+            <h2>Bất đồng bộ (Async/Await)</h2>
+            <p>Gọi API và xử lý tác vụ mất thời gian</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <p>Một số tác vụ cần thời gian như gọi API. <code>async/await</code> giúp "chờ" kết quả mà không làm đơ trang.
+          </p>
+
+          <!-- RUNNER 12 -->
+          <div class="code-wrap" data-runner="r12">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">async.js</span>
+              <button class="run-btn" onclick="runCode('r12')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy</button>
+            </div>
+            <div class="code-body">
+              <pre
+                id="r12-pre"><span class="c">// Gọi API thật — JSONPlaceholder (API test miễn phí)</span>
+<span class="k">async function</span> <span class="f">layUser</span>(<span class="v">id</span>) {
+  <span class="f">console</span>.<span class="p">log</span>(<span class="s">`⏳ Đang lấy user #${<span class="v">id</span>}...`</span>);
+  <span class="k">try</span> {
+    <span class="k">const</span> <span class="v">res</span>  = <span class="k">await</span> <span class="f">fetch</span>(
+      <span class="s">`https://jsonplaceholder.typicode.com/users/${<span class="v">id</span>}`</span>
+    );
+    <span class="k">const</span> <span class="v">user</span> = <span class="k">await</span> <span class="v">res</span>.<span class="p">json</span>();
+    <span class="f">console</span>.<span class="p">log</span>(<span class="s">'✅ Tên:'</span>,   <span class="v">user</span>.<span class="p">name</span>);
+    <span class="f">console</span>.<span class="p">log</span>(<span class="s">'📧 Email:'</span>, <span class="v">user</span>.<span class="p">email</span>);
+    <span class="f">console</span>.<span class="p">log</span>(<span class="s">'🏙️ Thành phố:'</span>, <span class="v">user</span>.<span class="p">address</span>.<span class="p">city</span>);
+    <span class="k">return</span> <span class="v">user</span>;
+  } <span class="k">catch</span> (<span class="v">err</span>) {
+    <span class="f">console</span>.<span class="p">error</span>(<span class="s">'❌ Lỗi:'</span>, <span class="v">err</span>.<span class="p">message</span>);
+  }
+}
+
+<span class="c">// Gọi hàm — thử đổi id từ 1-10</span>
+<span class="f">layUser</span>(<span class="n">1</span>);
+
+<span class="c">// setTimeout demo</span>
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'⚡ Dòng này chạy NGAY, không chờ API'</span>);
+<span class="f">setTimeout</span>(() => <span class="f">console</span>.<span class="p">log</span>(<span class="s">'⏰ Chạy sau 1 giây'</span>), <span class="n">1000</span>);</pre>
+            </div>
+            <textarea class="code-editor" id="r12-ed">async function layUser(id) {
+  console.log(`⏳ Đang lấy user #${id}...`);
+  try {
+    const res  = await fetch(
+      `https://jsonplaceholder.typicode.com/users/${id}`
+    );
+    const user = await res.json();
+    console.log('✅ Tên:',   user.name);
+    console.log('📧 Email:', user.email);
+    console.log('🏙️ Thành phố:', user.address.city);
+    return user;
+  } catch (err) {
+    console.error('❌ Lỗi:', err.message);
+  }
+}
+
+layUser(1);
+
+console.log('⚡ Dòng này chạy NGAY, không chờ API');
+setTimeout(() => console.log('⏰ Chạy sau 1 giây'), 1000);</textarea>
+            <div class="output-panel" id="r12-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r12')">Xóa</button>
+              </div>
+              <div class="out-body" id="r12-body"></div>
+            </div>
+          </div>
+          <div class="info i-ok"><span class="info-icon">✅</span><span>Ví dụ này gọi API thật từ
+              jsonplaceholder.typicode.com! Thử đổi số 1 thành 2, 3... để lấy user khác.</span></div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 13 — TO-DO LIST DEMO
+──────────────────────────────────────── -->
+      <div class="section" id="s13">
+        <div class="sec-hdr">
+          <span class="sec-num">13</span>
+          <div>
+            <h2>Ví dụ thực tế — To-do List</h2>
+            <p>Kết hợp tất cả kiến thức vào app mini</p>
+          </div>
+        </div>
+
+        <div class="sub">
+          <!-- RUNNER 13 -->
+          <div class="code-wrap" data-runner="r13">
+            <div class="code-hdr">
+              <div class="dots">
+                <div class="d dr"></div>
+                <div class="d dy"></div>
+                <div class="d dg"></div>
+              </div>
+              <span class="file-lbl">todo.js</span>
+              <button class="run-btn" onclick="runCode('r13')"><svg viewBox="0 0 16 16">
+                  <path d="M3 2l11 6-11 6V2z" />
+                </svg> Chạy &amp; Khởi động</button>
+            </div>
+            <div class="code-body">
+              <pre id="r13-pre"><span class="c">// Khởi tạo To-do List hoàn chỉnh</span>
+<span class="k">const</span> <span class="v">todoInput</span> = <span class="f">document</span>.<span class="p">getElementById</span>(<span class="s">'todo-inp'</span>);
+<span class="k">const</span> <span class="v">todoList</span>  = <span class="f">document</span>.<span class="p">getElementById</span>(<span class="s">'todo-list'</span>);
+<span class="k">const</span> <span class="v">todoBtn</span>   = <span class="f">document</span>.<span class="p">getElementById</span>(<span class="s">'todo-btn'</span>);
+<span class="k">const</span> <span class="v">todoCount</span> = <span class="f">document</span>.<span class="p">getElementById</span>(<span class="s">'todo-count'</span>);
+
+<span class="k">let</span> <span class="v">todos</span> = [];
+
+<span class="k">const</span> <span class="f">render</span> = () => {
+  <span class="v">todoList</span>.<span class="p">innerHTML</span> = <span class="v">todos</span>.<span class="p">map</span>((<span class="v">t</span>, <span class="v">i</span>) => <span class="s">`
+    &lt;li style="display:flex;justify-content:space-between;
+      align-items:center;padding:9px 12px;margin:5px 0;
+      background:var(--surface3);border-radius:7px;
+      border-left:3px solid ${<span class="v">t</span>.<span class="p">done</span> ? <span class="s">'var(--green)'</span> : <span class="s">'var(--js)'</span>}"&gt;
+      &lt;span onclick="toggleTodo(${<span class="v">i</span>})" style="cursor:pointer;flex:1;
+        text-decoration:${<span class="v">t</span>.<span class="p">done</span> ? <span class="s">'line-through'</span> : <span class="s">'none'</span>};
+        opacity:${<span class="v">t</span>.<span class="p">done</span> ? <span class="s">'.45'</span> : <span class="s">'1'</span>};color:var(--text);font-size:13px"&gt;
+        ${<span class="v">t</span>.<span class="p">done</span> ? <span class="s">'✅'</span> : <span class="s">'⬜'</span>} ${<span class="v">t</span>.<span class="p">text</span>}
+      &lt;/span&gt;
+      &lt;button onclick="removeTodo(${<span class="v">i</span>})" style="background:var(--red-dim);
+        border:none;color:var(--red);padding:3px 8px;border-radius:4px;
+        cursor:pointer;font-size:11px;font-weight:700"&gt;✕&lt;/button&gt;
+    &lt;/li&gt;`</span>).<span class="p">join</span>(<span class="s">''</span>);
+  <span class="v">todoCount</span>.<span class="p">textContent</span> =
+    <span class="s">`${<span class="v">todos</span>.<span class="p">filter</span>(<span class="v">t</span>=><span class="v">t</span>.<span class="p">done</span>).<span class="p">length</span>}/${<span class="v">todos</span>.<span class="p">length</span>} hoàn thành`</span>;
+};
+
+<span class="f">window</span>.<span class="p">toggleTodo</span> = (<span class="v">i</span>) => {
+  <span class="v">todos</span>[<span class="v">i</span>].<span class="p">done</span> = !<span class="v">todos</span>[<span class="v">i</span>].<span class="p">done</span>; <span class="f">render</span>();
+};
+<span class="f">window</span>.<span class="p">removeTodo</span> = (<span class="v">i</span>) => {
+  <span class="v">todos</span>.<span class="p">splice</span>(<span class="v">i</span>, <span class="n">1</span>); <span class="f">render</span>();
+};
+
+<span class="k">const</span> <span class="f">addTodo</span> = () => {
+  <span class="k">const</span> <span class="v">txt</span> = <span class="v">todoInput</span>.<span class="p">value</span>.<span class="p">trim</span>();
+  <span class="k">if</span> (!<span class="v">txt</span>) <span class="k">return</span>;
+  <span class="v">todos</span>.<span class="p">push</span>({ <span class="p">text</span>: <span class="v">txt</span>, <span class="p">done</span>: <span class="b">false</span> });
+  <span class="v">todoInput</span>.<span class="p">value</span> = <span class="s">''</span>;
+  <span class="f">render</span>();
+  <span class="f">console</span>.<span class="p">log</span>(<span class="s">'Thêm:'</span>, <span class="v">txt</span>);
+};
+
+<span class="v">todoBtn</span>.<span class="p">addEventListener</span>(<span class="s">'click'</span>, <span class="v">addTodo</span>);
+<span class="v">todoInput</span>.<span class="p">addEventListener</span>(<span class="s">'keydown'</span>, <span class="v">e</span> =>
+  <span class="v">e</span>.<span class="p">key</span> === <span class="s">'Enter'</span> && <span class="f">addTodo</span>());
+
+<span class="c">// Thêm vài task mẫu</span>
+[<span class="s">'Học HTML & CSS'</span>, <span class="s">'Học JavaScript'</span>, <span class="s">'Làm dự án đầu tiên'</span>]
+  .<span class="p">forEach</span>(<span class="v">t</span> => <span class="v">todos</span>.<span class="p">push</span>({ <span class="p">text</span>: <span class="v">t</span>, <span class="p">done</span>: <span class="b">false</span> }));
+<span class="v">todos</span>[<span class="n">0</span>].<span class="p">done</span> = <span class="b">true</span>;
+<span class="f">render</span>();
+<span class="f">console</span>.<span class="p">log</span>(<span class="s">'✅ To-do List đã sẵn sàng!'</span>);</pre>
+            </div>
+            <textarea class="code-editor" id="r13-ed">const todoInput = document.getElementById('todo-inp');
+const todoList  = document.getElementById('todo-list');
+const todoBtn   = document.getElementById('todo-btn');
+const todoCount = document.getElementById('todo-count');
+
+let todos = [];
+
+const render = () => {
+  todoList.innerHTML = todos.map((t, i) => `
+    <li style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;margin:5px 0;background:var(--surface3);border-radius:7px;border-left:3px solid ${t.done ? 'var(--green)' : 'var(--js)'}">
+      <span onclick="toggleTodo(${i})" style="cursor:pointer;flex:1;text-decoration:${t.done ? 'line-through' : 'none'};opacity:${t.done ? '.45' : '1'};color:var(--text);font-size:13px">
+        ${t.done ? '✅' : '⬜'} ${t.text}
+      </span>
+      <button onclick="removeTodo(${i})" style="background:var(--red-dim);border:none;color:var(--red);padding:3px 8px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:700">✕</button>
+    </li>`).join('');
+  todoCount.textContent =
+    `${todos.filter(t=>t.done).length}/${todos.length} hoàn thành`;
+};
+
+window.toggleTodo = (i) => { todos[i].done = !todos[i].done; render(); };
+window.removeTodo = (i) => { todos.splice(i, 1); render(); };
+
+const addTodo = () => {
+  const txt = todoInput.value.trim();
+  if (!txt) return;
+  todos.push({ text: txt, done: false });
+  todoInput.value = '';
+  render();
+  console.log('Thêm:', txt);
+};
+
+todoBtn.addEventListener('click', addTodo);
+todoInput.addEventListener('keydown', e => e.key === 'Enter' && addTodo());
+
+['Học HTML & CSS', 'Học JavaScript', 'Làm dự án đầu tiên']
+  .forEach(t => todos.push({ text: t, done: false }));
+todos[0].done = true;
+render();
+console.log('✅ To-do List đã sẵn sàng!');</textarea>
+            <div class="output-panel" id="r13-out">
+              <div class="out-hdr">
+                <div class="out-dot"></div>Output<button class="out-clear" onclick="clearOut('r13')">Xóa</button>
+              </div>
+              <div class="out-body" id="r13-body"></div>
+            </div>
+          </div>
+
+          <!-- TODO LIVE DEMO -->
+          <div class="demo-live">
+            <div class="demo-live-hdr">
+              <div class="live-dot"></div>📝 To-do List Demo — Nhấn Chạy để khởi động
+            </div>
+            <div class="demo-live-body">
+              <div style="display:flex;gap:8px;margin-bottom:10px">
+                <input id="todo-inp" placeholder="Thêm công việc mới... (Enter)"
+                  style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 13px;border-radius:7px;font-size:13px;font-family:'Be Vietnam Pro',sans-serif;outline:none">
+                <button id="todo-btn"
+                  style="background:var(--js);color:#0d0d14;border:none;padding:9px 16px;border-radius:7px;font-weight:700;font-size:13px;cursor:pointer;font-family:'Be Vietnam Pro',sans-serif;white-space:nowrap">+
+                  Thêm</button>
+              </div>
+              <ul id="todo-list" style="list-style:none;padding:0;margin:0"></ul>
+              <div id="todo-count"
+                style="font-size:11.5px;color:var(--muted);margin-top:8px;font-family:'JetBrains Mono',monospace"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="div">
+
+      <!-- ────────────────────────────────────────
+     SECTION 14 — ROADMAP
+──────────────────────────────────────── -->
+      <div class="section" id="s14">
+        <div class="sec-hdr">
+          <span class="sec-num">14</span>
+          <div>
+            <h2>Lộ trình học tiếp theo</h2>
+            <p>Sau khi nắm vững JavaScript cơ bản</p>
+          </div>
+        </div>
+
+        <div class="rm">
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:var(--js-dim);color:var(--js)">1</div>
+              <div class="rmln"></div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:var(--js)">Luyện tập &amp; Dự án nhỏ</h4>
+              <p>Calculator, quiz app, weather app. Thực hành là cách học hiệu quả nhất.</p>
+            </div>
+          </div>
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:var(--green-dim);color:var(--green)">2</div>
+              <div class="rmln"></div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:var(--green)">ES6+ Nâng cao</h4>
+              <p>Promises, Modules, Classes, Destructuring, Spread/Rest.</p>
+            </div>
+          </div>
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:var(--purple-dim);color:var(--purple)">3</div>
+              <div class="rmln"></div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:var(--purple)">Fetch API &amp; JSON</h4>
+              <p>Gọi REST API thực tế, xây dựng app lấy dữ liệu từ internet.</p>
+            </div>
+          </div>
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:var(--red-dim);color:var(--red)">4</div>
+              <div class="rmln"></div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:var(--red)">React / Vue</h4>
+              <p>Framework JS hiện đại để xây dựng UI phức tạp, tái sử dụng component.</p>
+            </div>
+          </div>
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:rgba(251,146,60,.12);color:var(--orange)">5</div>
+              <div class="rmln"></div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:var(--orange)">Node.js &amp; Backend</h4>
+              <p>Chạy JS phía server, xây dựng API, kết nối database.</p>
+            </div>
+          </div>
+          <div class="rmi">
+            <div class="rml">
+              <div class="rmn" style="background:rgba(148,163,184,.1);color:#94a3b8">6</div>
+            </div>
+            <div class="rmc">
+              <h4 style="color:#94a3b8">TypeScript</h4>
+              <p>JavaScript có kiểu dữ liệu tĩnh — chuẩn công nghiệp cho dự án lớn.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info i-ok" style="margin-top:20px">
+          <span class="info-icon">🔗</span>
+          <div>
+            <strong>Tài nguyên học miễn phí:</strong><br>
+            <span style="font-size:12.5px">
+              <a href="https://javascript.info" style="color:var(--green)">javascript.info</a> ·
+              <a href="https://developer.mozilla.org/vi/docs/Web/JavaScript" style="color:var(--green)">MDN
+                JavaScript</a> ·
+              <a href="https://www.freecodecamp.org" style="color:var(--green)">freeCodeCamp</a> ·
+              <a href="https://eloquentjavascript.net" style="color:var(--green)">Eloquent JS</a>
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <span>⚡ Hướng dẫn JavaScript · Nền tối · Có thể chạy code trực tiếp</span>
+      <span style="margin-left:auto">Phần 3/3 — Bộ học Web cơ bản</span>
+    </div>
+  </div><!-- /main -->
+
+  <!-- ════════════════ CODE RUNNER ENGINE ════════════════ -->
+  <style>
+    .code-wrap .code-body {
+      display: none;
+    }
+
+    .code-wrap .code-editor {
+      display: block;
+    }
+  </style>
+  <script>
+    // Toggle: hiện editor khi click vào pre area
+    document.querySelectorAll('.code-wrap').forEach(wrap => {
+      const id = wrap.dataset.runner;
+      const ed = document.getElementById(id + '-ed');
+      if (ed) {
+        ed.addEventListener('focus', () => {
+          // already visible
+        });
+      }
+    });
+
+    // Format any value for display
+    function fmt(v) {
+      if (v === undefined) return 'undefined';
+      if (v === null) return 'null';
+      if (typeof v === 'string') return `"${v}"`;
+      if (typeof v === 'object') {
+        try { return JSON.stringify(v, null, 1).replace(/\n\s*/g, ' '); }
+        catch { return String(v); }
+      }
+      return String(v);
+    }
+
+    function appendOut(bodyEl, args, type) {
+      const line = document.createElement('div');
+      line.className = 'out-line';
+      const arrow = document.createElement('span');
+      arrow.className = 'out-arrow' + (type === 'error' ? ' err' : type === 'warn' ? ' warn' : '');
+      arrow.textContent = type === 'error' ? '✖' : type === 'warn' ? '▲' : '▶';
+      const val = document.createElement('span');
+      val.className = 'out-val' + (type === 'error' ? ' err' : type === 'warn' ? ' warn' : '');
+      val.textContent = args.map(a => fmt(a)).join('  ');
+      line.appendChild(arrow);
+      line.appendChild(val);
+      bodyEl.appendChild(line);
+      bodyEl.scrollTop = bodyEl.scrollHeight;
+    }
+
+    function runCode(id) {
+      const ed = document.getElementById(id + '-ed');
+      const outPanel = document.getElementById(id + '-out');
+      const bodyEl = document.getElementById(id + '-body');
+
+      // clear
+      bodyEl.innerHTML = '';
+      outPanel.style.display = 'block';
+
+      // patch console
+      const origLog = console.log;
+      const origWarn = console.warn;
+      const origError = console.error;
+
+      console.log = (...a) => { appendOut(bodyEl, a, 'log'); origLog(...a); };
+      console.warn = (...a) => { appendOut(bodyEl, a, 'warn'); origWarn(...a); };
+      console.error = (...a) => { appendOut(bodyEl, a, 'error'); origError(...a); };
+
+      try {
+        // eslint-disable-next-line no-new-func
+        new Function(ed.value)();
+      } catch (e) {
+        appendOut(bodyEl, [e.message], 'error');
+      }
+
+      console.log = origLog;
+      console.warn = origWarn;
+      console.error = origError;
+    }
+
+    function clearOut(id) {
+      document.getElementById(id + '-body').innerHTML = '';
+      document.getElementById(id + '-out').style.display = 'none';
+    }
+
+    // Tab key in textarea
+    document.querySelectorAll('.code-editor').forEach(ta => {
+      ta.addEventListener('keydown', e => {
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          const s = ta.selectionStart, end = ta.selectionEnd;
+          ta.value = ta.value.substring(0, s) + '  ' + ta.value.substring(end);
+          ta.selectionStart = ta.selectionEnd = s + 2;
+        }
+      });
+    });
+  </script>
+  <a href="html_css_introduction.html"
+    style="position:fixed;bottom:30px;left:30px;background:var(--html,#ff6b35);color:#fff;padding:12px 24px;border-radius:50px;font-weight:700;font-family:'Be Vietnam Pro',sans-serif;font-size:14px;text-decoration:none;box-shadow:0 4px 20px rgba(255,107,53,0.3);z-index:9999;transition:all 0.2s;display:flex;align-items:center;gap:8px"
+    onmouseover="this.style.transform='translateY(-3px) scale(1.02)'" onmouseout="this.style.transform='none'">
+    ⬅ HTML & CSS
+  </a>
+  <a href="n8n_js_guide.html"
+    style="position:fixed;bottom:30px;right:30px;background:var(--n8n,#ea4b71);color:#fff;padding:12px 24px;border-radius:50px;font-weight:700;font-family:'Be Vietnam Pro',sans-serif;font-size:14px;text-decoration:none;box-shadow:0 4px 20px rgba(234,75,113,0.3);z-index:9999;transition:all 0.2s;display:flex;align-items:center;gap:8px"
+    onmouseover="this.style.transform='translateY(-3px) scale(1.02)'" onmouseout="this.style.transform='none'">
+    n8n JS Guide ➔
+  </a>
+</body>
+
+</html>
