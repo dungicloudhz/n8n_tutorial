@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>n8n AI Agent — Hướng dẫn xây dựng AI Agent toàn tập</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   VARIABLES
+══════════════════════════════════════ */
+:root {
+  --bg:         #080810;
+  --s1:         #0e0e1c;
+  --s2:         #131326;
+  --s3:         #18182e;
+  --s4:         #1e1e38;
+  --border:     #222240;
+  --border2:    #2c2c50;
+  --text:       #e6e6f2;
+  --muted:      #666698;
+  --faint:      #363660;
+
+  --n8n:        #ff6584;
+  --n8n-d:      #cc3355;
+  --n8n-dim:    rgba(255,101,132,.11);
+  --n8n-glow:   rgba(255,101,132,.20);
+
+  --green:      #40d88e;
+  --green-dim:  rgba(64,216,142,.10);
+  --blue:       #5ba8ff;
+  --blue-dim:   rgba(91,168,255,.10);
+  --purple:     #a07af4;
+  --purple-dim: rgba(160,122,244,.10);
+  --yellow:     #ffd060;
+  --yellow-dim: rgba(255,208,96,.10);
+  --teal:       #30d8c0;
+  --teal-dim:   rgba(48,216,192,.10);
+  --orange:     #ff8c50;
+  --orange-dim: rgba(255,140,80,.10);
+
+  --code-bg:    #05050e;
+}
+
+* { margin:0; padding:0; box-sizing:border-box }
+html { scroll-behavior:smooth }
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar { width:5px }
+::-webkit-scrollbar-track { background: transparent }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius:3px }
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+.sidebar {
+  position:fixed; left:0; top:0; width:258px; height:100vh;
+  background:var(--s1); border-right:1px solid var(--border);
+  overflow-y:auto; z-index:400;
+  display:flex; flex-direction:column;
+}
+.sb-logo {
+  padding:20px 18px 16px;
+  border-bottom:1px solid var(--border);
+}
+.sb-brand {
+  display:flex; align-items:center; gap:11px; margin-bottom:12px;
+}
+.logo-icon {
+  width:40px; height:40px; border-radius:10px; flex-shrink:0;
+  background:linear-gradient(135deg, var(--n8n), var(--n8n-d));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#fff;
+  box-shadow: 0 0 24px var(--n8n-glow);
+  letter-spacing:-1px;
+}
+.logo-text h2 { font-size:15px; font-weight:800; letter-spacing:-.4px }
+.logo-text p  { font-size:10.5px; color:var(--muted); margin-top:2px }
+
+.prog-wrap { height:3px; background:var(--border); border-radius:2px; overflow:hidden }
+.prog-bar  { height:100%; background:linear-gradient(90deg,var(--n8n),var(--purple)); width:0%; transition:width .4s; border-radius:2px }
+
+.nav-section { padding:10px 0 4px }
+.nav-sect-label {
+  padding:8px 18px 3px;
+  font-size:9.5px; font-weight:700;
+  letter-spacing:1.8px; text-transform:uppercase;
+  color:var(--faint);
+}
+.nav-link {
+  display:flex; align-items:center; gap:9px;
+  padding:7px 18px; color:var(--muted);
+  text-decoration:none; font-size:12.5px; font-weight:600;
+  border-left:2px solid transparent; transition:all .14s;
+}
+.nav-link:hover, .nav-link.active {
+  color:var(--text);
+  background:rgba(255,101,132,.07);
+  border-left-color:var(--n8n);
+}
+.nav-link .ico { font-size:13px; flex-shrink:0; width:16px; text-align:center }
+.nav-badge {
+  margin-left:auto; font-size:9px; font-weight:700;
+  padding:2px 7px; border-radius:100px;
+  background:var(--n8n-dim); color:var(--n8n);
+}
+
+/* ══ PAGE NAV ══ */
+.page-nav-section {
+  padding: 15px 18px 5px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 5px;
+}
+.page-nav-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 8px;
+}
+.page-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: all .14s;
+  margin-bottom: 2px;
+}
+.page-link:hover {
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+}
+.page-link.active {
+  background: var(--n8n-dim);
+  color: var(--n8n);
+  font-weight: 700;
+}
+.page-link .pg-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.page-link .pg-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  opacity: 0.5;
+  margin-left: auto;
+}
+
+/* ══════════════════════════════════════
+   MAIN
+══════════════════════════════════════ */
+.main { margin-left:258px; min-height:100vh }
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero {
+  padding:80px 64px 64px;
+  position:relative; overflow:hidden;
+  border-bottom:1px solid var(--border);
+  background:
+    radial-gradient(ellipse 70% 55% at 65% 35%, rgba(160,122,244,.09) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 65% at 15% 85%, rgba(255,101,132,.05) 0%, transparent 55%),
+    var(--bg);
+}
+.hero-dots {
+  position:absolute; inset:0; pointer-events:none;
+  background-image: radial-gradient(circle, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size:28px 28px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+.hero-glow {
+  position:absolute; right:-100px; top:-100px; width:500px; height:500px;
+  background:radial-gradient(circle, rgba(160,122,244,.07) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--purple-dim); border:1px solid rgba(160,122,244,.3);
+  color:var(--purple); padding:5px 16px; border-radius:100px;
+  font-size:11.5px; font-weight:700; margin-bottom:26px; letter-spacing:.3px;
+}
+.hero-eyebrow .pulse {
+  width:6px; height:6px; border-radius:50%; background:var(--purple);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+.hero h1 {
+  font-size:58px; font-weight:900;
+  letter-spacing:-2.5px; line-height:1.02; margin-bottom:18px;
+}
+.h-pink { color:var(--n8n) }
+.h-grad {
+  background:linear-gradient(135deg,var(--purple) 0%,var(--blue) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-desc {
+  font-size:16px; color:var(--muted); max-width:560px;
+  line-height:1.72; margin-bottom:30px;
+}
+.hero-chips { display:flex; gap:8px; flex-wrap:wrap }
+.chip {
+  padding:5px 14px; border-radius:7px; font-size:12px; font-weight:700;
+}
+.chip-r { background:var(--n8n-dim); color:var(--n8n) }
+.chip-g { background:var(--green-dim); color:var(--green) }
+.chip-p { background:var(--purple-dim); color:var(--purple) }
+.chip-b { background:var(--blue-dim); color:var(--blue) }
+.chip-y { background:var(--yellow-dim); color:var(--yellow) }
+
+/* ══════════════════════════════════════
+   CONTENT
+══════════════════════════════════════ */
+.content { padding:56px 64px; max-width:1000px }
+
+/* ══════════════════════════════════════
+   SECTION
+══════════════════════════════════════ */
+.section { margin-bottom:76px }
+.sec-head {
+  display:flex; align-items:flex-start; gap:14px;
+  margin-bottom:34px; padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.sec-tag {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+  color:var(--n8n); background:var(--n8n-dim); border:1px solid var(--n8n-glow);
+  padding:3px 10px; border-radius:5px; margin-top:5px; flex-shrink:0; letter-spacing:.5px;
+}
+.sec-title { font-size:24px; font-weight:800; letter-spacing:-.6px; margin-bottom:5px }
+.sec-sub   { font-size:13px; color:var(--muted) }
+
+/* ══════════════════════════════════════
+   SUBSECTION
+══════════════════════════════════════ */
+.sub { margin-bottom:42px }
+.sub-title {
+  font-size:14.5px; font-weight:700; margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.sub-title::before {
+  content:''; display:inline-block; width:14px; height:3px;
+  background:var(--n8n); border-radius:2px; flex-shrink:0;
+}
+.sub p, .sub ul, .sub ol {
+  color:var(--muted); font-size:13.5px; margin-bottom:12px; line-height:1.75;
+}
+.sub ul, .sub ol { padding-left:22px }
+.sub li { margin-bottom:5px }
+.sub strong { color:var(--text) }
+
+/* ══════════════════════════════════════
+   GRID CARDS
+══════════════════════════════════════ */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0 }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0 }
+.grid-auto { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; margin:16px 0 }
+
+.card {
+  background:var(--s1); border:1px solid var(--border); border-radius:11px;
+  padding:16px; transition:all .2s; cursor:default;
+}
+.card:hover { border-color:var(--n8n); transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.35) }
+.card-icon { font-size:26px; margin-bottom:9px }
+.card-title { font-size:13px; font-weight:700; margin-bottom:4px }
+.card-desc  { font-size:12px; color:var(--muted); line-height:1.55 }
+
+/* ══════════════════════════════════════
+   WORKFLOW VISUAL
+══════════════════════════════════════ */
+.wf-canvas {
+  background:var(--s1); border:1px solid var(--border); border-radius:13px;
+  padding:24px 28px; margin:16px 0; overflow-x:auto;
+}
+.wf-heading {
+  font-size:10px; font-weight:700; color:var(--muted);
+  letter-spacing:1.2px; text-transform:uppercase; margin-bottom:20px;
+  display:flex; align-items:center; gap:8px;
+}
+.wf-heading::before {
+  content:''; width:20px; height:1px; background:var(--border2);
+}
+
+.wf-row { display:flex; align-items:center; gap:0; min-width:max-content }
+.wf-col { display:flex; flex-direction:column; gap:10px }
+
+.wnode-wrap { display:flex; flex-direction:column; align-items:center; gap:6px }
+.wnode {
+  background:var(--s2); border:1.5px solid var(--border2); border-radius:11px;
+  padding:12px 15px; min-width:98px; text-align:center;
+  transition:all .25s; cursor:default; position:relative;
+}
+.wnode:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,0,0,.45) }
+.wnode .w-ico  { font-size:20px; margin-bottom:5px }
+.wnode .w-name { font-size:11px; font-weight:700; line-height:1.3 }
+.wnode .w-sub  { font-size:9.5px; color:var(--muted); margin-top:2px }
+.wnode-lbl {
+  font-size:9.5px; font-weight:700; padding:2px 9px;
+  border-radius:100px; white-space:nowrap;
+}
+
+/* Node color variants */
+.wn-t .wnode { border-color:rgba(64,216,142,.45) }
+.wn-t .wnode:hover { box-shadow:0 12px 32px rgba(0,0,0,.45), 0 0 20px rgba(64,216,142,.12) }
+.wn-t .w-ico, .wn-t .w-name { color:var(--green) }
+.wn-t .wnode-lbl { background:var(--green-dim); color:var(--green) }
+
+.wn-p .wnode { border-color:rgba(91,168,255,.4) }
+.wn-p .w-ico, .wn-p .w-name { color:var(--blue) }
+.wn-p .wnode-lbl { background:var(--blue-dim); color:var(--blue) }
+
+.wn-l .wnode { border-color:rgba(160,122,244,.4) }
+.wn-l .w-ico, .wn-l .w-name { color:var(--purple) }
+.wn-l .wnode-lbl { background:var(--purple-dim); color:var(--purple) }
+
+.wn-c .wnode { border-color:rgba(255,208,96,.4) }
+.wn-c .w-ico, .wn-c .w-name { color:var(--yellow) }
+.wn-c .wnode-lbl { background:var(--yellow-dim); color:var(--yellow) }
+
+.wn-a .wnode { border-color:rgba(255,101,132,.4) }
+.wn-a .wnode:hover { box-shadow:0 12px 32px rgba(0,0,0,.45), 0 0 20px rgba(255,101,132,.12) }
+.wn-a .w-ico, .wn-a .w-name { color:var(--n8n) }
+.wn-a .wnode-lbl { background:var(--n8n-dim); color:var(--n8n) }
+
+.wn-d .wnode { border-color:rgba(48,216,192,.4) }
+.wn-d .w-ico, .wn-d .w-name { color:var(--teal) }
+.wn-d .wnode-lbl { background:var(--teal-dim); color:var(--teal) }
+
+.wn-o .wnode { border-color:rgba(255,140,80,.4) }
+.wn-o .w-ico, .wn-o .w-name { color:var(--orange) }
+.wn-o .wnode-lbl { background:var(--orange-dim); color:var(--orange) }
+
+/* Connector arrow */
+.wf-arr {
+  display:flex; align-items:center; padding:0 3px; margin-top:-22px; flex-shrink:0;
+}
+.arr-line { width:28px; height:2px; background:var(--border2) }
+.arr-head {
+  width:0; height:0;
+  border-top:5px solid transparent;
+  border-bottom:5px solid transparent;
+  border-left:8px solid var(--border2);
+}
+
+/* ══════════════════════════════════════
+   CODE BLOCKS
+══════════════════════════════════════ */
+.cblock {
+  background:var(--code-bg); border:1px solid var(--border);
+  border-radius:11px; overflow:hidden; margin:14px 0;
+}
+.cb-head {
+  display:flex; align-items:center; gap:8px; padding:10px 16px;
+  background:#070710; border-bottom:1px solid var(--border);
+}
+.cb-dots { display:flex; gap:5px }
+.cbd { width:10px; height:10px; border-radius:50% }
+.r { background:#ff5f56 } .y { background:#febc2e } .g { background:#28c840 }
+.cb-name {
+  font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--muted); margin-left:4px;
+}
+.cb-tag {
+  margin-left:auto; font-size:9.5px; font-weight:700;
+  padding:2px 8px; border-radius:4px; background:var(--n8n-dim); color:var(--n8n);
+}
+.cb-tag-p { background:var(--purple-dim); color:var(--purple) }
+.cb-tag-g { background:var(--green-dim); color:var(--green) }
+.cb-tag-b { background:var(--blue-dim); color:var(--blue) }
+.cb-body { padding:18px 22px; overflow-x:auto }
+.cb-body pre {
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+  line-height:1.8; color:#c8c8e8; tab-size:2; white-space:pre;
+}
+
+/* syntax */
+.kw{color:#ff7b7b} .fn{color:#ffc060} .st{color:#70e0a0}
+.nm{color:#b0a0f8} .cm{color:#303060;font-style:italic} .vr{color:#90c8ff}
+.pr{color:#80e8b0} .op{color:#c8c8e8} .ht{color:var(--n8n)} .se{color:var(--teal)}
+
+/* ══════════════════════════════════════
+   INFO BOXES
+══════════════════════════════════════ */
+.info {
+  border-radius:9px; padding:13px 16px; font-size:13.5px;
+  margin:14px 0; display:flex; gap:10px; line-height:1.65;
+}
+.info-ico { font-size:16px; flex-shrink:0; margin-top:1px }
+.i-n8n  { background:var(--n8n-dim);    border:1px solid var(--n8n-glow);                color:#d05070 }
+.i-ok   { background:var(--green-dim);  border:1px solid rgba(64,216,142,.2);            color:#28a860 }
+.i-warn { background:var(--yellow-dim); border:1px solid rgba(255,208,96,.2);            color:#c09000 }
+.i-note { background:var(--purple-dim); border:1px solid rgba(160,122,244,.2);           color:#8060d0 }
+.i-blue { background:var(--blue-dim);   border:1px solid rgba(91,168,255,.2);            color:#3878d0 }
+
+/* ══════════════════════════════════════
+   TABLE
+══════════════════════════════════════ */
+.tbl { width:100%; border-collapse:collapse; font-size:13px; margin:14px 0; border-radius:11px; overflow:hidden }
+.tbl th {
+  background:var(--s3); padding:10px 14px; text-align:left;
+  font-weight:700; font-size:9.5px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted);
+  border-bottom:1px solid var(--border2);
+}
+.tbl td {
+  padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.04);
+  color:var(--muted); vertical-align:top;
+}
+.tbl tr:hover td { background:rgba(255,255,255,.025) }
+.tbl code {
+  font-family:'JetBrains Mono',monospace; font-size:11.5px;
+  background:var(--code-bg); padding:2px 7px; border-radius:4px; color:var(--teal);
+}
+.c-g{color:var(--green)} .c-b{color:var(--blue)} .c-n{color:var(--n8n)}
+.c-p{color:var(--purple)} .c-y{color:var(--yellow)} .c-t{color:var(--teal)}
+
+/* ══════════════════════════════════════
+   STEP LIST
+══════════════════════════════════════ */
+.steps { display:flex; flex-direction:column; margin:16px 0 }
+.step  { display:flex; gap:16px }
+.step-L { display:flex; flex-direction:column; align-items:center; width:36px; flex-shrink:0 }
+.step-num {
+  width:36px; height:36px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:800;
+  color:var(--n8n); background:var(--n8n-dim); border:2px solid var(--n8n-glow);
+}
+.step-line { width:2px; flex:1; background:var(--border); margin:5px 0; min-height:16px }
+.step-B { padding:4px 0 28px }
+.step-B h4 { font-size:14px; font-weight:700; margin-bottom:6px }
+.step-B p  { font-size:13px; color:var(--muted); line-height:1.65 }
+
+/* ══════════════════════════════════════
+   DEMO BOX
+══════════════════════════════════════ */
+.demo-box {
+  background:var(--s1); border:1px solid var(--border);
+  border-radius:12px; overflow:hidden; margin:16px 0;
+}
+.demo-box-head {
+  display:flex; align-items:center; gap:8px; padding:10px 18px;
+  background:var(--s2); border-bottom:1px solid var(--border);
+  font-size:11px; font-weight:700; color:var(--muted); letter-spacing:.5px;
+}
+.live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 1.4s infinite }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+.demo-body { padding:22px 24px }
+
+/* ══════════════════════════════════════
+   NODE GALLERY
+══════════════════════════════════════ */
+.node-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin:16px 0 }
+.ng-card {
+  background:var(--s1); border:1px solid var(--border); border-radius:10px;
+  padding:14px; transition:all .2s;
+}
+.ng-card:hover { border-color:var(--n8n); transform:translateY(-2px) }
+.ng-icon { font-size:24px; margin-bottom:8px }
+.ng-name { font-size:12.5px; font-weight:700; margin-bottom:3px }
+.ng-desc { font-size:11.5px; color:var(--muted); line-height:1.5 }
+.ng-badge {
+  display:inline-block; font-size:9px; font-weight:700;
+  padding:2px 8px; border-radius:100px; margin-top:8px;
+}
+
+/* ══════════════════════════════════════
+   CHEAT SHEET
+══════════════════════════════════════ */
+.cheat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0 }
+.cheat-card {
+  background:var(--s1); border:1px solid var(--border); border-radius:10px; padding:16px;
+}
+.cheat-card h4 {
+  font-size:11.5px; font-weight:700; color:var(--n8n);
+  text-transform:uppercase; letter-spacing:.8px; margin-bottom:12px;
+}
+.cheat-row {
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:5px 0; border-bottom:1px solid rgba(255,255,255,.04); font-size:12.5px;
+}
+.cheat-row:last-child { border-bottom:none }
+.ck { color:var(--muted) }
+.cv { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--teal) }
+
+/* ══════════════════════════════════════
+   ROADMAP
+══════════════════════════════════════ */
+.roadmap { display:flex; flex-direction:column }
+.rm-row  { display:flex; gap:16px }
+.rm-L    { display:flex; flex-direction:column; align-items:center; width:34px; flex-shrink:0 }
+.rm-num  { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0 }
+.rm-line { width:2px; flex:1; background:var(--border); margin:5px 0; min-height:16px }
+.rm-body { padding:3px 0 26px }
+.rm-body h4 { font-size:14px; font-weight:800; margin-bottom:4px }
+.rm-body p  { font-size:13px; color:var(--muted) }
+
+/* ══════════════════════════════════════
+   INLINE CODE
+══════════════════════════════════════ */
+p code, li code, td code {
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+  background:rgba(48,216,192,.1); color:var(--teal);
+  padding:2px 6px; border-radius:4px;
+}
+
+/* AGENT DIAGRAM */
+.agent-diagram {
+  background:var(--s1); border:1px solid var(--border); border-radius:14px;
+  padding:28px; margin:16px 0; position:relative; overflow:hidden;
+}
+.agent-diagram::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg, var(--purple), var(--blue), var(--n8n));
+}
+.ag-center {
+  background:var(--s2); border:2px solid rgba(160,122,244,.5);
+  border-radius:14px; padding:18px 22px; text-align:center;
+  box-shadow:0 0 40px rgba(160,122,244,.15);
+  min-width:130px;
+}
+.ag-center-icon { font-size:32px; margin-bottom:6px }
+.ag-center-name { font-size:13px; font-weight:800; color:var(--purple) }
+.ag-center-sub  { font-size:10px; color:var(--muted); margin-top:2px }
+
+.ag-row { display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap }
+.ag-item {
+  background:var(--s2); border:1px solid var(--border); border-radius:10px;
+  padding:12px 16px; text-align:center; font-size:11.5px; font-weight:700;
+  min-width:100px; transition:all .2s;
+}
+.ag-item:hover { transform:translateY(-2px); border-color:var(--purple) }
+.ag-item .ag-ico { font-size:20px; margin-bottom:5px }
+.ag-item .ag-label { color:var(--muted); font-size:10px; margin-top:3px }
+
+.ag-arr {
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+}
+.ag-arr-line { width:2px; height:28px; background:var(--border2) }
+.ag-arr-head {
+  width:0; height:0;
+  border-left:5px solid transparent; border-right:5px solid transparent;
+  border-top:7px solid var(--border2);
+}
+.ag-h-arr { display:flex; align-items:center; gap:0 }
+.ag-h-arr .arr-line { width:20px }
+
+/* MEMORY TYPES */
+.mem-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin:16px 0 }
+.mem-card {
+  background:var(--s1); border:1px solid var(--border); border-radius:10px;
+  padding:16px; position:relative; overflow:hidden;
+}
+.mem-card::after {
+  content:''; position:absolute; top:0; left:0; width:3px; height:100%; border-radius:0;
+}
+.mem-blue::after { background:var(--blue) }
+.mem-green::after { background:var(--green) }
+.mem-purple::after { background:var(--purple) }
+.mem-yellow::after { background:var(--yellow) }
+.mem-card-icon { font-size:22px; margin-bottom:8px }
+.mem-card-title { font-size:13px; font-weight:700; margin-bottom:4px }
+.mem-card-desc { font-size:11.5px; color:var(--muted); line-height:1.55 }
+.mem-tag {
+  display:inline-block; font-size:9px; font-weight:700;
+  padding:2px 8px; border-radius:100px; margin-top:8px;
+}
+
+/* divider */
+hr.dv { border:none; border-top:1px solid var(--border); margin:60px 0 }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+.footer {
+  border-top:1px solid var(--border); padding:28px 64px;
+  display:flex; align-items:center; gap:12px; font-size:12px; color:var(--muted);
+}
+.footer a { color:var(--n8n); text-decoration:none }
+.footer a:hover { text-decoration:underline }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:900px) {
+  .sidebar{display:none} .main{margin-left:0}
+  .hero,.content,.footer{padding-left:22px;padding-right:22px}
+  .hero{padding-top:44px} .hero h1{font-size:36px;letter-spacing:-1.5px}
+  .cheat-grid,.grid-2{grid-template-columns:1fr}
+  .ag-row { flex-direction:column }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ SIDEBAR ══════════════════════ -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-brand">
+      <div class="logo-icon">n8n</div>
+      <div class="logo-text">
+        <h2>n8n AI Agent</h2>
+        <p>Hướng dẫn toàn tập</p>
+      </div>
+    </div>
+    <div class="prog-wrap"><div class="prog-bar" id="pbar"></div></div>
+  </div>
+
+  <!-- ── PAGE NAVIGATION ── -->
+  <div class="page-nav-section">
+    <div class="page-nav-label">Bộ tài liệu</div>
+    <a href="n8n_guide.html" class="page-link">
+      <span class="pg-icon">🚀</span> n8n Toàn Tập
+      <span class="pg-num">04</span>
+    </a>
+    <a href="n8n_ai_agent_guide.html" class="page-link active">
+      <span class="pg-icon">🤖</span> AI Agent
+      <span class="pg-num">05</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">Nền Tảng</div>
+    <a href="#s01" class="nav-link"><span class="ico">🤖</span>AI Agent là gì?<span class="nav-badge">NEW</span></a>
+    <a href="#s02" class="nav-link"><span class="ico">🧠</span>Các node AI Agent</a>
+    <a href="#s03" class="nav-link"><span class="ico">🔧</span>Tools — Công cụ cho Agent</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-sect-label">Bộ Nhớ & Ngữ Cảnh</div>
+    <a href="#s04" class="nav-link"><span class="ico">💾</span>Memory Types</a>
+    <a href="#s05" class="nav-link"><span class="ico">📄</span>RAG & Vector Store</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-sect-label">Ví Dụ Thực Tế</div>
+    <a href="#s06" class="nav-link"><span class="ico">💬</span>Chatbot hỗ trợ khách hàng</a>
+    <a href="#s07" class="nav-link"><span class="ico">📧</span>Agent xử lý email</a>
+    <a href="#s08" class="nav-link"><span class="ico">🔍</span>Agent nghiên cứu & tóm tắt</a>
+    <a href="#s09" class="nav-link"><span class="ico">🗂️</span>Multi-Agent Workflow</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-sect-label">Nâng Cao</div>
+    <a href="#s10" class="nav-link"><span class="ico">⚙️</span>Cấu hình LLM</a>
+    <a href="#s11" class="nav-link"><span class="ico">📋</span>Prompt Engineering</a>
+    <a href="#s12" class="nav-link"><span class="ico">🐛</span>Debug Agent</a>
+    <a href="#s13" class="nav-link"><span class="ico">📌</span>Cheat Sheet</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════ MAIN ══════════════════════ -->
+<div class="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-eyebrow"><div class="pulse"></div>AI · LLM · Autonomous Agent · n8n</div>
+  <h1>Xây dựng <span class="h-pink">AI Agent</span><br><span class="h-grad">với n8n</span></h1>
+  <p class="hero-desc">Kết hợp sức mạnh của LLM (OpenAI, Gemini, Claude) với automation của n8n — tạo ra những agent AI có thể suy nghĩ, quyết định và tự động thực thi công việc 24/7.</p>
+  <div class="hero-chips">
+    <span class="chip chip-p">🤖 Autonomous Agent</span>
+    <span class="chip chip-b">🧠 LLM-powered</span>
+    <span class="chip chip-g">🔧 400+ Tools</span>
+    <span class="chip chip-r">💾 Memory & RAG</span>
+    <span class="chip chip-y">🔗 Multi-Agent</span>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- ═════════════════════════════════
+     S01 — AI AGENT LÀ GÌ?
+═════════════════════════════════ -->
+<div class="section" id="s01">
+  <div class="sec-head">
+    <span class="sec-tag">01</span>
+    <div>
+      <h2 class="sec-title">AI Agent trong n8n là gì?</h2>
+      <p class="sec-sub">Hiểu bản chất — Agent khác gì workflow thông thường?</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <p><strong>AI Agent</strong> trong n8n là một workflow đặc biệt, trong đó <strong>LLM (Large Language Model)</strong> đóng vai trò "bộ não" — nó nhận đầu vào, suy nghĩ, lựa chọn công cụ phù hợp và tự thực thi. Không cần định nghĩa trước từng bước cụ thể như workflow thông thường.</p>
+
+    <div class="grid-2">
+      <div style="background:var(--s1);border:1px solid var(--border);border-radius:11px;padding:18px">
+        <div style="font-size:11px;font-weight:700;color:var(--yellow);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">⚙️ Workflow thông thường</div>
+        <ul style="color:var(--muted);font-size:13px;padding-left:18px;line-height:1.8">
+          <li>Luồng chạy cố định A → B → C</li>
+          <li>Bạn tự định nghĩa từng bước</li>
+          <li>Không có khả năng "suy nghĩ"</li>
+          <li>Xử lý tốt khi quy trình rõ ràng</li>
+          <li>Dễ debug và kiểm soát</li>
+        </ul>
+      </div>
+      <div style="background:var(--purple-dim);border:1px solid rgba(160,122,244,.25);border-radius:11px;padding:18px">
+        <div style="font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">🤖 AI Agent Workflow</div>
+        <ul style="color:var(--muted);font-size:13px;padding-left:18px;line-height:1.8">
+          <li>LLM tự quyết định bước tiếp theo</li>
+          <li>Tự chọn tool phù hợp với ngữ cảnh</li>
+          <li>Lặp lại cho đến khi hoàn thành mục tiêu</li>
+          <li>Xử lý tốt khi yêu cầu mơ hồ, phức tạp</li>
+          <li>Linh hoạt, thích nghi với tình huống mới</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Kiến trúc ReAct của AI Agent</div>
+    <p>n8n AI Agent hoạt động theo vòng lặp <strong>ReAct (Reason + Act)</strong>: LLM nhận câu hỏi, suy nghĩ (Thought), chọn hành động (Action), nhận kết quả (Observation), rồi lặp lại cho đến khi có câu trả lời cuối cùng.</p>
+
+    <div class="agent-diagram">
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase">Vòng lặp ReAct — Agent tự quyết định</div>
+      </div>
+
+      <!-- Input -->
+      <div style="display:flex;justify-content:center;margin-bottom:16px">
+        <div class="ag-item" style="border-color:rgba(64,216,142,.4);min-width:200px">
+          <div class="ag-ico">💬</div>
+          <div style="color:var(--green);font-weight:700">User Input / Trigger</div>
+          <div class="ag-label">Câu hỏi hoặc yêu cầu</div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-bottom:16px">
+        <div class="ag-arr"><div class="ag-arr-line"></div><div class="ag-arr-head"></div></div>
+      </div>
+
+      <!-- LLM Core -->
+      <div style="display:flex;justify-content:center;margin-bottom:16px">
+        <div class="ag-center">
+          <div class="ag-center-icon">🧠</div>
+          <div class="ag-center-name">LLM Agent Core</div>
+          <div class="ag-center-sub">Thought → Action → Observation</div>
+        </div>
+      </div>
+
+      <!-- Tools -->
+      <div style="display:flex;justify-content:center;margin-bottom:16px">
+        <div class="ag-arr"><div class="ag-arr-line"></div><div class="ag-arr-head"></div></div>
+      </div>
+
+      <div class="ag-row" style="margin-bottom:16px">
+        <div class="ag-item"><div class="ag-ico">🔍</div><div>Web Search</div><div class="ag-label">Tool</div></div>
+        <div class="ag-item"><div class="ag-ico">📊</div><div>Google Sheets</div><div class="ag-label">Tool</div></div>
+        <div class="ag-item"><div class="ag-ico">📧</div><div>Gmail / Slack</div><div class="ag-label">Tool</div></div>
+        <div class="ag-item"><div class="ag-ico">🗄️</div><div>Database</div><div class="ag-label">Tool</div></div>
+        <div class="ag-item"><div class="ag-ico">⚙️</div><div>Custom Code</div><div class="ag-label">Tool</div></div>
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-bottom:16px">
+        <div class="ag-arr"><div class="ag-arr-line"></div><div class="ag-arr-head"></div></div>
+      </div>
+
+      <!-- Output -->
+      <div style="display:flex;justify-content:center">
+        <div class="ag-item" style="border-color:rgba(255,101,132,.4);min-width:200px">
+          <div class="ag-ico">✅</div>
+          <div style="color:var(--n8n);font-weight:700">Final Answer</div>
+          <div class="ag-label">Kết quả cuối cùng</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Khi nào nên dùng AI Agent?</div>
+    <table class="tbl">
+      <thead><tr><th>Tình huống</th><th>Dùng Workflow</th><th>Dùng AI Agent</th></tr></thead>
+      <tbody>
+        <tr><td>Gửi email hàng ngày lúc 8h</td><td class="c-g">✅ Phù hợp</td><td>❌ Over-engineering</td></tr>
+        <tr><td>Phân loại email theo nội dung</td><td>⚠️ Cần nhiều IF node</td><td class="c-g">✅ Phù hợp hơn</td></tr>
+        <tr><td>Chatbot hỗ trợ khách hàng</td><td>❌ Không đủ linh hoạt</td><td class="c-g">✅ Phù hợp</td></tr>
+        <tr><td>Đọc CV → Đánh giá → Ghi Sheets</td><td>⚠️ Phức tạp</td><td class="c-g">✅ Agent tự xử lý</td></tr>
+        <tr><td>Tìm kiếm thông tin → Tóm tắt → Gửi báo cáo</td><td>❌ Không tự search được</td><td class="c-g">✅ Agent tự tìm & viết</td></tr>
+        <tr><td>Transform JSON đơn giản</td><td class="c-g">✅ Nhanh hơn, rẻ hơn</td><td>❌ Tốn token</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S02 — CÁC NODE AI AGENT
+═════════════════════════════════ -->
+<div class="section" id="s02">
+  <div class="sec-head">
+    <span class="sec-tag">02</span>
+    <div>
+      <h2 class="sec-title">Các Node AI trong n8n</h2>
+      <p class="sec-sub">Bộ node @n8n/n8n-nodes-langchain — Nền tảng AI của n8n</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <p>n8n tích hợp LangChain natively, cung cấp 3 nhóm node chính. Tất cả nằm trong section <strong>"AI"</strong> khi bạn tìm kiếm node.</p>
+
+    <div class="node-gallery">
+      <div class="ng-card">
+        <div class="ng-icon">🤖</div>
+        <div class="ng-name">AI Agent</div>
+        <div class="ng-desc">Node trung tâm — LLM nhận input, chọn tools, lặp lại đến khi xong</div>
+        <span class="ng-badge" style="background:var(--purple-dim);color:var(--purple)">CORE</span>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">💬</div>
+        <div class="ng-name">Basic LLM Chain</div>
+        <div class="ng-desc">Gửi prompt đến LLM, nhận text trả về. Không có tools, không loop</div>
+        <span class="ng-badge" style="background:var(--blue-dim);color:var(--blue)">SIMPLE</span>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">🔗</div>
+        <div class="ng-name">LLM Chain</div>
+        <div class="ng-desc">Xây dựng chain phức tạp, kết hợp prompt templates và output parsers</div>
+        <span class="ng-badge" style="background:var(--teal-dim);color:var(--teal)">CHAIN</span>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">📊</div>
+        <div class="ng-name">Information Extractor</div>
+        <div class="ng-desc">Trích xuất dữ liệu có cấu trúc từ text tự nhiên ra JSON</div>
+        <span class="ng-badge" style="background:var(--green-dim);color:var(--green)">EXTRACT</span>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">🤔</div>
+        <div class="ng-name">Sentiment Analysis</div>
+        <div class="ng-desc">Phân tích cảm xúc văn bản: tích cực / tiêu cực / trung lập</div>
+        <span class="ng-badge" style="background:var(--yellow-dim);color:var(--yellow)">CLASSIFY</span>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">✍️</div>
+        <div class="ng-name">Text Classifier</div>
+        <div class="ng-desc">Phân loại văn bản theo các nhãn bạn định nghĩa trước</div>
+        <span class="ng-badge" style="background:var(--n8n-dim);color:var(--n8n)">CLASSIFY</span>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">📝</div>
+        <div class="ng-name">Summarization Chain</div>
+        <div class="ng-desc">Tóm tắt văn bản dài, hỗ trợ document chunking tự động</div>
+        <span class="ng-badge" style="background:var(--teal-dim);color:var(--teal)">SUMMARY</span>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">🗣️</div>
+        <div class="ng-name">Conversational Agent</div>
+        <div class="ng-desc">Agent có nhớ lịch sử hội thoại, phù hợp chatbot nhiều lượt</div>
+        <span class="ng-badge" style="background:var(--purple-dim);color:var(--purple)">CHAT</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Chat Models được hỗ trợ</div>
+    <p>n8n hỗ trợ kết nối với hầu hết LLM phổ biến hiện nay qua <strong>Chat Model nodes</strong>. Mỗi node cần một <strong>Credential</strong> riêng (API Key).</p>
+    <table class="tbl">
+      <thead><tr><th>Provider</th><th>Node</th><th>Model phổ biến</th><th>Ghi chú</th></tr></thead>
+      <tbody>
+        <tr><td class="c-g"><strong>OpenAI</strong></td><td><code>ChatOpenAI</code></td><td>gpt-4o, gpt-4o-mini, gpt-3.5-turbo</td><td>Phổ biến nhất, hỗ trợ function calling</td></tr>
+        <tr><td class="c-b"><strong>Google Gemini</strong></td><td><code>ChatGoogleGemini</code></td><td>gemini-1.5-pro, gemini-1.5-flash</td><td>Context window lớn (1M tokens)</td></tr>
+        <tr><td class="c-p"><strong>Anthropic Claude</strong></td><td><code>ChatAnthropic</code></td><td>claude-3-5-sonnet, claude-3-haiku</td><td>Tốt cho phân tích, viết lách</td></tr>
+        <tr><td class="c-y"><strong>Ollama</strong></td><td><code>ChatOllama</code></td><td>llama3, mistral, qwen2.5</td><td>Self-hosted, miễn phí hoàn toàn</td></tr>
+        <tr><td class="c-t"><strong>Azure OpenAI</strong></td><td><code>ChatAzureOpenAI</code></td><td>gpt-4, gpt-4-turbo</td><td>Dành cho enterprise, data privacy</td></tr>
+        <tr><td><strong>Groq</strong></td><td><code>ChatGroq</code></td><td>llama3-70b, mixtral-8x7b</td><td>Tốc độ inference cực nhanh</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S03 — TOOLS
+═════════════════════════════════ -->
+<div class="section" id="s03">
+  <div class="sec-head">
+    <span class="sec-tag">03</span>
+    <div>
+      <h2 class="sec-title">Tools — Công cụ cho AI Agent</h2>
+      <p class="sec-sub">Agent chỉ mạnh khi được trang bị đúng tools — đây là "tay chân" của Agent</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <p>Tools là các hành động mà Agent <em>có thể</em> thực hiện. LLM sẽ tự quyết định khi nào gọi tool nào dựa vào mô tả của tool. <strong>Mô tả rõ ràng = Agent sử dụng tool chính xác hơn.</strong></p>
+
+    <div class="grid-3">
+      <div class="card"><div class="card-icon">🌐</div><div class="card-title">HTTP Request Tool</div><div class="card-desc">Gọi bất kỳ REST API nào. Agent tự điền params, headers theo ngữ cảnh</div></div>
+      <div class="card"><div class="card-icon">🔍</div><div class="card-title">SerpAPI / Tavily</div><div class="card-desc">Tìm kiếm Google real-time. Rất hữu ích cho Agent cần tra thông tin mới nhất</div></div>
+      <div class="card"><div class="card-icon">📊</div><div class="card-title">Google Sheets Tool</div><div class="card-desc">Đọc/ghi dữ liệu vào Google Sheets. Agent có thể tra cứu hoặc lưu thông tin</div></div>
+      <div class="card"><div class="card-icon">📧</div><div class="card-title">Gmail / Outlook</div><div class="card-desc">Đọc email, tìm kiếm, gửi reply. Agent tự xử lý hộp thư của bạn</div></div>
+      <div class="card"><div class="card-icon">🗄️</div><div class="card-title">SQL Database</div><div class="card-desc">Agent tự viết và chạy query SQL để tra cứu dữ liệu từ database</div></div>
+      <div class="card"><div class="card-icon">⚙️</div><div class="card-title">Code Tool</div><div class="card-desc">Chạy đoạn JavaScript tùy ý. Tool mạnh nhất để xử lý logic phức tạp</div></div>
+      <div class="card"><div class="card-icon">🔗</div><div class="card-title">Workflow Tool</div><div class="card-desc">Gọi một n8n workflow khác. Dùng để tạo Multi-Agent hoặc modular agents</div></div>
+      <div class="card"><div class="card-icon">📚</div><div class="card-title">Vector Store Tool</div><div class="card-desc">Tìm kiếm trong knowledge base. Dùng cho RAG — trả lời câu hỏi theo tài liệu</div></div>
+      <div class="card"><div class="card-icon">🗂️</div><div class="card-title">Notion / Airtable</div><div class="card-desc">Đọc/tạo/cập nhật records. Agent quản lý project, task, database của bạn</div></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cách kết nối Tool vào AI Agent</div>
+    <p>Trong n8n, kết nối tool vào Agent không phải qua arrow thông thường mà qua <strong>connection loại "ai_tool"</strong> — kéo từ output của Tool node vào input <em>Tools</em> của AI Agent node.</p>
+
+    <div class="wf-canvas">
+      <div class="wf-heading">Sơ đồ kết nối Agent + Tools</div>
+      <div style="display:flex;align-items:flex-start;gap:0">
+        <!-- Chat input -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+          <div class="wnode-wrap wn-t" style="margin-bottom:8px">
+            <div class="wnode"><div class="w-ico">💬</div><div class="w-name">Chat Trigger</div><div class="w-sub">User message</div></div>
+            <div class="wnode-lbl">TRIGGER</div>
+          </div>
+        </div>
+
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+
+        <!-- Agent -->
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="wnode-wrap wn-l">
+            <div class="wnode" style="min-height:90px;border-color:rgba(160,122,244,.6);box-shadow:0 0 24px rgba(160,122,244,.12)">
+              <div class="w-ico">🤖</div>
+              <div class="w-name">AI Agent</div>
+              <div class="w-sub">Tools input ↓</div>
+            </div>
+            <div class="wnode-lbl">AGENT</div>
+          </div>
+
+          <!-- Tools connected below Agent -->
+          <div style="display:flex;gap:10px;margin-top:18px">
+            <div class="wnode-wrap wn-b" style="">
+              <div class="wnode" style="min-width:80px;border-color:rgba(91,168,255,.4)"><div class="w-ico" style="font-size:15px;color:var(--blue)">🔍</div><div class="w-name" style="color:var(--blue);font-size:10px">SerpAPI</div></div>
+              <div class="wnode-lbl" style="background:var(--blue-dim);color:var(--blue)">TOOL</div>
+            </div>
+            <div class="wnode-wrap">
+              <div class="wnode" style="min-width:80px;border-color:rgba(64,216,142,.4)"><div class="w-ico" style="font-size:15px;color:var(--green)">📊</div><div class="w-name" style="color:var(--green);font-size:10px">Sheets</div></div>
+              <div class="wnode-lbl" style="background:var(--green-dim);color:var(--green)">TOOL</div>
+            </div>
+            <div class="wnode-wrap">
+              <div class="wnode" style="min-width:80px;border-color:rgba(255,208,96,.4)"><div class="w-ico" style="font-size:15px;color:var(--yellow)">⚙️</div><div class="w-name" style="color:var(--yellow);font-size:10px">Code</div></div>
+              <div class="wnode-lbl" style="background:var(--yellow-dim);color:var(--yellow)">TOOL</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+
+        <!-- Output -->
+        <div class="wnode-wrap wn-a">
+          <div class="wnode"><div class="w-ico">✅</div><div class="w-name">Final Output</div><div class="w-sub">Agent response</div></div>
+          <div class="wnode-lbl">OUTPUT</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info i-note">
+      <span class="info-ico">💡</span>
+      <div><strong style="color:var(--text)">Tip quan trọng:</strong> Mỗi tool cần có <strong>Description</strong> rõ ràng bằng tiếng Anh. Ví dụ: <em>"Use this tool to search current information from Google when the user asks about recent events."</em> LLM đọc description này để quyết định có gọi tool hay không.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S04 — MEMORY TYPES
+═════════════════════════════════ -->
+<div class="section" id="s04">
+  <div class="sec-head">
+    <span class="sec-tag">04</span>
+    <div>
+      <h2 class="sec-title">Memory — Bộ nhớ của Agent</h2>
+      <p class="sec-sub">Agent nhớ được ngữ cảnh → hội thoại tự nhiên, kết quả chính xác hơn</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <p>Mặc định LLM không có bộ nhớ giữa các lần gọi. Để Agent nhớ lịch sử hội thoại hoặc thông tin quan trọng, bạn cần thêm <strong>Memory node</strong> kết nối vào AI Agent.</p>
+
+    <div class="mem-grid">
+      <div class="mem-card mem-blue">
+        <div class="mem-card-icon">💬</div>
+        <div class="mem-card-title">Buffer Memory</div>
+        <div class="mem-card-desc">Lưu toàn bộ lịch sử hội thoại vào RAM. Đơn giản nhất, nhưng mất khi restart.</div>
+        <span class="mem-tag" style="background:var(--blue-dim);color:var(--blue)">IN-MEMORY</span>
+      </div>
+      <div class="mem-card mem-green">
+        <div class="mem-card-icon">🪟</div>
+        <div class="mem-card-title">Window Buffer Memory</div>
+        <div class="mem-card-desc">Chỉ nhớ N tin nhắn gần nhất. Tiết kiệm token cho hội thoại dài.</div>
+        <span class="mem-tag" style="background:var(--green-dim);color:var(--green)">WINDOWED</span>
+      </div>
+      <div class="mem-card mem-purple">
+        <div class="mem-card-icon">🗄️</div>
+        <div class="mem-card-title">Postgres Chat Memory</div>
+        <div class="mem-card-desc">Lưu lịch sử vào PostgreSQL. Persistent qua restart, phù hợp production.</div>
+        <span class="mem-tag" style="background:var(--purple-dim);color:var(--purple)">PERSISTENT</span>
+      </div>
+      <div class="mem-card mem-yellow">
+        <div class="mem-card-icon">🔴</div>
+        <div class="mem-card-title">Redis Chat Memory</div>
+        <div class="mem-card-desc">Lưu vào Redis với TTL tùy chỉnh. Nhanh, phù hợp cho nhiều user đồng thời.</div>
+        <span class="mem-tag" style="background:var(--yellow-dim);color:var(--yellow)">FAST</span>
+      </div>
+      <div class="mem-card mem-blue">
+        <div class="mem-card-icon">📊</div>
+        <div class="mem-card-title">Motorhead Memory</div>
+        <div class="mem-card-desc">Server chuyên lưu memory + tự động tóm tắt lịch sử dài.</div>
+        <span class="mem-tag" style="background:var(--blue-dim);color:var(--blue)">MANAGED</span>
+      </div>
+      <div class="mem-card mem-green">
+        <div class="mem-card-icon">🧠</div>
+        <div class="mem-card-title">Zep Memory</div>
+        <div class="mem-card-desc">Long-term memory, tự trích xuất facts quan trọng từ hội thoại, tìm kiếm ngữ nghĩa.</div>
+        <span class="mem-tag" style="background:var(--green-dim);color:var(--green)">LONG-TERM</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Ví dụ: Cấu hình Window Buffer Memory</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-L"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Thêm node "Window Buffer Memory"</h4><p>Tìm kiếm "Window Buffer Memory" trong node panel. Kéo vào canvas gần AI Agent node.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Cấu hình: Context Window Length</h4>
+          <p>Đặt số lượng tin nhắn cần nhớ — thông thường <strong>10–20 messages</strong> là đủ. Càng nhiều càng tốn token.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Kết nối vào AI Agent qua "ai_memory" port</h4>
+          <p>Kéo từ output của Memory node → input <em>Memory</em> của AI Agent. Connection màu <strong>tím</strong> là đúng.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">4</div></div>
+        <div class="step-B">
+          <h4>Session ID để phân biệt người dùng</h4>
+          <p>Cấu hình <strong>Session ID</strong> bằng <code>{{ $json.sessionId }}</code> hoặc <code>{{ $('Chat Trigger').item.json.sessionId }}</code> để mỗi cuộc hội thoại có bộ nhớ riêng.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Expression — Session ID theo user</span><span class="cb-tag cb-tag-p">Memory Config</span></div>
+      <div class="cb-body"><pre><span class="cm">// Dùng userId từ webhook để mỗi user có memory riêng</span>
+<span class="vr">Session ID</span>: <span class="st">{{ $json.userId }}</span>
+
+<span class="cm">// Hoặc dùng chat session từ Telegram</span>
+<span class="vr">Session ID</span>: <span class="st">{{ $('Telegram Trigger').item.json.message.chat.id }}</span>
+
+<span class="cm">// Hoặc tạo session theo ngày (reset mỗi ngày)</span>
+<span class="vr">Session ID</span>: <span class="st">{{ $json.userId + '_' + $now.toFormat('yyyy-MM-dd') }}</span></pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S05 — RAG & VECTOR STORE
+═════════════════════════════════ -->
+<div class="section" id="s05">
+  <div class="sec-head">
+    <span class="sec-tag">05</span>
+    <div>
+      <h2 class="sec-title">RAG & Vector Store</h2>
+      <p class="sec-sub">Cho Agent trả lời dựa trên tài liệu nội bộ của bạn — knowledge base riêng</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <p><strong>RAG (Retrieval-Augmented Generation)</strong> là kỹ thuật cho phép LLM trả lời câu hỏi dựa trên tài liệu của bạn (PDF, Google Docs, website…) thay vì chỉ dựa vào training data. n8n tích hợp đầy đủ pipeline RAG.</p>
+
+    <div class="info i-blue">
+      <span class="info-ico">🔄</span>
+      <div><strong style="color:var(--text)">Luồng RAG gồm 2 workflow:</strong><br>
+      <span style="color:var(--muted)"><strong>1. Ingestion Workflow</strong> — Đọc tài liệu → Chunk → Embed → Lưu vào Vector Store (chạy 1 lần hoặc định kỳ)</span><br>
+      <span style="color:var(--muted)"><strong>2. Query Workflow</strong> — Nhận câu hỏi → Tìm kiếm semantic trong vector store → Đưa context vào LLM → Trả lời</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Workflow 1 — Nhập tài liệu vào Vector Store</div>
+
+    <div class="wf-canvas">
+      <div class="wf-heading">RAG Ingestion Pipeline</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">📄</div><div class="w-name">Google Drive</div><div class="w-sub">Lấy file PDF</div></div>
+          <div class="wnode-lbl">SOURCE</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">✂️</div><div class="w-name">Text Splitter</div><div class="w-sub">Chunk 1000 chars</div></div>
+          <div class="wnode-lbl">SPLIT</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">🔢</div><div class="w-name">Embeddings</div><div class="w-sub">OpenAI Embed</div></div>
+          <div class="wnode-lbl">EMBED</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-a">
+          <div class="wnode"><div class="w-ico">🗄️</div><div class="w-name">Pinecone</div><div class="w-sub">Lưu vectors</div></div>
+          <div class="wnode-lbl">STORE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Workflow 2 — Agent trả lời từ Knowledge Base</div>
+
+    <div class="wf-canvas">
+      <div class="wf-heading">RAG Query + AI Agent</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">💬</div><div class="w-name">Chat Trigger</div><div class="w-sub">User hỏi</div></div>
+          <div class="wnode-lbl">TRIGGER</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">🤖</div><div class="w-name">AI Agent</div><div class="w-sub">+ Vector Tool</div></div>
+          <div class="wnode-lbl">AGENT</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">🔍</div><div class="w-name">Vector Store</div><div class="w-sub">Semantic search</div></div>
+          <div class="wnode-lbl">TOOL</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-a">
+          <div class="wnode"><div class="w-ico">✅</div><div class="w-name">Trả lời</div><div class="w-sub">Kèm nguồn tài liệu</div></div>
+          <div class="wnode-lbl">OUTPUT</div>
+        </div>
+      </div>
+    </div>
+
+    <p><strong>Vector Store được hỗ trợ:</strong> Pinecone, Qdrant, Weaviate, Supabase pgvector, Postgres pgvector, In-memory (phát triển/test), Zep, Chroma.</p>
+    <div class="info i-ok">
+      <span class="info-ico">💡</span>
+      <div><strong style="color:var(--text)">Bắt đầu nhanh:</strong> Dùng <strong>Supabase</strong> (free tier) + <strong>pgvector</strong> extension — vừa lưu metadata vừa search vector trong 1 database PostgreSQL. Không cần setup thêm infra.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S06 — VÍ DỤ: CHATBOT HỖ TRỢ
+═════════════════════════════════ -->
+<div class="section" id="s06">
+  <div class="sec-head">
+    <span class="sec-tag">06</span>
+    <div>
+      <h2 class="sec-title">Ví dụ 1 — Chatbot hỗ trợ khách hàng</h2>
+      <p class="sec-sub">Chatbot trên Telegram / Website biết trả lời theo tài liệu công ty</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Sơ đồ workflow</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">Customer Support Chatbot — Telegram + RAG + Memory</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">📱</div><div class="w-name">Telegram Trigger</div><div class="w-sub">Tin nhắn mới</div></div>
+          <div class="wnode-lbl">TRIGGER</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode" style="border-color:rgba(160,122,244,.6);box-shadow:0 0 20px rgba(160,122,244,.1)">
+            <div class="w-ico">🤖</div><div class="w-name">AI Agent</div><div class="w-sub">GPT-4o-mini</div>
+          </div>
+          <div class="wnode-lbl">AGENT</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-a">
+          <div class="wnode"><div class="w-ico">📱</div><div class="w-name">Telegram</div><div class="w-sub">Gửi reply</div></div>
+          <div class="wnode-lbl">REPLY</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">System Prompt cho Customer Support Agent</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">System Prompt — AI Agent Node</span><span class="cb-tag cb-tag-p">Prompt</span></div>
+      <div class="cb-body"><pre><span class="st">You are a helpful customer support assistant for TechShop Vietnam.</span>
+<span class="st">You help customers with questions about products, orders, and policies.</span>
+
+<span class="st">RULES:</span>
+<span class="st">- Always respond in Vietnamese</span>
+<span class="st">- Be friendly, professional, and concise</span>
+<span class="st">- Use the knowledge_base tool to look up product info and policies</span>
+<span class="st">- Use the check_order tool when customers ask about their order status</span>
+<span class="st">- If you cannot find the answer, say "Xin lỗi, tôi sẽ chuyển câu hỏi</span>
+<span class="st">  của bạn đến bộ phận hỗ trợ trong 24h."</span>
+<span class="st">- Never make up information about products or policies</span>
+
+<span class="st">Current date: {{ $now.toFormat('dd/MM/yyyy') }}</span></pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình đầy đủ các thành phần</div>
+    <table class="tbl">
+      <thead><tr><th>Thành phần</th><th>Node</th><th>Cấu hình</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Trigger</strong></td><td>Telegram Trigger</td><td>Message type: All, Token: BotFather API key</td></tr>
+        <tr><td><strong>LLM</strong></td><td>ChatOpenAI</td><td>Model: gpt-4o-mini, Temperature: 0.3</td></tr>
+        <tr><td><strong>Memory</strong></td><td>Postgres Chat Memory</td><td>Session ID: <code>{{ $json.message.chat.id }}</code></td></tr>
+        <tr><td><strong>Tool 1</strong></td><td>Vector Store Tool</td><td>Description: "Search company knowledge base for product info"</td></tr>
+        <tr><td><strong>Tool 2</strong></td><td>HTTP Request Tool</td><td>URL: <code>https://api.yourapp.com/orders/{{'{{'}}userId{{'}}'}}</code></td></tr>
+        <tr><td><strong>Output</strong></td><td>Telegram node</td><td>Chat ID: <code>{{ $('Telegram Trigger').item.json.message.chat.id }}</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S07 — VÍ DỤ: AGENT XỬ LÝ EMAIL
+═════════════════════════════════ -->
+<div class="section" id="s07">
+  <div class="sec-head">
+    <span class="sec-tag">07</span>
+    <div>
+      <h2 class="sec-title">Ví dụ 2 — Agent xử lý email tự động</h2>
+      <p class="sec-sub">Agent đọc inbox, phân loại, draft reply và lưu vào CRM</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Sơ đồ workflow</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">Email Processing Agent — Gmail + Sheets CRM</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">⏰</div><div class="w-name">Schedule</div><div class="w-sub">Mỗi 15 phút</div></div>
+          <div class="wnode-lbl">TRIGGER</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">📧</div><div class="w-name">Gmail</div><div class="w-sub">Unread emails</div></div>
+          <div class="wnode-lbl">FETCH</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">🤖</div><div class="w-name">AI Agent</div><div class="w-sub">Classify + Reply</div></div>
+          <div class="wnode-lbl">AGENT</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">❓</div><div class="w-name">IF Node</div><div class="w-sub">Auto-reply?</div></div>
+          <div class="wnode-lbl">ROUTE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Code: Parse output của AI Agent thành JSON</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">AI Agent — System Prompt (yêu cầu output JSON)</span><span class="cb-tag cb-tag-p">Prompt</span></div>
+      <div class="cb-body"><pre><span class="st">You are an email processing assistant. Analyze each email and respond</span>
+<span class="st">with a JSON object ONLY (no other text):</span>
+
+<span class="st">{</span>
+<span class="st">  "category": "sales_inquiry | support | spam | invoice | other",</span>
+<span class="st">  "priority": "high | medium | low",</span>
+<span class="st">  "sentiment": "positive | neutral | negative",</span>
+<span class="st">  "summary": "Brief 1-sentence summary in Vietnamese",</span>
+<span class="st">  "should_auto_reply": true/false,</span>
+<span class="st">  "draft_reply": "Reply text in Vietnamese if should_auto_reply is true, else null",</span>
+<span class="st">  "crm_note": "Note to save in CRM"</span>
+<span class="st">}</span></pre></div>
+    </div>
+
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Parse JSON từ Agent output</span><span class="cb-tag">JavaScript</span></div>
+      <div class="cb-body"><pre><span class="kw">const</span> <span class="vr">items</span> = <span class="fn">$input</span>.<span class="pr">all</span>();
+<span class="kw">const</span> <span class="vr">results</span> = [];
+
+<span class="kw">for</span> (<span class="kw">const</span> <span class="vr">item</span> <span class="kw">of</span> <span class="vr">items</span>) {
+  <span class="kw">const</span> <span class="vr">agentOutput</span> = <span class="vr">item</span>.<span class="pr">json</span>.<span class="pr">output</span>;
+
+  <span class="kw">try</span> {
+    <span class="cm">// Tìm và parse JSON từ output của Agent</span>
+    <span class="kw">const</span> <span class="vr">jsonMatch</span> = <span class="vr">agentOutput</span>.<span class="fn">match</span>(<span class="nm">/\{[\s\S]*\}/</span>);
+    <span class="kw">const</span> <span class="vr">parsed</span> = <span class="nm">JSON</span>.<span class="fn">parse</span>(<span class="vr">jsonMatch</span>[<span class="nm">0</span>]);
+
+    <span class="vr">results</span>.<span class="fn">push</span>({
+      <span class="pr">json</span>: {
+        ...<span class="vr">parsed</span>,
+        <span class="pr">emailId</span>: <span class="vr">item</span>.<span class="pr">json</span>.<span class="pr">id</span>,
+        <span class="pr">from</span>: <span class="vr">item</span>.<span class="pr">json</span>.<span class="pr">from</span>,
+        <span class="pr">processedAt</span>: <span class="nm">$now</span>.<span class="fn">toISO</span>()
+      }
+    });
+  } <span class="kw">catch</span> (<span class="vr">e</span>) {
+    <span class="vr">results</span>.<span class="fn">push</span>({ <span class="pr">json</span>: { <span class="pr">error</span>: <span class="st">'Parse failed'</span>, <span class="pr">raw</span>: <span class="vr">agentOutput</span> } });
+  }
+}
+
+<span class="kw">return</span> <span class="vr">results</span>;</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S08 — VÍ DỤ: AGENT NGHIÊN CỨU
+═════════════════════════════════ -->
+<div class="section" id="s08">
+  <div class="sec-head">
+    <span class="sec-tag">08</span>
+    <div>
+      <h2 class="sec-title">Ví dụ 3 — Agent nghiên cứu & báo cáo</h2>
+      <p class="sec-sub">Agent tự tìm kiếm thông tin online, tổng hợp và gửi báo cáo hàng ngày</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Workflow: Daily Research Digest</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">Research Agent — Schedule → Search → Summarize → Email</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">⏰</div><div class="w-name">Schedule</div><div class="w-sub">7:00 AM daily</div></div>
+          <div class="wnode-lbl">TRIGGER</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">📋</div><div class="w-name">Set Node</div><div class="w-sub">Topics to research</div></div>
+          <div class="wnode-lbl">CONFIG</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">🤖</div><div class="w-name">AI Agent</div><div class="w-sub">Research + Write</div></div>
+          <div class="wnode-lbl">AGENT</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">📧</div><div class="w-name">Gmail</div><div class="w-sub">Gửi digest</div></div>
+          <div class="wnode-lbl">SEND</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình Set Node — Danh sách chủ đề nghiên cứu</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Set Node — Research Config</span><span class="cb-tag cb-tag-g">JSON</span></div>
+      <div class="cb-body"><pre>{
+  <span class="pr">"topics"</span>: [
+    <span class="st">"Latest AI developments and LLM releases"</span>,
+    <span class="st">"Vietnam tech startup news"</span>,
+    <span class="st">"n8n automation updates and new features"</span>
+  ],
+  <span class="pr">"date"</span>: <span class="st">"{{ $now.toFormat('dd/MM/yyyy') }}"</span>,
+  <span class="pr">"recipient"</span>: <span class="st">"your@email.com"</span>
+}</pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">System Prompt cho Research Agent</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">System Prompt — Research Agent</span><span class="cb-tag cb-tag-p">Prompt</span></div>
+      <div class="cb-body"><pre><span class="st">You are a research assistant. For each topic provided, use the web_search</span>
+<span class="st">tool to find the latest news and developments from the past 24 hours.</span>
+
+<span class="st">After researching all topics, write a professional daily digest in Vietnamese</span>
+<span class="st">with the following format:</span>
+
+<span class="st">📰 BẢN TIN HÀNG NGÀY — {{ $json.date }}</span>
+<span class="st">================================</span>
+
+<span class="st">For each topic:</span>
+<span class="st">## [Topic Name]</span>
+<span class="st">- [Key finding 1 with source link]</span>
+<span class="st">- [Key finding 2 with source link]</span>
+<span class="st">- [Key finding 3 with source link]</span>
+
+<span class="st">---</span>
+<span class="st">📊 TÓM TẮT: [2-3 sentences overview of the day's most important news]</span>
+
+<span class="st">Always cite sources. If no news found for a topic, state that clearly.</span>
+
+<span class="st">Topics to research: {{ $json.topics.join(', ') }}</span></pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình Gmail Node — Gửi báo cáo HTML</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Gmail Node — Send Email Config</span></div>
+      <div class="cb-body"><pre><span class="pr">To</span>:      <span class="st">{{ $('Set Node').item.json.recipient }}</span>
+<span class="pr">Subject</span>: <span class="st">📰 Daily Digest — {{ $now.toFormat('dd/MM/yyyy') }}</span>
+<span class="pr">Body</span>:    <span class="st">{{ $json.output }}</span>  <span class="cm">← output từ AI Agent</span>
+<span class="pr">Type</span>:    Text</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S09 — MULTI-AGENT
+═════════════════════════════════ -->
+<div class="section" id="s09">
+  <div class="sec-head">
+    <span class="sec-tag">09</span>
+    <div>
+      <h2 class="sec-title">Multi-Agent Workflow</h2>
+      <p class="sec-sub">Nhiều Agent chuyên biệt phối hợp — giải quyết bài toán phức tạp</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <p>Khi một bài toán quá phức tạp cho một Agent, bạn có thể <strong>tách thành nhiều Agent chuyên biệt</strong>. Agent điều phối (Orchestrator) phân công việc cho các Sub-Agent, mỗi agent làm tốt một nhiệm vụ cụ thể.</p>
+
+    <div class="agent-diagram">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase">Multi-Agent Architecture — Orchestrator Pattern</div>
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-bottom:20px">
+        <div class="ag-item" style="border-color:rgba(64,216,142,.4)">
+          <div class="ag-ico">💬</div>
+          <div style="color:var(--green)">User Request</div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-bottom:20px">
+        <div class="ag-arr"><div class="ag-arr-line"></div><div class="ag-arr-head"></div></div>
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-bottom:20px">
+        <div class="ag-center" style="border-color:rgba(255,101,132,.5);box-shadow:0 0 30px rgba(255,101,132,.12)">
+          <div class="ag-center-icon">🎯</div>
+          <div class="ag-center-name" style="color:var(--n8n)">Orchestrator Agent</div>
+          <div class="ag-center-sub">Phân tích & điều phối</div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:48px;margin-bottom:20px">
+        <div class="ag-arr"><div class="ag-arr-line"></div><div class="ag-arr-head"></div></div>
+        <div class="ag-arr"><div class="ag-arr-line"></div><div class="ag-arr-head"></div></div>
+        <div class="ag-arr"><div class="ag-arr-line"></div><div class="ag-arr-head"></div></div>
+      </div>
+
+      <div class="ag-row" style="margin-bottom:20px">
+        <div class="ag-item" style="border-color:rgba(91,168,255,.4)">
+          <div class="ag-ico">🔍</div>
+          <div style="color:var(--blue)">Research Agent</div>
+          <div class="ag-label">Tìm kiếm thông tin</div>
+        </div>
+        <div class="ag-item" style="border-color:rgba(160,122,244,.4)">
+          <div class="ag-ico">✍️</div>
+          <div style="color:var(--purple)">Writer Agent</div>
+          <div class="ag-label">Viết & chỉnh sửa</div>
+        </div>
+        <div class="ag-item" style="border-color:rgba(255,208,96,.4)">
+          <div class="ag-ico">📊</div>
+          <div style="color:var(--yellow)">Data Agent</div>
+          <div class="ag-label">Phân tích số liệu</div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:48px;margin-bottom:20px">
+        <div class="ag-arr"><div class="ag-arr-line" style="transform:rotate(180deg)"></div><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid var(--border2)"></div></div>
+        <div class="ag-arr"><div class="ag-arr-line" style="transform:rotate(180deg)"></div><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid var(--border2)"></div></div>
+        <div class="ag-arr"><div class="ag-arr-line" style="transform:rotate(180deg)"></div><div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid var(--border2)"></div></div>
+      </div>
+
+      <div style="display:flex;justify-content:center">
+        <div class="ag-item" style="border-color:rgba(64,216,142,.4);min-width:200px">
+          <div class="ag-ico">✅</div>
+          <div style="color:var(--green)">Tổng hợp kết quả</div>
+          <div class="ag-label">Final output to user</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cách triển khai: Workflow Tool</div>
+    <p>Mỗi Sub-Agent là một <strong>n8n workflow riêng biệt</strong>. Orchestrator gọi chúng thông qua <strong>Workflow Tool</strong> — giống như gọi một function.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-L"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Tạo Sub-Agent workflows riêng</h4>
+          <p>Mỗi Sub-Agent là 1 workflow bắt đầu bằng <strong>Execute Workflow Trigger</strong>. Nhận input qua <code>$json.query</code>, trả output qua Set node cuối.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Trong Orchestrator: Thêm Workflow Tool</h4>
+          <p>Thêm node <strong>"Execute Workflow"</strong> làm Tool, chọn workflow Sub-Agent. Viết description rõ ràng để LLM biết khi nào gọi Sub-Agent nào.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">3</div></div>
+        <div class="step-B">
+          <h4>Orchestrator tự điều phối</h4>
+          <p>Orchestrator Agent nhận request từ user, tự quyết định gọi Sub-Agent nào, tổng hợp kết quả và trả về câu trả lời cuối cùng.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info i-warn">
+      <span class="info-ico">⚠️</span>
+      <div><strong style="color:var(--text)">Lưu ý về chi phí:</strong> Multi-Agent gọi LLM nhiều lần hơn → tốn token hơn. Chỉ dùng khi bài toán thực sự cần phân công. Với hầu hết use case, một Agent đủ mạnh là đủ.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S10 — CẤU HÌNH LLM
+═════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="sec-head">
+    <span class="sec-tag">10</span>
+    <div>
+      <h2 class="sec-title">Cấu hình LLM — Các tham số quan trọng</h2>
+      <p class="sec-sub">Hiệu chỉnh LLM đúng cách giúp Agent chính xác và tiết kiệm chi phí</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <table class="tbl">
+      <thead><tr><th>Tham số</th><th>Ý nghĩa</th><th>Gợi ý</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Temperature</strong></td>
+          <td>Độ ngẫu nhiên (0 = chính xác, 1 = sáng tạo)</td>
+          <td class="c-g">0.1–0.3 cho xử lý dữ liệu; 0.7–0.9 cho sáng tạo nội dung</td>
+        </tr>
+        <tr>
+          <td><strong>Max Tokens</strong></td>
+          <td>Độ dài tối đa của response</td>
+          <td class="c-b">1000–2000 cho chat; 4000+ cho viết báo cáo dài</td>
+        </tr>
+        <tr>
+          <td><strong>Max Iterations</strong></td>
+          <td>Số lần Agent được phép lặp (Thought→Action)</td>
+          <td class="c-y">10 là default, tăng lên 20–30 cho task phức tạp</td>
+        </tr>
+        <tr>
+          <td><strong>Timeout</strong></td>
+          <td>Thời gian tối đa chờ LLM phản hồi</td>
+          <td>60s cho gpt-4o-mini; 120s cho gpt-4o</td>
+        </tr>
+        <tr>
+          <td><strong>Top P</strong></td>
+          <td>Nucleus sampling — cũng ảnh hưởng độ ngẫu nhiên</td>
+          <td>Thường để mặc định (1.0), chỉ điều chỉnh khi cần</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Chọn model phù hợp theo use case</div>
+    <div class="grid-2">
+      <div class="card" style="border-color:rgba(64,216,142,.3)">
+        <div class="card-icon">⚡</div>
+        <div class="card-title" style="color:var(--green)">gpt-4o-mini / gemini-flash</div>
+        <div class="card-desc">Nhanh, rẻ ($0.15/1M tokens). Dùng cho: phân loại, tóm tắt đơn giản, chatbot volume cao, reply email. Đủ tốt cho 80% use cases.</div>
+      </div>
+      <div class="card" style="border-color:rgba(160,122,244,.3)">
+        <div class="card-icon">🧠</div>
+        <div class="card-title" style="color:var(--purple)">gpt-4o / claude-3-5-sonnet</div>
+        <div class="card-desc">Thông minh, chính xác cao hơn ($2.5+/1M tokens). Dùng cho: phân tích phức tạp, viết chuyên nghiệp, code generation, reasoning task.</div>
+      </div>
+      <div class="card" style="border-color:rgba(255,208,96,.3)">
+        <div class="card-icon">🆓</div>
+        <div class="card-title" style="color:var(--yellow)">Ollama (Local)</div>
+        <div class="card-desc">Miễn phí hoàn toàn, data không ra ngoài. Dùng cho: data nhạy cảm, dev/test, budget zero. Cần máy có GPU đủ mạnh.</div>
+      </div>
+      <div class="card" style="border-color:rgba(255,140,80,.3)">
+        <div class="card-icon">🚀</div>
+        <div class="card-title" style="color:var(--orange)">Groq (llama3-70b)</div>
+        <div class="card-desc">Tốc độ inference cực nhanh (~300 tokens/s), tier miễn phí hào phóng. Dùng cho: real-time chat, automation cần phản hồi nhanh.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S11 — PROMPT ENGINEERING
+═════════════════════════════════ -->
+<div class="section" id="s11">
+  <div class="sec-head">
+    <span class="sec-tag">11</span>
+    <div>
+      <h2 class="sec-title">Prompt Engineering cho AI Agent</h2>
+      <p class="sec-sub">System prompt tốt = Agent hoạt động chính xác, ít lỗi hơn</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu trúc System Prompt chuẩn</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Template — System Prompt cho Agent</span><span class="cb-tag cb-tag-p">Template</span></div>
+      <div class="cb-body"><pre><span class="cm">## 1. IDENTITY — Vai trò của Agent</span>
+<span class="st">You are [tên và vai trò cụ thể], working for [công ty/ngữ cảnh].</span>
+
+<span class="cm">## 2. OBJECTIVE — Mục tiêu chính</span>
+<span class="st">Your primary goal is to [mục tiêu cụ thể].</span>
+
+<span class="cm">## 3. RULES — Quy tắc ứng xử</span>
+<span class="st">- Always respond in [ngôn ngữ]</span>
+<span class="st">- [Rule 1]</span>
+<span class="st">- [Rule 2]</span>
+<span class="st">- Never [điều cấm]</span>
+
+<span class="cm">## 4. TOOL USAGE — Hướng dẫn dùng tools</span>
+<span class="st">- Use [tool_name] when [tình huống cụ thể]</span>
+<span class="st">- Always verify data with [tool] before responding</span>
+
+<span class="cm">## 5. OUTPUT FORMAT — Định dạng kết quả</span>
+<span class="st">Always format your response as: [format mong muốn]</span>
+
+<span class="cm">## 6. CONTEXT — Thông tin ngữ cảnh</span>
+<span class="st">Current date: {{ $now.toFormat('dd/MM/yyyy HH:mm') }}</span>
+<span class="st">User: {{ $json.userName ?? 'Guest' }}</span></pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Tips viết prompt hiệu quả</div>
+
+    <div class="grid-2">
+      <div class="card" style="border-color:rgba(64,216,142,.3)">
+        <div class="card-icon">✅</div>
+        <div class="card-title" style="color:var(--green)">Nên làm</div>
+        <div class="card-desc" style="color:var(--muted)">
+          <ul style="padding-left:16px;line-height:2">
+            <li>Viết bằng tiếng Anh cho system prompt</li>
+            <li>Chỉ định rõ format output (JSON, markdown…)</li>
+            <li>Đặt tên tool mô tả rõ chức năng</li>
+            <li>Thêm ví dụ cụ thể khi cần</li>
+            <li>Inject context động bằng expressions</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(255,101,132,.3)">
+        <div class="card-icon">❌</div>
+        <div class="card-title" style="color:var(--n8n)">Không nên làm</div>
+        <div class="card-desc" style="color:var(--muted)">
+          <ul style="padding-left:16px;line-height:2">
+            <li>Prompt quá dài và phức tạp</li>
+            <li>Thêm quá nhiều tool (Agent bị confused)</li>
+            <li>Không test với edge cases</li>
+            <li>Dùng model đắt tiền cho task đơn giản</li>
+            <li>Bỏ qua error handling</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Inject dynamic context vào prompt</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">System Prompt — Dynamic Context Injection</span></div>
+      <div class="cb-body"><pre><span class="cm">// Thêm thông tin user từ database vào context</span>
+<span class="st">Current user info:</span>
+<span class="st">- Name: {{ $('Get User').item.json.fullName }}</span>
+<span class="st">- Plan: {{ $('Get User').item.json.planType }}</span>
+<span class="st">- Language: {{ $('Get User').item.json.preferredLanguage }}</span>
+
+<span class="cm">// Thêm dữ liệu real-time</span>
+<span class="st">Today's date: {{ $now.toFormat('EEEE, dd MMMM yyyy') }}</span>
+<span class="st">Current time (Vietnam): {{ $now.setZone('Asia/Ho_Chi_Minh').toFormat('HH:mm') }}</span>
+
+<span class="cm">// Điều kiện theo plan</span>
+<span class="st">{{ $('Get User').item.json.planType === 'premium'</span>
+<span class="st">  ? 'This is a premium user. Provide detailed, in-depth responses.'</span>
+<span class="st">  : 'Free user. Keep responses concise.' }}</span></pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S12 — DEBUG AGENT
+═════════════════════════════════ -->
+<div class="section" id="s12">
+  <div class="sec-head">
+    <span class="sec-tag">12</span>
+    <div>
+      <h2 class="sec-title">Debug AI Agent — Xử lý khi Agent sai</h2>
+      <p class="sec-sub">Agent không như kỳ vọng? Đây là quy trình debug có hệ thống</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Các lỗi phổ biến và cách xử lý</div>
+    <table class="tbl">
+      <thead><tr><th>Triệu chứng</th><th>Nguyên nhân</th><th>Cách sửa</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Agent không dùng tool dù cần</td>
+          <td>Tool description không rõ ràng</td>
+          <td class="c-g">Viết lại description rõ hơn, thêm "Use this when..."</td>
+        </tr>
+        <tr>
+          <td>Agent lặp vô tận, không có kết quả</td>
+          <td>Max iterations quá cao, tool luôn trả error</td>
+          <td class="c-b">Giảm max iterations, fix lỗi trong tool được gọi</td>
+        </tr>
+        <tr>
+          <td>Output JSON bị parse lỗi</td>
+          <td>LLM thêm text trước/sau JSON</td>
+          <td class="c-p">Dùng regex <code>/\{[\s\S]*\}/</code> để extract JSON</td>
+        </tr>
+        <tr>
+          <td>Agent trả lời sai ngôn ngữ</td>
+          <td>Thiếu chỉ định ngôn ngữ trong system prompt</td>
+          <td class="c-g">Thêm "Always respond in Vietnamese" vào prompt</td>
+        </tr>
+        <tr>
+          <td>Tốn quá nhiều token</td>
+          <td>Context window quá lớn, tool gọi nhiều lần</td>
+          <td class="c-y">Giảm window memory, giới hạn số tool calls</td>
+        </tr>
+        <tr>
+          <td>Agent "hallucinate" thông tin</td>
+          <td>Không có tool để verify, temperature cao</td>
+          <td class="c-g">Thêm search tool, giảm temperature xuống 0.1–0.2</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Xem intermediate steps của Agent</div>
+    <p>Bật <strong>"Return Intermediate Steps"</strong> trong AI Agent node để xem từng bước Thought/Action/Observation của agent — cực kỳ hữu ích để debug.</p>
+
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Inspect Agent Steps</span><span class="cb-tag">Debug</span></div>
+      <div class="cb-body"><pre><span class="kw">const</span> <span class="vr">agentResult</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>;
+
+<span class="cm">// Log toàn bộ intermediate steps</span>
+<span class="kw">if</span> (<span class="vr">agentResult</span>.<span class="pr">intermediateSteps</span>) {
+  <span class="vr">agentResult</span>.<span class="pr">intermediateSteps</span>.<span class="fn">forEach</span>((<span class="vr">step</span>, <span class="vr">i</span>) => {
+    <span class="fn">console</span>.<span class="pr">log</span>(<span class="st">`--- Step ${i + 1} ---`</span>);
+    <span class="fn">console</span>.<span class="pr">log</span>(<span class="st">'Tool called:'</span>, <span class="vr">step</span>.<span class="pr">action</span>.<span class="pr">tool</span>);
+    <span class="fn">console</span>.<span class="pr">log</span>(<span class="st">'Input:'</span>, <span class="vr">step</span>.<span class="pr">action</span>.<span class="pr">toolInput</span>);
+    <span class="fn">console</span>.<span class="pr">log</span>(<span class="st">'Output:'</span>, <span class="vr">step</span>.<span class="pr">observation</span>);
+  });
+}
+
+<span class="kw">return</span> [{ <span class="pr">json</span>: {
+  <span class="pr">finalAnswer</span>: <span class="vr">agentResult</span>.<span class="pr">output</span>,
+  <span class="pr">stepsCount</span>: <span class="vr">agentResult</span>.<span class="pr">intermediateSteps</span>?.<span class="pr">length</span> ?? <span class="nm">0</span>,
+  <span class="pr">toolsUsed</span>: <span class="vr">agentResult</span>.<span class="pr">intermediateSteps</span>
+    ?.<span class="fn">map</span>(<span class="vr">s</span> => <span class="vr">s</span>.<span class="pr">action</span>.<span class="pr">tool</span>) ?? []
+}}];</pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Error handling cho Agent workflow</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Error Workflow — Notify khi Agent fail</span><span class="cb-tag">Error Handler</span></div>
+      <div class="cb-body"><pre><span class="cm">// Code Node trong Error Workflow</span>
+<span class="kw">const</span> <span class="vr">errorData</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>;
+
+<span class="kw">return</span> [{
+  <span class="pr">json</span>: {
+    <span class="pr">message</span>: <span class="st">`🚨 AI Agent Failed!\n</span>
+<span class="st">Workflow: ${errorData.workflow.name}\n</span>
+<span class="st">Error: ${errorData.execution.error.message}\n</span>
+<span class="st">Time: ${$now.toFormat('dd/MM/yyyy HH:mm')}\n</span>
+<span class="st">Execution ID: ${errorData.execution.id}`</span>
+  }
+}];
+
+<span class="cm">// Kết nối output vào Telegram/Slack để nhận alert</span></pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S13 — CHEAT SHEET
+═════════════════════════════════ -->
+<div class="section" id="s13">
+  <div class="sec-head">
+    <span class="sec-tag">13</span>
+    <div>
+      <h2 class="sec-title">Cheat Sheet — AI Agent</h2>
+      <p class="sec-sub">Tra cứu nhanh cấu hình, expressions và patterns hay dùng nhất</p>
+    </div>
+  </div>
+
+  <div class="cheat-grid">
+    <div class="cheat-card">
+      <h4>🤖 AI Agent — Các port kết nối</h4>
+      <div class="cheat-row"><span class="ck">Input chính</span><span class="cv">chatInput (text)</span></div>
+      <div class="cheat-row"><span class="ck">LLM model</span><span class="cv">ai_languageModel port</span></div>
+      <div class="cheat-row"><span class="ck">Memory</span><span class="cv">ai_memory port</span></div>
+      <div class="cheat-row"><span class="ck">Tools</span><span class="cv">ai_tool port</span></div>
+      <div class="cheat-row"><span class="ck">Output</span><span class="cv">$json.output</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>💾 Memory — Expressions</h4>
+      <div class="cheat-row"><span class="ck">Session by user</span><span class="cv">{{ $json.userId }}</span></div>
+      <div class="cheat-row"><span class="ck">Telegram chat</span><span class="cv">{{ $json.message.chat.id }}</span></div>
+      <div class="cheat-row"><span class="ck">Session by date</span><span class="cv">{{ $now.toISODate() }}</span></div>
+      <div class="cheat-row"><span class="ck">Combined key</span><span class="cv">{{ $json.uid + '_' + $now.toISODate() }}</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>📤 Lấy output Agent</h4>
+      <div class="cheat-row"><span class="ck">Text output</span><span class="cv">$json.output</span></div>
+      <div class="cheat-row"><span class="ck">Từ node trước</span><span class="cv">$('AI Agent').first().json.output</span></div>
+      <div class="cheat-row"><span class="ck">Intermediate steps</span><span class="cv">$json.intermediateSteps</span></div>
+      <div class="cheat-row"><span class="ck">Số steps đã chạy</span><span class="cv">$json.intermediateSteps.length</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>⚙️ LLM Parameters</h4>
+      <div class="cheat-row"><span class="ck">Phân loại/Dữ liệu</span><span class="cv">temperature: 0.1</span></div>
+      <div class="cheat-row"><span class="ck">Chat thông thường</span><span class="cv">temperature: 0.5</span></div>
+      <div class="cheat-row"><span class="ck">Sáng tạo nội dung</span><span class="cv">temperature: 0.8</span></div>
+      <div class="cheat-row"><span class="ck">Max iterations</span><span class="cv">10 (default) → 30 (complex)</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>🔧 Tool Description Template</h4>
+      <div class="cheat-row"><span class="ck">Search tool</span><span class="cv">"Use when user asks about..."</span></div>
+      <div class="cheat-row"><span class="ck">Data tool</span><span class="cv">"Use to retrieve/update..."</span></div>
+      <div class="cheat-row"><span class="ck">Action tool</span><span class="cv">"Use to send/create/delete..."</span></div>
+      <div class="cheat-row"><span class="ck">Ngôn ngữ</span><span class="cv">English (dù app tiếng Việt)</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>🧠 Model Selection</h4>
+      <div class="cheat-row"><span class="ck">Nhanh & rẻ</span><span class="cv">gpt-4o-mini / gemini-flash</span></div>
+      <div class="cheat-row"><span class="ck">Thông minh</span><span class="cv">gpt-4o / claude-sonnet</span></div>
+      <div class="cheat-row"><span class="ck">Free local</span><span class="cv">ollama:llama3.1</span></div>
+      <div class="cheat-row"><span class="ck">Siêu nhanh</span><span class="cv">groq:llama3-70b</span></div>
+    </div>
+  </div>
+
+  <div style="margin-top:28px">
+    <div class="sub-title">Patterns hay dùng nhất</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Common Patterns — Copy &amp; paste</span><span class="cb-tag">Patterns</span></div>
+      <div class="cb-body"><pre><span class="cm">// 1. Extract JSON từ Agent output an toàn</span>
+<span class="kw">const</span> <span class="vr">raw</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>.<span class="pr">output</span>;
+<span class="kw">const</span> <span class="vr">json</span> = <span class="nm">JSON</span>.<span class="fn">parse</span>(<span class="vr">raw</span>.<span class="fn">match</span>(<span class="nm">/\{[\s\S]*\}/</span>)[<span class="nm">0</span>]);
+
+<span class="cm">// 2. Fallback nếu Agent không trả lời đúng format</span>
+<span class="kw">const</span> <span class="vr">output</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>.<span class="pr">output</span> || <span class="st">'Xin lỗi, tôi không thể xử lý yêu cầu này.'</span>;
+
+<span class="cm">// 3. Inject user message vào prompt (Human Message)</span>
+<span class="cm">// Trong AI Agent → "User Message" field:</span>
+<span class="st">{{ $json.chatInput ?? $json.message?.text ?? $json.query }}</span>
+
+<span class="cm">// 4. Check Agent có gọi tool nào không</span>
+<span class="kw">const</span> <span class="vr">steps</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>.<span class="pr">intermediateSteps</span> ?? [];
+<span class="kw">const</span> <span class="vr">toolsUsed</span> = <span class="vr">steps</span>.<span class="fn">map</span>(<span class="vr">s</span> => <span class="vr">s</span>.<span class="pr">action</span>.<span class="pr">tool</span>);
+<span class="fn">console</span>.<span class="pr">log</span>(<span class="st">'Tools called:'</span>, <span class="vr">toolsUsed</span>);</pre></div>
+    </div>
+  </div>
+
+  <div class="info i-ok" style="margin-top:22px">
+    <span class="info-ico">🔗</span>
+    <div style="font-size:13.5px">
+      <strong style="color:var(--text)">Tài nguyên học AI Agent với n8n:</strong><br>
+      <span style="color:var(--muted)">
+        <a href="https://docs.n8n.io/advanced-ai/" style="color:var(--n8n)">docs.n8n.io/advanced-ai</a> — Tài liệu chính thức AI &nbsp;·&nbsp;
+        <a href="https://n8n.io/workflows/?categories=AI" style="color:var(--n8n)">n8n.io/workflows AI</a> — Templates AI sẵn có &nbsp;·&nbsp;
+        <a href="https://community.n8n.io" style="color:var(--n8n)">community.n8n.io</a> — Hỏi đáp cộng đồng
+      </span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<div class="footer">
+  <span>🤖 n8n AI Agent · Hướng dẫn xây dựng AI Agent toàn tập · Bộ tài liệu n8n Series</span>
+  <span style="margin-left:auto;color:var(--faint)">13 chủ đề · LLM + Tools + Memory + RAG</span>
+</div>
+</div><!-- /main -->
+
+<script>
+// ── Progress bar khi scroll ──
+window.addEventListener('scroll', () => {
+  const el = document.documentElement;
+  const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+  document.getElementById('pbar').style.width = pct + '%';
+});
+
+// ── Active nav link khi scroll ──
+const sections = document.querySelectorAll('.section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -65% 0px' });
+
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
