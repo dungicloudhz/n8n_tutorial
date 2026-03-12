@@ -202,6 +202,62 @@
       background: var(--accent);
     }
 
+    /* ══ PAGE NAV ══ */
+    .page-nav-section {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 4px
+    }
+
+    .page-nav-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 6px;
+      margin-bottom: 6px
+    }
+
+    .page-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 7px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all .18s;
+      margin-bottom: 3px;
+      font-family: 'Syne', sans-serif
+    }
+
+    .page-link:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-dim)
+    }
+
+    .page-link.active {
+      background: rgba(0, 217, 255, 0.1);
+      color: var(--accent);
+      font-weight: 700
+    }
+
+    .page-link .pg-icon {
+      font-size: 13px;
+      flex-shrink: 0
+    }
+
+    .page-link .pg-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      opacity: .5;
+      margin-left: auto
+    }
+
     /* Sidebar hide on mobile */
     @media (max-width: 1023px) {
       .sidebar {
@@ -861,6 +917,165 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #2a3f5f;
     }
+
+    /* ===================== PLAYGROUND ===================== */
+    .playground {
+      border-top: 1px solid var(--border);
+      background: #070b14;
+    }
+
+    .playground-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 16px;
+      background: #0c1220;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .traffic-lights {
+      display: flex;
+      gap: 5px;
+    }
+
+    .tl {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .tl-red {
+      background: #ff5f57;
+    }
+
+    .tl-yellow {
+      background: #ffbd2e;
+    }
+
+    .tl-green {
+      background: #28c840;
+    }
+
+    .playground-filename {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      flex: 1;
+    }
+
+    .btn-run {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 14px;
+      background: var(--js);
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .btn-run:hover {
+      background: #ffe44d;
+      transform: scale(1.03);
+    }
+
+    .btn-run:active {
+      transform: scale(0.97);
+    }
+
+    .btn-run svg {
+      width: 10px;
+      height: 10px;
+    }
+
+    .code-editable {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #c3e88d;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.7;
+      padding: 14px 16px;
+      resize: vertical;
+      min-height: 80px;
+      caret-color: var(--accent);
+      tab-size: 2;
+    }
+
+    .code-editable::selection {
+      background: rgba(0, 217, 255, 0.2);
+    }
+
+    .playground-output {
+      border-top: 1px solid var(--border);
+      padding: 10px 16px;
+      display: none;
+    }
+
+    .playground-output.show {
+      display: block;
+    }
+
+    .output-label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .output-label.ok {
+      color: #4ade80;
+    }
+
+    .output-label.err {
+      color: #f87171;
+    }
+
+    .output-body {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .output-line {
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .output-line.log {
+      color: #e2e8f0;
+    }
+
+    .output-line.warn {
+      color: #fbbf24;
+    }
+
+    .output-line.err {
+      color: #f87171;
+    }
+
+    .output-line.ret {
+      color: var(--green);
+    }
+
+    .output-line.info {
+      color: var(--accent);
+    }
+
+    .code-panel {
+      border-right: 1px solid var(--border);
+    }
   </style>
 </head>
 
@@ -875,6 +1090,23 @@
         <div class="brand-logo">n8n</div>
         <div class="brand-title">JS → n8n</div>
         <div class="brand-sub">Hướng dẫn cho JavaScript Developer</div>
+      </div>
+
+      <!-- ── PAGE NAVIGATION ── -->
+      <div class="page-nav-section">
+        <div class="page-nav-label">Bộ tài liệu</div>
+        <a href="html_css_introduction.html" class="page-link">
+          <span class="pg-icon">🏗️</span> HTML &amp; CSS
+          <span class="pg-num">01</span>
+        </a>
+        <a href="javascript_introduction.html" class="page-link">
+          <span class="pg-icon">⚡</span> JavaScript
+          <span class="pg-num">02</span>
+        </a>
+        <a href="n8n_js_guide.html" class="page-link active">
+          <span class="pg-icon">🔴</span> JS → n8n
+          <span class="pg-num">03</span>
+        </a>
       </div>
 
       <nav class="sidebar-nav">
@@ -954,7 +1186,7 @@
 
       <!-- CONTENT -->
       <div class="content">
-        <!-- ===== 1. VARIABLES & DATA ===== -->
+
         <div class="section" id="variables">
           <div class="section-header">
             <div class="section-num">01</div>
@@ -964,12 +1196,11 @@
             </div>
           </div>
 
-          <!-- CARD 1 -->
           <div class="compare-card">
             <div class="compare-card-header">
               <span class="concept-icon">📦</span>
               <span class="concept-name">Khai báo biến & Set Node</span>
-              <span class="concept-desc"><span class="node-badge badge-action">ACTION</span> Set / Edit Fields</span>
+              <span class="concept-desc"><span class="node-badge badge-action">ACTION</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
@@ -985,6 +1216,37 @@
   <span class="prop">email</span>: <span class="str">"a@gmail.com"</span>,
   <span class="prop">score</span>: <span class="num">90</span>
 };</pre>
+                <div class="playground" id="pg-variables1">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">variables.js</span>
+                    <button class="btn-run" onclick="runCode('pg-variables1')"><svg viewBox="0 0 10 10"
+                        fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="15">const name = &quot;Nguyễn Văn A&quot;;
+const age = 25;
+const isActive = true;
+
+const user = {
+  name: &quot;Nguyễn Văn A&quot;,
+  email: &quot;a@gmail.com&quot;,
+  score: 90
+};
+
+console.log(&quot;name:&quot;, name);
+console.log(&quot;age:&quot;, age);
+console.log(&quot;isActive:&quot;, isActive);
+console.log(&quot;user:&quot;, user);</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
+                  </div>
+                </div>
               </div>
               <div class="node-panel">
                 <div class="panel-label n8n">🔴 n8n Node</div>
@@ -992,22 +1254,14 @@
                   <div class="node-type"><span class="node-dot"></span> Edit Fields (Set)</div>
                   <div class="node-title">Set User Data</div>
                   <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">name</span>
-                      <span class="config-val highlight">= "Nguyễn Văn A"</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">email</span>
-                      <span class="config-val highlight">= "a@gmail.com"</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">score</span>
-                      <span class="config-val highlight">= 90</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Mode</span>
-                      <span class="config-val">Keep All Fields</span>
-                    </div>
+                    <div class="config-row"><span class="config-key">name</span><span class="config-val highlight">=
+                        "Nguyễn Văn A"</span></div>
+                    <div class="config-row"><span class="config-key">email</span><span class="config-val highlight">=
+                        "a@gmail.com"</span></div>
+                    <div class="config-row"><span class="config-key">score</span><span class="config-val highlight">=
+                        90</span></div>
+                    <div class="config-row"><span class="config-key">Mode</span><span class="config-val">Keep All
+                        Fields</span></div>
                   </div>
                 </div>
               </div>
@@ -1015,62 +1269,72 @@
             <div class="compare-full">
               <div class="explain-box">
                 <span class="explain-icon">💡</span>
-                <div class="explain-text">
-                  Trong n8n, node <strong>Edit Fields (Set)</strong> giống như việc gán biến trong JS.
-                  Bạn định nghĩa key-value, và n8n truyền chúng sang các node tiếp theo qua
-                  <code>$json.fieldName</code>.
-                  Chọn <strong>Keep All Fields</strong> để giữ dữ liệu cũ + thêm field mới, hoặc
-                  <strong>Replace</strong> để chỉ giữ field bạn set.
-                </div>
+                <div class="explain-text">Trong n8n, node <strong>Edit Fields (Set)</strong> giống như gán biến trong
+                  JS. Dữ liệu truyền qua các node tiếp theo bằng <code>$json.fieldName</code>.</div>
               </div>
             </div>
           </div>
 
-          <!-- CARD 2: Accessing data -->
           <div class="compare-card">
             <div class="compare-card-header">
               <span class="concept-icon">🔍</span>
               <span class="concept-name">Truy cập dữ liệu từ node trước</span>
-              <span class="concept-desc"><span class="node-badge badge-core">EXPRESSION</span> $json / $node</span>
+              <span class="concept-desc"><span class="node-badge badge-core">EXPRESSION</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
                 <div class="panel-label js">⚡ JavaScript</div>
-                <pre><span class="cmt">// Truy cập thuộc tính object</span>
+                <pre><span class="cmt">// Truy cập thuộc tính</span>
 <span class="var">user</span>.<span class="prop">name</span>
 <span class="var">user</span>.<span class="prop">email</span>
 
-<span class="cmt">// Truy cập nested object</span>
+<span class="cmt">// Nested object</span>
 <span class="var">response</span>.<span class="prop">data</span>.<span class="prop">items</span>[<span class="num">0</span>].<span class="prop">id</span>
 
 <span class="cmt">// Destructuring</span>
-<span class="kw">const</span> { <span class="var">name</span>, <span class="var">age</span> } = <span class="var">user</span>;
+<span class="kw">const</span> { <span class="var">name</span>, <span class="var">age</span> } = <span class="var">user</span>;</pre>
+                <div class="playground" id="pg-variables2">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">access.js</span>
+                    <button class="btn-run" onclick="runCode('pg-variables2')"><svg viewBox="0 0 10 10"
+                        fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="13">const user = {
+  name: &quot;Nguyễn Văn A&quot;,
+  email: &quot;a@gmail.com&quot;,
+  data: { items: [{ id: 101 }, { id: 102 }] }
+};
 
-<span class="cmt">// Từ node khác (trong workflow)</span>
-<span class="cmt">// prevNode.output.data.field</span></pre>
+console.log(&quot;user.name:&quot;, user.name);
+console.log(&quot;user.email:&quot;, user.email);
+console.log(&quot;nested items[0].id:&quot;, user.data.items[0].id);
+
+const { name, email } = user;
+console.log(&quot;Destructured:&quot;, name, &quot;|&quot;, email);</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
+                  </div>
+                </div>
               </div>
               <div class="node-panel">
-                <div class="panel-label n8n">🔴 n8n Expressions</div>
+                <div class="panel-label n8n">🔴 n8n Node</div>
                 <div class="n8n-node">
                   <div class="node-type"><span class="node-dot"></span> Expression Syntax</div>
                   <div class="node-title">Truy cập dữ liệu</div>
                   <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Node hiện tại</span>
-                      <span class="config-val highlight">{{ $json.name }}</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Nested</span>
-                      <span class="config-val highlight">{{ $json.data.items[0].id }}</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Node cụ thể</span>
-                      <span class="config-val highlight">{{ $node["Set User"].json.email }}</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">All items</span>
-                      <span class="config-val highlight">{{ $items("HTTP Request") }}</span>
-                    </div>
+                    <div class="config-row"><span class="config-key">Node hiện tại</span><span
+                        class="config-val highlight">{{ $json.name }}</span></div>
+                    <div class="config-row"><span class="config-key">Nested</span><span class="config-val highlight">{{
+                        $json.data.items[0].id }}</span></div>
+                    <div class="config-row"><span class="config-key">Node khác</span><span
+                        class="config-val highlight">{{ $node["Set User"].json.email }}</span></div>
                   </div>
                 </div>
               </div>
@@ -1078,24 +1342,22 @@
             <div class="compare-full">
               <div class="explain-box">
                 <span class="explain-icon">💡</span>
-                <div class="explain-text">
-                  n8n dùng cú pháp <strong>{{ expression }}</strong> trong các field để truy cập dữ liệu.
-                  <strong>$json</strong> = dữ liệu từ node trước đó, như <code>response.data</code> trong JS.
-                  <strong>$node["Tên Node"].json</strong> giống như import result từ một function cụ thể.
+                <div class="explain-text">n8n dùng <strong>{{ expression }}</strong> để truy cập dữ liệu.
+                  <strong>$json</strong> = output node trước, như <code>response.data</code> trong JS.
                 </div>
               </div>
             </div>
           </div>
+
         </div>
 
-        <div class="section-divider">Điều kiện & Phân nhánh</div>
+        <div class="section-divider">Điều kiện &amp; Phân nhánh</div>
 
-        <!-- ===== 2. CONDITIONS ===== -->
         <div class="section" id="conditions">
           <div class="section-header">
             <div class="section-num">02</div>
             <div>
-              <div class="section-title">If / Switch → IF Node & Switch Node</div>
+              <div class="section-title">If / Switch → IF Node &amp; Switch Node</div>
               <div class="section-subtitle">Phân nhánh workflow theo điều kiện</div>
             </div>
           </div>
@@ -1104,23 +1366,52 @@
             <div class="compare-card-header">
               <span class="concept-icon">🔀</span>
               <span class="concept-name">If-Else → IF Node</span>
-              <span class="concept-desc"><span class="node-badge badge-logic">LOGIC</span> IF Node</span>
+              <span class="concept-desc"><span class="node-badge badge-logic">LOGIC</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
                 <div class="panel-label js">⚡ JavaScript</div>
-                <pre><span class="kw">if</span> (<span class="var">user</span>.<span class="prop">age</span> <span class="op">>=</span> <span class="num">18</span>) {
+                <pre><span class="kw">if</span> (<span class="var">user</span>.<span class="prop">age</span> <span class="op">&gt;=</span> <span class="num">18</span>) {
   <span class="cmt">// → nhánh TRUE</span>
-  sendEmail(<span class="var">user</span>);
+  <span class="fn">sendEmail</span>(<span class="var">user</span>);
 } <span class="kw">else</span> {
   <span class="cmt">// → nhánh FALSE</span>
-  blockUser(<span class="var">user</span>);
+  <span class="fn">blockUser</span>(<span class="var">user</span>);
 }
 
-<span class="cmt">// Kết hợp điều kiện</span>
-<span class="kw">if</span> (<span class="var">score</span> <span class="op">></span> <span class="num">80</span> <span class="op">&&</span> <span class="var">isActive</span>) {
-  applyDiscount();
+<span class="kw">if</span> (<span class="var">score</span> <span class="op">&gt;</span> <span class="num">80</span> <span class="op">&amp;&amp;</span> <span class="var">isActive</span>) {
+  <span class="fn">applyDiscount</span>();
 }</pre>
+                <div class="playground" id="pg-if1">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">if-else.js</span>
+                    <button class="btn-run" onclick="runCode('pg-if1')"><svg viewBox="0 0 10 10" fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="15">const user = { name: &quot;An&quot;, age: 20 };
+// Thử đổi age thành 15 rồi bấm Chạy lại!
+
+if (user.age &gt;= 18) {
+  console.log(&quot;✅ TRUE: Gửi email cho&quot;, user.name);
+} else {
+  console.log(&quot;❌ FALSE: Chặn user&quot;, user.name);
+}
+
+const score = 85;
+const isActive = true;
+if (score &gt; 80 &amp;&amp; isActive) {
+  console.log(&quot;🎉 Áp dụng giảm giá 10%&quot;);
+}</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
+                  </div>
+                </div>
               </div>
               <div class="node-panel">
                 <div class="panel-label n8n">🔴 n8n Node</div>
@@ -1128,54 +1419,72 @@
                   <div class="node-type"><span class="node-dot"></span> IF Node</div>
                   <div class="node-title">Check User Age</div>
                   <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Condition 1</span>
-                      <span class="config-val highlight">$json.age >= 18</span>
+                    <div class="config-row"><span class="config-key">Condition</span><span
+                        class="config-val highlight">$json.age >= 18</span></div>
+                    <div class="config-row"><span class="config-key">Combine</span><span class="config-val">AND</span>
                     </div>
-                    <div class="config-row">
-                      <span class="config-key">Combine</span>
-                      <span class="config-val">AND</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">True branch</span>
-                      <span class="config-val highlight">→ Send Email</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">False branch</span>
-                      <span class="config-val highlight">→ Block User</span>
-                    </div>
+                    <div class="config-row"><span class="config-key">True branch</span><span
+                        class="config-val highlight">→ Send Email</span></div>
+                    <div class="config-row"><span class="config-key">False branch</span><span
+                        class="config-val highlight">→ Block User</span></div>
                   </div>
                 </div>
-                <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">
-                  IF node có 2 output ports: <strong style="color: var(--green)">True</strong> và <strong
-                    style="color: var(--n8n)">False</strong> — kéo dây đến node tương ứng
-                </p>
+                <p style="font-size:12px;color:var(--text-muted);margin-top:10px">IF node có 2 output ports: <strong
+                    style="color:var(--green)">True</strong> và <strong style="color:var(--n8n)">False</strong></p>
               </div>
             </div>
+
           </div>
 
           <div class="compare-card">
             <div class="compare-card-header">
               <span class="concept-icon">🎯</span>
               <span class="concept-name">Switch-Case → Switch Node</span>
-              <span class="concept-desc"><span class="node-badge badge-logic">LOGIC</span> Switch Node</span>
+              <span class="concept-desc"><span class="node-badge badge-logic">LOGIC</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
                 <div class="panel-label js">⚡ JavaScript</div>
                 <pre><span class="kw">switch</span> (<span class="var">order</span>.<span class="prop">status</span>) {
   <span class="kw">case</span> <span class="str">"pending"</span>:
-    <span class="fn">sendConfirmation</span>();
-    <span class="kw">break</span>;
+    <span class="fn">sendConfirmation</span>(); <span class="kw">break</span>;
   <span class="kw">case</span> <span class="str">"shipped"</span>:
-    <span class="fn">updateTracking</span>();
-    <span class="kw">break</span>;
+    <span class="fn">updateTracking</span>(); <span class="kw">break</span>;
   <span class="kw">case</span> <span class="str">"delivered"</span>:
-    <span class="fn">markComplete</span>();
-    <span class="kw">break</span>;
+    <span class="fn">markComplete</span>(); <span class="kw">break</span>;
   <span class="kw">default</span>:
     <span class="fn">logError</span>();
 }</pre>
+                <div class="playground" id="pg-switch1">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">switch.js</span>
+                    <button class="btn-run" onclick="runCode('pg-switch1')"><svg viewBox="0 0 10 10"
+                        fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="14">const order = { status: &quot;shipped&quot; };
+// Thử đổi: &quot;pending&quot; / &quot;delivered&quot; / &quot;unknown&quot;
+
+switch (order.status) {
+  case &quot;pending&quot;:
+    console.log(&quot;📧 Gửi email xác nhận&quot;); break;
+  case &quot;shipped&quot;:
+    console.log(&quot;🚚 Cập nhật tracking&quot;); break;
+  case &quot;delivered&quot;:
+    console.log(&quot;✅ Đánh dấu hoàn thành&quot;); break;
+  default:
+    console.log(&quot;⚠ Không hợp lệ:&quot;, order.status);
+}</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
+                  </div>
+                </div>
               </div>
               <div class="node-panel">
                 <div class="panel-label n8n">🔴 n8n Node</div>
@@ -1183,26 +1492,16 @@
                   <div class="node-type"><span class="node-dot"></span> Switch Node</div>
                   <div class="node-title">Route By Order Status</div>
                   <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Mode</span>
-                      <span class="config-val">Rules</span>
+                    <div class="config-row"><span class="config-key">Mode</span><span class="config-val">Rules</span>
                     </div>
-                    <div class="config-row">
-                      <span class="config-key">Output 0</span>
-                      <span class="config-val highlight">status == "pending"</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Output 1</span>
-                      <span class="config-val highlight">status == "shipped"</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Output 2</span>
-                      <span class="config-val highlight">status == "delivered"</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Fallback</span>
-                      <span class="config-val">→ Log Error</span>
-                    </div>
+                    <div class="config-row"><span class="config-key">Output 0</span><span
+                        class="config-val highlight">status == "pending"</span></div>
+                    <div class="config-row"><span class="config-key">Output 1</span><span
+                        class="config-val highlight">status == "shipped"</span></div>
+                    <div class="config-row"><span class="config-key">Output 2</span><span
+                        class="config-val highlight">status == "delivered"</span></div>
+                    <div class="config-row"><span class="config-key">Fallback</span><span class="config-val">→ Log
+                        Error</span></div>
                   </div>
                 </div>
               </div>
@@ -1210,25 +1509,22 @@
             <div class="compare-full">
               <div class="explain-box">
                 <span class="explain-icon">💡</span>
-                <div class="explain-text">
-                  Switch node tạo nhiều output ports như các <strong>case</strong> trong JS. Mỗi rule là một điều kiện —
-                  data khớp rule nào sẽ đi ra port đó.
-                  Bạn có thể dùng <strong>Expression mode</strong> để route theo giá trị của field bất kỳ:
-                  <code>{{ $json.status }}</code>
+                <div class="explain-text">Switch node tạo nhiều output ports như các <strong>case</strong>. Dùng
+                  <strong>Expression mode</strong> để route theo <code>{{ $json.status }}</code>.
                 </div>
               </div>
             </div>
           </div>
+
         </div>
 
-        <div class="section-divider">Vòng lặp & Mảng</div>
+        <div class="section-divider">Vòng lặp &amp; Mảng</div>
 
-        <!-- ===== 3. LOOPS ===== -->
         <div class="section" id="loops">
           <div class="section-header">
             <div class="section-num">03</div>
             <div>
-              <div class="section-title">Loops & Array Methods → SplitInBatches / Items</div>
+              <div class="section-title">Loops &amp; Array Methods → SplitInBatches / Items</div>
               <div class="section-subtitle">Xử lý danh sách dữ liệu</div>
             </div>
           </div>
@@ -1237,7 +1533,7 @@
             <div class="compare-card-header">
               <span class="concept-icon">🔄</span>
               <span class="concept-name">forEach / map → n8n Items</span>
-              <span class="concept-desc"><span class="node-badge badge-core">CORE</span> Auto-loop mặc định</span>
+              <span class="concept-desc"><span class="node-badge badge-core">CORE</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
@@ -1248,94 +1544,57 @@
   { <span class="prop">id</span>: <span class="num">2</span>, <span class="prop">name</span>: <span class="str">"Bình"</span> },
 ];
 
-<span class="var">users</span>.<span class="fn">forEach</span>(<span class="var">user</span> <span class="op">=></span> {
+<span class="var">users</span>.<span class="fn">forEach</span>(<span class="var">user</span> <span class="op">=&gt;</span> {
   <span class="fn">sendEmail</span>(<span class="var">user</span>.<span class="prop">email</span>);
-});
+});</pre>
+                <div class="playground" id="pg-loop1">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">auto-loop.js</span>
+                    <button class="btn-run" onclick="runCode('pg-loop1')"><svg viewBox="0 0 10 10" fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="12">// n8n tự loop qua từng item như forEach này!
+const users = [
+  { id: 1, name: &quot;An&quot;,    email: &quot;an@gmail.com&quot; },
+  { id: 2, name: &quot;Bình&quot;,  email: &quot;binh@gmail.com&quot; },
+  { id: 3, name: &quot;Cường&quot;, email: &quot;cuong@gmail.com&quot; },
+];
 
-<span class="cmt">// Hoặc for...of</span>
-<span class="kw">for</span> (<span class="kw">const</span> <span class="var">user</span> <span class="kw">of</span> <span class="var">users</span>) {
-  <span class="fn">callAPI</span>(<span class="var">user</span>.<span class="prop">id</span>);
-}</pre>
-              </div>
-              <div class="node-panel">
-                <div class="panel-label n8n">🔴 n8n Auto-loop</div>
-                <div class="n8n-node">
-                  <div class="node-type"><span class="node-dot"></span> n8n tự động loop!</div>
-                  <div class="node-title">🎉 Không cần viết loop</div>
-                  <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Input</span>
-                      <span class="config-val">[ user1, user2, user3 ]</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Node xử lý</span>
-                      <span class="config-val highlight">Send Email Node</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">n8n làm gì?</span>
-                      <span class="config-val">Chạy node cho TỪNG item!</span>
-                    </div>
+users.forEach(user =&gt; {
+  console.log(`📨 [item ${user.id}] gửi tới: ${user.email}`);
+});
+console.log(&quot;→ n8n chạy node cho&quot;, users.length, &quot;items tự động!&quot;);</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
                   </div>
                 </div>
-                <p style="font-size: 12px; color: var(--green); margin-top: 12px;">
-                  ✅ Mỗi node trong n8n mặc định chạy cho tất cả items — tương đương forEach tự động!
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="compare-card">
-            <div class="compare-card-header">
-              <span class="concept-icon">📦</span>
-              <span class="concept-name">Batch Processing → SplitInBatches</span>
-              <span class="concept-desc"><span class="node-badge badge-action">ACTION</span> Split In Batches</span>
-            </div>
-            <div class="compare-grid">
-              <div class="code-panel">
-                <div class="panel-label js">⚡ JavaScript</div>
-                <pre><span class="cmt">// Chia mảng thành chunks</span>
-<span class="kw">function</span> <span class="fn">chunk</span>(<span class="var">arr</span>, <span class="var">size</span>) {
-  <span class="kw">const</span> <span class="var">result</span> = [];
-  <span class="kw">for</span> (<span class="kw">let</span> <span class="var">i</span> = <span class="num">0</span>; <span class="var">i</span> <span class="op"><</span> <span class="var">arr</span>.<span class="prop">length</span>; <span class="var">i</span> <span class="op">+=</span> <span class="var">size</span>) {
-    <span class="var">result</span>.<span class="fn">push</span>(<span class="var">arr</span>.<span class="fn">slice</span>(<span class="var">i</span>, <span class="var">i</span> <span class="op">+</span> <span class="var">size</span>));
-  }
-  <span class="kw">return</span> <span class="var">result</span>;
-}
-
-<span class="cmt">// Xử lý 100 users, 10 cái/lần</span>
-<span class="kw">const</span> <span class="var">batches</span> = <span class="fn">chunk</span>(<span class="var">users</span>, <span class="num">10</span>);
-<span class="kw">for</span> (<span class="kw">const</span> <span class="var">batch</span> <span class="kw">of</span> <span class="var">batches</span>) {
-  <span class="kw">await</span> <span class="fn">processBatch</span>(<span class="var">batch</span>);
-  <span class="kw">await</span> <span class="fn">delay</span>(<span class="num">1000</span>);
-}</pre>
               </div>
               <div class="node-panel">
                 <div class="panel-label n8n">🔴 n8n Node</div>
                 <div class="n8n-node">
-                  <div class="node-type"><span class="node-dot"></span> Split In Batches</div>
-                  <div class="node-title">Process in Batches of 10</div>
+                  <div class="node-type"><span class="node-dot"></span> Auto-loop (Built-in!)</div>
+                  <div class="node-title">🎉 Không cần viết loop</div>
                   <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Batch Size</span>
-                      <span class="config-val highlight">10</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Reset</span>
-                      <span class="config-val">false</span>
-                    </div>
+                    <div class="config-row"><span class="config-key">Input</span><span class="config-val">[ user1,
+                        user2, user3 ]</span></div>
+                    <div class="config-row"><span class="config-key">n8n tự làm</span><span
+                        class="config-val highlight">Chạy node cho TỪNG item</span></div>
                   </div>
                 </div>
-                <div class="flow-arrow">↓ loop back ↑</div>
-                <div class="n8n-node">
-                  <div class="node-type"><span class="node-dot"></span> Wait Node</div>
-                  <div class="node-title">Delay 1 second</div>
-                  <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Wait Amount</span>
-                      <span class="config-val highlight">1 second</span>
-                    </div>
-                  </div>
-                </div>
+                <p style="font-size:12px;color:var(--green);margin-top:10px">✅ Mỗi node tự chạy cho tất cả items!</p>
+              </div>
+            </div>
+            <div class="compare-full">
+              <div class="explain-box">
+                <span class="explain-icon">💡</span>
+                <div class="explain-text">Điểm khác biệt lớn nhất: <strong>n8n tự động loop</strong> qua tất cả items.
+                  Không cần forEach — node sẽ chạy cho mỗi item trong mảng đầu vào.</div>
               </div>
             </div>
           </div>
@@ -1343,46 +1602,75 @@
           <div class="compare-card">
             <div class="compare-card-header">
               <span class="concept-icon">🔧</span>
-              <span class="concept-name">Array .map() → Code Node / Item Lists</span>
-              <span class="concept-desc"><span class="node-badge badge-transform">TRANSFORM</span> Code / Item
-                Lists</span>
+              <span class="concept-name">Array .map() .filter() → Code Node</span>
+              <span class="concept-desc"><span class="node-badge badge-transform">TRANSFORM</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
                 <div class="panel-label js">⚡ JavaScript</div>
                 <pre><span class="cmt">// map: biến đổi từng phần tử</span>
-<span class="kw">const</span> <span class="var">emails</span> = <span class="var">users</span>.<span class="fn">map</span>(<span class="var">u</span> <span class="op">=></span> ({
+<span class="kw">const</span> <span class="var">emails</span> = <span class="var">users</span>.<span class="fn">map</span>(<span class="var">u</span> <span class="op">=&gt;</span> ({
   <span class="prop">to</span>: <span class="var">u</span>.<span class="prop">email</span>,
-  <span class="prop">subject</span>: <span class="str">`Hello </span><span class="op">${</span><span class="var">u</span>.<span class="prop">name</span><span class="op">}</span><span class="str">`</span>,
-  <span class="prop">sent</span>: <span class="kw">false</span>
+  <span class="prop">subject</span>: <span class="str">`Hello </span><span class="op">${</span><span class="var">u</span>.<span class="prop">name</span><span class="op">}</span><span class="str">`</span>
 }));
 
 <span class="cmt">// filter: lọc phần tử</span>
 <span class="kw">const</span> <span class="var">adults</span> = <span class="var">users</span>.<span class="fn">filter</span>(
-  <span class="var">u</span> <span class="op">=></span> <span class="var">u</span>.<span class="prop">age</span> <span class="op">>=</span> <span class="num">18</span>
+  <span class="var">u</span> <span class="op">=&gt;</span> <span class="var">u</span>.<span class="prop">age</span> <span class="op">&gt;=</span> <span class="num">18</span>
 );</pre>
+                <div class="playground" id="pg-loop2">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">array-methods.js</span>
+                    <button class="btn-run" onclick="runCode('pg-loop2')"><svg viewBox="0 0 10 10" fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="21">const users = [
+  { id: 1, name: &quot;An&quot;,    age: 16 },
+  { id: 2, name: &quot;Bình&quot;,  age: 22 },
+  { id: 3, name: &quot;Cường&quot;, age: 30 },
+];
+
+// map → Code Node transform
+const emails = users.map(u =&gt; ({
+  to: u.name + &quot;@gmail.com&quot;,
+  subject: &quot;Hello &quot; + u.name
+}));
+console.log(&quot;map →&quot;, emails);
+
+// filter → Filter Node
+const adults = users.filter(u =&gt; u.age &gt;= 18);
+console.log(&quot;filter adults →&quot;, adults);
+
+// reduce → tổng
+const totalAge = users.reduce((s, u) =&gt; s + u.age, 0);
+console.log(&quot;tổng tuổi →&quot;, totalAge);</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
+                  </div>
+                </div>
               </div>
               <div class="node-panel">
                 <div class="panel-label n8n">🔴 n8n Node</div>
                 <div class="n8n-node">
                   <div class="node-type"><span class="node-dot"></span> Code Node (JS)</div>
-                  <div class="node-title">Map & Transform Items</div>
+                  <div class="node-title">Map & Filter Items</div>
                   <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Mode</span>
-                      <span class="config-val">Run Once For All Items</span>
-                    </div>
-                    <div class="config-row" style="flex-direction: column; gap: 4px;">
-                      <span class="config-key">Code:</span>
-                      <span class="config-val highlight" style="font-size: 11px; line-height: 1.6;">
-                        return items.map(item => ({<br>
-                        &nbsp;&nbsp;json: {<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;to: item.json.email,<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;subject: `Hello ${item.json.name}`<br>
-                        &nbsp;&nbsp;}<br>
-                        }));
-                      </span>
-                    </div>
+                    <div class="config-row"><span class="config-key">Mode</span><span class="config-val">Run Once For
+                        All Items</span></div>
+                    <div class="config-row"><span class="config-key">Code</span><span
+                        class="config-val highlight">return items.map(item => ({</span></div>
+                    <div class="config-row"><span class="config-key"></span><span class="config-val highlight"> json: {
+                        to: item.json.email,</span></div>
+                    <div class="config-row"><span class="config-key"></span><span class="config-val highlight"> subject:
+                        `Hello ${item.json.name}`</span></div>
+                    <div class="config-row"><span class="config-key"></span><span
+                        class="config-val highlight">}}));</span></div>
                   </div>
                 </div>
               </div>
@@ -1390,26 +1678,22 @@
             <div class="compare-full">
               <div class="explain-box">
                 <span class="explain-icon">💡</span>
-                <div class="explain-text">
-                  Trong Code Node, mảng <strong>items</strong> = array JS của bạn. Mỗi item có dạng
-                  <code>{ json: {...} }</code>.
-                  Để dùng <strong>.map()</strong>, chọn mode <em>"Run Once For All Items"</em> và
-                  <code>return items.map(...)</code>.
-                  Để dùng như <strong>.forEach()</strong>, chọn mode <em>"Run Once For Each Item"</em>.
+                <div class="explain-text">Trong Code Node: <strong>items</strong> = array JS. Mỗi item có dạng
+                  <code>{ json: {...} }</code>. Dùng mode <em>"Run Once For All Items"</em> để map/filter.
                 </div>
               </div>
             </div>
           </div>
+
         </div>
 
-        <div class="section-divider">Functions & Modules</div>
+        <div class="section-divider">Functions &amp; Modules</div>
 
-        <!-- ===== 4. FUNCTIONS ===== -->
         <div class="section" id="functions">
           <div class="section-header">
             <div class="section-num">04</div>
             <div>
-              <div class="section-title">Functions → Code Node & Sub-workflows</div>
+              <div class="section-title">Functions → Code Node &amp; Sub-workflows</div>
               <div class="section-subtitle">Đóng gói logic tái sử dụng</div>
             </div>
           </div>
@@ -1418,23 +1702,49 @@
             <div class="compare-card-header">
               <span class="concept-icon">⚙️</span>
               <span class="concept-name">Function → Code Node</span>
-              <span class="concept-desc"><span class="node-badge badge-core">CORE</span> Code Node</span>
+              <span class="concept-desc"><span class="node-badge badge-core">CORE</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
                 <div class="panel-label js">⚡ JavaScript</div>
-                <pre><span class="cmt">// Hàm xử lý dữ liệu</span>
-<span class="kw">function</span> <span class="fn">calculateDiscount</span>(<span class="var">price</span>, <span class="var">vip</span>) {
+                <pre><span class="kw">function</span> <span class="fn">calculateDiscount</span>(<span class="var">price</span>, <span class="var">vip</span>) {
   <span class="kw">if</span> (<span class="var">vip</span>) <span class="kw">return</span> <span class="var">price</span> <span class="op">*</span> <span class="num">0.8</span>;
-  <span class="kw">if</span> (<span class="var">price</span> <span class="op">></span> <span class="num">500000</span>) <span class="kw">return</span> <span class="var">price</span> <span class="op">*</span> <span class="num">0.9</span>;
+  <span class="kw">if</span> (<span class="var">price</span> <span class="op">&gt;</span> <span class="num">500000</span>) <span class="kw">return</span> <span class="var">price</span> <span class="op">*</span> <span class="num">0.9</span>;
   <span class="kw">return</span> <span class="var">price</span>;
 }
 
-<span class="cmt">// Gọi hàm</span>
 <span class="kw">const</span> <span class="var">final</span> = <span class="fn">calculateDiscount</span>(
-  <span class="var">order</span>.<span class="prop">price</span>,
-  <span class="var">user</span>.<span class="prop">isVip</span>
+  <span class="var">order</span>.<span class="prop">price</span>, <span class="var">user</span>.<span class="prop">isVip</span>
 );</pre>
+                <div class="playground" id="pg-fn1">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">function.js</span>
+                    <button class="btn-run" onclick="runCode('pg-fn1')"><svg viewBox="0 0 10 10" fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="14">function calculateDiscount(price, isVip) {
+  if (isVip) return price * 0.8;
+  if (price &gt; 500000) return price * 0.9;
+  return price;
+}
+
+// Thử thay đổi các giá trị!
+console.log(&quot;VIP 1,000,000đ →&quot;, calculateDiscount(1000000, true).toLocaleString(&quot;vi&quot;) + &quot;đ&quot;);
+console.log(&quot;Thường 600,000đ →&quot;, calculateDiscount(600000, false).toLocaleString(&quot;vi&quot;) + &quot;đ&quot;);
+console.log(&quot;Thường 200,000đ →&quot;, calculateDiscount(200000, false).toLocaleString(&quot;vi&quot;) + &quot;đ&quot;);
+
+const greet = name =&gt; &quot;Xin chào, &quot; + name + &quot;!&quot;;
+console.log(greet(&quot;Nguyễn Văn A&quot;));</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
+                  </div>
+                </div>
               </div>
               <div class="node-panel">
                 <div class="panel-label n8n">🔴 n8n Node</div>
@@ -1442,82 +1752,25 @@
                   <div class="node-type"><span class="node-dot"></span> Code Node</div>
                   <div class="node-title">Calculate Discount</div>
                   <div class="node-config">
-                    <div class="config-row" style="flex-direction: column; gap: 4px;">
-                      <span class="config-val highlight" style="font-size: 11.5px; line-height: 1.7;">
-                        const price = $json.price;<br>
-                        const isVip = $json.isVip;<br><br>
-                        let final = price;<br>
-                        if (isVip) final = price * 0.8;<br>
-                        else if (price > 500000) final = price * 0.9;<br><br>
-                        return [{ json: { ...$json, finalPrice: final } }];
-                      </span>
-                    </div>
+                    <div class="config-row"><span class="config-key"></span><span class="config-val highlight">const
+                        price = $json.price;</span></div>
+                    <div class="config-row"><span class="config-key"></span><span class="config-val highlight">const
+                        isVip = $json.isVip;</span></div>
+                    <div class="config-row"><span class="config-key"></span><span class="config-val highlight">let final
+                        = isVip ? price*0.8 : price;</span></div>
+                    <div class="config-row"><span class="config-key"></span><span class="config-val highlight">return [{
+                        json: { ...\$json, finalPrice: final } }];</span></div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
 
-          <div class="compare-card">
-            <div class="compare-card-header">
-              <span class="concept-icon">🗂️</span>
-              <span class="concept-name">Module / Reusable Function → Sub-workflow</span>
-              <span class="concept-desc"><span class="node-badge badge-action">ACTION</span> Execute Workflow</span>
-            </div>
-            <div class="compare-grid">
-              <div class="code-panel">
-                <div class="panel-label js">⚡ JavaScript</div>
-                <pre><span class="cmt">// utils/sendNotification.js</span>
-<span class="kw">export async function</span> <span class="fn">sendNotification</span>(<span class="var">data</span>) {
-  <span class="kw">await</span> <span class="fn">sendEmail</span>(<span class="var">data</span>);
-  <span class="kw">await</span> <span class="fn">sendSlack</span>(<span class="var">data</span>);
-  <span class="kw">await</span> <span class="fn">logDB</span>(<span class="var">data</span>);
-}
-
-<span class="cmt">// Gọi từ module khác</span>
-<span class="kw">import</span> { <span class="fn">sendNotification</span> } <span class="kw">from</span> <span class="str">"./utils"</span>;
-<span class="kw">await</span> <span class="fn">sendNotification</span>({ <span class="prop">user</span>: <span class="var">user</span> });</pre>
-              </div>
-              <div class="node-panel">
-                <div class="panel-label n8n">🔴 n8n Node</div>
-                <div class="n8n-node">
-                  <div class="node-type"><span class="node-dot"></span> Execute Workflow</div>
-                  <div class="node-title">Call: Send Notification</div>
-                  <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Workflow ID</span>
-                      <span class="config-val highlight">WF_sendNotification</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Wait for result</span>
-                      <span class="config-val">true</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Pass data</span>
-                      <span class="config-val highlight">{{ $json }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="compare-full">
-              <div class="explain-box">
-                <span class="explain-icon">💡</span>
-                <div class="explain-text">
-                  <strong>Sub-workflow</strong> = module/function tái sử dụng trong n8n. Tạo workflow với trigger
-                  <strong>When Called by Another Workflow</strong>,
-                  sau đó gọi bằng node <strong>Execute Workflow</strong>. Đây là cách tốt nhất để DRY (Don't Repeat
-                  Yourself) trong n8n,
-                  giống như extract một function dùng chung.
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div class="section-divider">HTTP & API</div>
+        <div class="section-divider">HTTP &amp; API</div>
 
-        <!-- ===== 5. HTTP ===== -->
         <div class="section" id="http">
           <div class="section-header">
             <div class="section-num">05</div>
@@ -1531,7 +1784,7 @@
             <div class="compare-card-header">
               <span class="concept-icon">🌐</span>
               <span class="concept-name">fetch() / axios → HTTP Request Node</span>
-              <span class="concept-desc"><span class="node-badge badge-action">ACTION</span> HTTP Request</span>
+              <span class="concept-desc"><span class="node-badge badge-action">ACTION</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
@@ -1542,12 +1795,45 @@
   {
     <span class="prop">method</span>: <span class="str">"GET"</span>,
     <span class="prop">headers</span>: {
-      <span class="str">"Authorization"</span>: <span class="str">`Bearer </span><span class="op">${</span><span class="var">token</span><span class="op">}</span><span class="str">`</span>,
-      <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span>
+      <span class="str">"Authorization"</span>: <span class="str">`Bearer </span><span class="op">${</span><span class="var">token</span><span class="op">}</span><span class="str">`</span>
     }
   }
 );
 <span class="kw">const</span> <span class="var">data</span> = <span class="kw">await</span> <span class="var">res</span>.<span class="fn">json</span>();</pre>
+                <div class="playground" id="pg-http1">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">http-request.js</span>
+                    <button class="btn-run" onclick="runCode('pg-http1')"><svg viewBox="0 0 10 10" fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="19">// Mô phỏng HTTP Request Node (n8n gọi API thật)
+function fakeHttpGet(url) {
+  const db = {
+    &quot;/users/1&quot;: { id:1, name:&quot;An&quot;,   email:&quot;an@example.com&quot;,   status:&quot;active&quot; },
+    &quot;/users/2&quot;: { id:2, name:&quot;Bình&quot;, email:&quot;binh@example.com&quot;, status:&quot;inactive&quot; },
+  };
+  return db[url] || { error: &quot;404 Not Found&quot;, url };
+}
+
+const userId = 1; // Thử đổi thành 2 hoặc 99!
+const res = fakeHttpGet(&quot;/users/&quot; + userId);
+console.log(&quot;Response:&quot;, res);
+
+if (res.error) {
+  console.error(&quot;Lỗi:&quot;, res.error);
+} else {
+  console.log(&quot;Email:&quot;, res.email, &quot;| Status:&quot;, res.status);
+}</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
+                  </div>
+                </div>
               </div>
               <div class="node-panel">
                 <div class="panel-label n8n">🔴 n8n Node</div>
@@ -1555,76 +1841,14 @@
                   <div class="node-type"><span class="node-dot"></span> HTTP Request</div>
                   <div class="node-title">Get User by ID</div>
                   <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Method</span>
-                      <span class="config-val highlight">GET</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">URL</span>
-                      <span class="config-val highlight">https://api.example.com/users/{{ $json.userId }}</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Auth</span>
-                      <span class="config-val">Bearer Token (Credential)</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Response</span>
-                      <span class="config-val">JSON (auto-parsed)</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="compare-card">
-            <div class="compare-card-header">
-              <span class="concept-icon">📤</span>
-              <span class="concept-name">POST / PUT với Body</span>
-              <span class="concept-desc"><span class="node-badge badge-action">ACTION</span> HTTP Request POST</span>
-            </div>
-            <div class="compare-grid">
-              <div class="code-panel">
-                <div class="panel-label js">⚡ JavaScript</div>
-                <pre><span class="cmt">// POST với JSON body</span>
-<span class="kw">const</span> <span class="var">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">"/api/orders"</span>, {
-  <span class="prop">method</span>: <span class="str">"POST"</span>,
-  <span class="prop">headers</span>: {
-    <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span>
-  },
-  <span class="prop">body</span>: <span class="fn">JSON.stringify</span>({
-    <span class="prop">userId</span>: <span class="var">user</span>.<span class="prop">id</span>,
-    <span class="prop">items</span>: <span class="var">cart</span>.<span class="prop">items</span>,
-    <span class="prop">total</span>: <span class="var">cart</span>.<span class="prop">total</span>
-  })
-});</pre>
-              </div>
-              <div class="node-panel">
-                <div class="panel-label n8n">🔴 n8n Node</div>
-                <div class="n8n-node">
-                  <div class="node-type"><span class="node-dot"></span> HTTP Request</div>
-                  <div class="node-title">Create Order</div>
-                  <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Method</span>
-                      <span class="config-val highlight">POST</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">URL</span>
-                      <span class="config-val">/api/orders</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Body Type</span>
-                      <span class="config-val">JSON</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">userId</span>
-                      <span class="config-val highlight">{{ $json.userId }}</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">total</span>
-                      <span class="config-val highlight">{{ $json.total }}</span>
-                    </div>
+                    <div class="config-row"><span class="config-key">Method</span><span
+                        class="config-val highlight">GET</span></div>
+                    <div class="config-row"><span class="config-key">URL</span><span
+                        class="config-val highlight">https://api.example.com/users/{{ $json.userId }}</span></div>
+                    <div class="config-row"><span class="config-key">Auth</span><span class="config-val">Bearer Token
+                        (Credential)</span></div>
+                    <div class="config-row"><span class="config-key">Response</span><span class="config-val">JSON
+                        (auto-parsed)</span></div>
                   </div>
                 </div>
               </div>
@@ -1632,20 +1856,17 @@
             <div class="compare-full">
               <div class="explain-box">
                 <span class="explain-icon">💡</span>
-                <div class="explain-text">
-                  n8n tự động handle <strong>JSON.stringify</strong> và parse response. Credentials (API keys, tokens)
-                  được lưu ở
-                  <strong>Credentials</strong> section — không hardcode vào URL như code thường.
-                  Dùng <strong>{{ $json.field }}</strong> để dynamic URL params và body values từ dữ liệu upstream.
-                </div>
+                <div class="explain-text">n8n tự handle <strong>JSON.stringify</strong> và parse response. API keys lưu
+                  trong <strong>Credentials</strong> — không hardcode. Dùng <code>{{ $json.field }}</code> cho dynamic
+                  URL.</div>
               </div>
             </div>
           </div>
+
         </div>
 
-        <div class="section-divider">Transform & Merge</div>
+        <div class="section-divider">Transform &amp; Merge</div>
 
-        <!-- ===== 6. TRANSFORMS ===== -->
         <div class="section" id="transforms">
           <div class="section-header">
             <div class="section-num">06</div>
@@ -1659,7 +1880,7 @@
             <div class="compare-card-header">
               <span class="concept-icon">🔗</span>
               <span class="concept-name">Object.assign / Spread → Merge Node</span>
-              <span class="concept-desc"><span class="node-badge badge-transform">TRANSFORM</span> Merge Node</span>
+              <span class="concept-desc"><span class="node-badge badge-transform">TRANSFORM</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
@@ -1668,12 +1889,43 @@
 <span class="kw">const</span> <span class="var">result</span> = { ...<span class="var">userA</span>, ...<span class="var">userB</span> };
 
 <span class="cmt">// Join 2 arrays bằng ID</span>
-<span class="kw">const</span> <span class="var">joined</span> = <span class="var">users</span>.<span class="fn">map</span>(<span class="var">u</span> <span class="op">=></span> {
-  <span class="kw">const</span> <span class="var">profile</span> = <span class="var">profiles</span>.<span class="fn">find</span>(
-    <span class="var">p</span> <span class="op">=></span> <span class="var">p</span>.<span class="prop">id</span> <span class="op">===</span> <span class="var">u</span>.<span class="prop">id</span>
+<span class="kw">const</span> <span class="var">joined</span> = <span class="var">users</span>.<span class="fn">map</span>(<span class="var">u</span> <span class="op">=&gt;</span> {
+  <span class="kw">const</span> <span class="var">p</span> = <span class="var">profiles</span>.<span class="fn">find</span>(
+    <span class="var">x</span> <span class="op">=&gt;</span> <span class="var">x</span>.<span class="prop">id</span> <span class="op">===</span> <span class="var">u</span>.<span class="prop">id</span>
   );
-  <span class="kw">return</span> { ...<span class="var">u</span>, ...<span class="var">profile</span> };
+  <span class="kw">return</span> { ...<span class="var">u</span>, ...<span class="var">p</span> };
 });</pre>
+                <div class="playground" id="pg-transform1">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">merge.js</span>
+                    <button class="btn-run" onclick="runCode('pg-transform1')"><svg viewBox="0 0 10 10"
+                        fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="15">// Merge Node: kết hợp 2 nguồn dữ liệu
+const userInfo    = { id: 1, name: &quot;An&quot; };
+const userProfile = { id: 1, avatar: &quot;an.jpg&quot;, level: 5 };
+const merged = { ...userInfo, ...userProfile };
+console.log(&quot;Merged:&quot;, merged);
+
+// Inner join theo ID (Merge Node mode: Combine)
+const users  = [{ id:1, name:&quot;An&quot; }, { id:2, name:&quot;Bình&quot; }];
+const scores = [{ id:1, score:90  }, { id:2, score:75   }];
+
+const joined = users.map(u =&gt; ({
+  ...u, ...scores.find(s =&gt; s.id === u.id)
+}));
+console.log(&quot;Joined:&quot;, joined);</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
+                  </div>
+                </div>
               </div>
               <div class="node-panel">
                 <div class="panel-label n8n">🔴 n8n Node</div>
@@ -1681,84 +1933,101 @@
                   <div class="node-type"><span class="node-dot"></span> Merge Node</div>
                   <div class="node-title">Join Users + Profiles</div>
                   <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Mode</span>
-                      <span class="config-val highlight">Combine (Inner Join)</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Join On</span>
-                      <span class="config-val highlight">id = id</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Input 1</span>
-                      <span class="config-val">Users Array</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Input 2</span>
-                      <span class="config-val">Profiles Array</span>
-                    </div>
+                    <div class="config-row"><span class="config-key">Mode</span><span
+                        class="config-val highlight">Combine (Inner Join)</span></div>
+                    <div class="config-row"><span class="config-key">Join On</span><span class="config-val highlight">id
+                        = id</span></div>
+                    <div class="config-row"><span class="config-key">Input 1</span><span class="config-val">Users
+                        Array</span></div>
+                    <div class="config-row"><span class="config-key">Input 2</span><span class="config-val">Profiles
+                        Array</span></div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
 
           <div class="compare-card">
             <div class="compare-card-header">
               <span class="concept-icon">📊</span>
               <span class="concept-name">Array.reduce() → Aggregate Node</span>
-              <span class="concept-desc"><span class="node-badge badge-transform">TRANSFORM</span> Aggregate Node</span>
+              <span class="concept-desc"><span class="node-badge badge-transform">TRANSFORM</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
                 <div class="panel-label js">⚡ JavaScript</div>
-                <pre><span class="cmt">// Tính tổng, trung bình</span>
+                <pre><span class="cmt">// Tính tổng</span>
 <span class="kw">const</span> <span class="var">total</span> = <span class="var">orders</span>.<span class="fn">reduce</span>(
-  (<span class="var">sum</span>, <span class="var">o</span>) <span class="op">=></span> <span class="var">sum</span> <span class="op">+</span> <span class="var">o</span>.<span class="prop">amount</span>, <span class="num">0</span>
+  (<span class="var">sum</span>, <span class="var">o</span>) <span class="op">=&gt;</span> <span class="var">sum</span> <span class="op">+</span> <span class="var">o</span>.<span class="prop">amount</span>, <span class="num">0</span>
 );
 
-<span class="cmt">// Gom tất cả items vào 1 mảng</span>
-<span class="kw">const</span> <span class="var">allItems</span> = <span class="var">orders</span>.<span class="fn">flatMap</span>(
-  <span class="var">o</span> <span class="op">=></span> <span class="var">o</span>.<span class="prop">items</span>
-);
+<span class="cmt">// Group by status</span>
+<span class="kw">const</span> <span class="var">grouped</span> = <span class="fn">groupBy</span>(<span class="var">orders</span>, <span class="str">"status"</span>);</pre>
+                <div class="playground" id="pg-transform2">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">aggregate.js</span>
+                    <button class="btn-run" onclick="runCode('pg-transform2')"><svg viewBox="0 0 10 10"
+                        fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="19">const orders = [
+  { id:1, amount:150000, status:&quot;done&quot;    },
+  { id:2, amount:320000, status:&quot;pending&quot; },
+  { id:3, amount:95000,  status:&quot;done&quot;    },
+  { id:4, amount:210000, status:&quot;pending&quot; },
+];
 
-<span class="cmt">// Count theo group</span>
-<span class="kw">const</span> <span class="var">byStatus</span> = <span class="fn">groupBy</span>(<span class="var">orders</span>, <span class="str">"status"</span>);</pre>
+const total = orders.reduce((s, o) =&gt; s + o.amount, 0);
+console.log(&quot;Tổng:&quot;, total.toLocaleString(&quot;vi&quot;) + &quot;đ&quot;);
+
+const grouped = orders.reduce((acc, o) =&gt; {
+  acc[o.status] = (acc[o.status] || 0) + 1;
+  return acc;
+}, {});
+console.log(&quot;Nhóm theo status:&quot;, grouped);
+
+const avg = Math.round(total / orders.length);
+console.log(&quot;Trung bình:&quot;, avg.toLocaleString(&quot;vi&quot;) + &quot;đ&quot;);</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
+                  </div>
+                </div>
               </div>
               <div class="node-panel">
                 <div class="panel-label n8n">🔴 n8n Node</div>
                 <div class="n8n-node">
                   <div class="node-type"><span class="node-dot"></span> Aggregate Node</div>
-                  <div class="node-title">Sum Orders</div>
+                  <div class="node-title">Sum &amp; Group Orders</div>
                   <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Aggregate</span>
-                      <span class="config-val">All Item Data (Into List)</span>
-                    </div>
-                  </div>
-                </div>
-                <div style="margin-top: 10px">
-                  <div class="n8n-node">
-                    <div class="node-type"><span class="node-dot"></span> Code Node</div>
-                    <div class="node-title">Calculate Total</div>
-                    <div class="node-config">
-                      <div class="config-row">
-                        <span class="config-val highlight" style="font-size:11px">
-                          const total = items.reduce((s,i) => s + i.json.amount, 0);<br>
-                          return [{ json: { total } }];
-                        </span>
-                      </div>
-                    </div>
+                    <div class="config-row"><span class="config-key">Aggregate</span><span
+                        class="config-val highlight">All Item Data (Into List)</span></div>
+                    <div class="config-row"><span class="config-key">+ Code Node</span><span
+                        class="config-val highlight">sum với reduce</span></div>
                   </div>
                 </div>
               </div>
             </div>
+            <div class="compare-full">
+              <div class="explain-box">
+                <span class="explain-icon">💡</span>
+                <div class="explain-text">Dùng <strong>Aggregate Node</strong> để gom items vào 1 list, sau đó
+                  <strong>Code Node</strong> để tính tổng/trung bình với <code>.reduce()</code>.
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
 
-        <div class="section-divider">Async & Scheduling</div>
+        <div class="section-divider">Async &amp; Scheduling</div>
 
-        <!-- ===== 7. ASYNC ===== -->
         <div class="section" id="async">
           <div class="section-header">
             <div class="section-num">07</div>
@@ -1772,22 +2041,55 @@
             <div class="compare-card-header">
               <span class="concept-icon">⏰</span>
               <span class="concept-name">setInterval / cron → Schedule Trigger</span>
-              <span class="concept-desc"><span class="node-badge badge-trigger">TRIGGER</span> Schedule Trigger</span>
+              <span class="concept-desc"><span class="node-badge badge-trigger">TRIGGER</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
                 <div class="panel-label js">⚡ JavaScript</div>
-                <pre><span class="cmt">// Chạy mỗi giờ</span>
-<span class="fn">setInterval</span>(<span class="fn">syncData</span>, <span class="num">3600000</span>);
-
-<span class="cmt">// Cron syntax: mỗi sáng 8:00</span>
-<span class="cmt">// "0 8 * * *"</span>
-<span class="var">cron</span>.<span class="fn">schedule</span>(<span class="str">"0 8 * * *"</span>, () <span class="op">=></span> {
+                <pre><span class="cmt">// Cron mỗi sáng 8:00</span>
+<span class="var">cron</span>.<span class="fn">schedule</span>(<span class="str">"0 8 * * *"</span>, () <span class="op">=&gt;</span> {
   <span class="fn">sendDailyReport</span>();
 });
 
 <span class="cmt">// Mỗi thứ 2 hàng tuần</span>
-<span class="cmt">// "0 9 * * 1"</span></pre>
+<span class="var">cron</span>.<span class="fn">schedule</span>(<span class="str">"0 9 * * 1"</span>, () <span class="op">=&gt;</span> {
+  <span class="fn">sendWeeklySummary</span>();
+});</pre>
+                <div class="playground" id="pg-async1">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">schedule.js</span>
+                    <button class="btn-run" onclick="runCode('pg-async1')"><svg viewBox="0 0 10 10" fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="20">// Schedule Trigger simulation
+function mockSchedule(cron, label, fn) {
+  console.log(&quot;⏰ Đăng ký:&quot;, label, &quot;| cron:&quot;, cron);
+  fn(); // chạy ngay để demo
+}
+
+mockSchedule(&quot;0 8 * * *&quot;, &quot;Báo cáo hàng ngày lúc 8:00&quot;, () =&gt; {
+  const report = {
+    date: new Date().toLocaleDateString(&quot;vi&quot;),
+    newOrders: 42,
+    revenue: 15600000
+  };
+  console.log(&quot;📊 Report:&quot;, report);
+  console.log(&quot;📧 Gửi email tới manager@company.com&quot;);
+});
+
+mockSchedule(&quot;0 9 * * 1&quot;, &quot;Báo cáo tuần (thứ 2)&quot;, () =&gt; {
+  console.log(&quot;📈 Weekly summary gửi xong!&quot;);
+});</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
+                  </div>
+                </div>
               </div>
               <div class="node-panel">
                 <div class="panel-label n8n">🔴 n8n Node</div>
@@ -1795,97 +2097,30 @@
                   <div class="node-type"><span class="node-dot"></span> Schedule Trigger</div>
                   <div class="node-title">Daily Report at 8AM</div>
                   <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Trigger At</span>
-                      <span class="config-val highlight">Every Day</span>
+                    <div class="config-row"><span class="config-key">Trigger At</span><span
+                        class="config-val highlight">Every Day</span></div>
+                    <div class="config-row"><span class="config-key">Hour</span><span
+                        class="config-val highlight">8</span></div>
+                    <div class="config-row"><span class="config-key">Minute</span><span class="config-val">0</span>
                     </div>
-                    <div class="config-row">
-                      <span class="config-key">Hour</span>
-                      <span class="config-val highlight">8</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Minute</span>
-                      <span class="config-val">0</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Or Custom Cron</span>
-                      <span class="config-val">0 8 * * *</span>
-                    </div>
+                    <div class="config-row"><span class="config-key">Custom Cron</span><span class="config-val">0 8 * *
+                        *</span></div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
 
-          <div class="compare-card">
-            <div class="compare-card-header">
-              <span class="concept-icon">🪝</span>
-              <span class="concept-name">EventEmitter / addEventListener → Webhook Trigger</span>
-              <span class="concept-desc"><span class="node-badge badge-trigger">TRIGGER</span> Webhook</span>
-            </div>
-            <div class="compare-grid">
-              <div class="code-panel">
-                <div class="panel-label js">⚡ JavaScript</div>
-                <pre><span class="cmt">// Express webhook handler</span>
-<span class="var">app</span>.<span class="fn">post</span>(<span class="str">"/webhook/payment"</span>, <span class="kw">async</span> (<span class="var">req</span>, <span class="var">res</span>) <span class="op">=></span> {
-  <span class="kw">const</span> <span class="var">event</span> = <span class="var">req</span>.<span class="prop">body</span>;
-
-  <span class="kw">if</span> (<span class="var">event</span>.<span class="prop">type</span> <span class="op">===</span> <span class="str">"payment.success"</span>) {
-    <span class="kw">await</span> <span class="fn">processOrder</span>(<span class="var">event</span>.<span class="prop">data</span>);
-  }
-
-  <span class="var">res</span>.<span class="fn">json</span>({ <span class="prop">received</span>: <span class="kw">true</span> });
-});</pre>
-              </div>
-              <div class="node-panel">
-                <div class="panel-label n8n">🔴 n8n Node</div>
-                <div class="n8n-node">
-                  <div class="node-type"><span class="node-dot"></span> Webhook Trigger</div>
-                  <div class="node-title">Receive Payment Event</div>
-                  <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Method</span>
-                      <span class="config-val highlight">POST</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Path</span>
-                      <span class="config-val highlight">payment-webhook</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">URL</span>
-                      <span class="config-val"
-                        style="font-size: 10px">https://your-n8n.com/webhook/payment-webhook</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Response</span>
-                      <span class="config-val">{ received: true }</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="compare-full">
-              <div class="explain-box">
-                <span class="explain-icon">💡</span>
-                <div class="explain-text">
-                  Webhook Trigger trong n8n = <strong>app.post()</strong> trong Express. n8n tự tạo URL endpoint,
-                  nhận request và chạy workflow. Dùng <strong>IF Node</strong> sau đó để check
-                  <code>$json.body.type === "payment.success"</code>
-                  giống như logic trong handler function.
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div class="section-divider">Error Handling</div>
 
-        <!-- ===== 8. ERRORS ===== -->
         <div class="section" id="errors">
           <div class="section-header">
             <div class="section-num">08</div>
             <div>
-              <div class="section-title">Error Handling → Error Trigger & Try/Catch</div>
+              <div class="section-title">Error Handling → Error Trigger &amp; Try/Catch</div>
               <div class="section-subtitle">Xử lý lỗi và retry trong workflow</div>
             </div>
           </div>
@@ -1894,7 +2129,7 @@
             <div class="compare-card-header">
               <span class="concept-icon">🛡️</span>
               <span class="concept-name">try/catch → Error Workflow</span>
-              <span class="concept-desc"><span class="node-badge badge-trigger">TRIGGER</span> Error Trigger</span>
+              <span class="concept-desc"><span class="node-badge badge-trigger">TRIGGER</span></span>
             </div>
             <div class="compare-grid">
               <div class="code-panel">
@@ -1903,15 +2138,51 @@
   <span class="kw">const</span> <span class="var">result</span> = <span class="kw">await</span> <span class="fn">callAPI</span>();
   <span class="kw">await</span> <span class="fn">processData</span>(<span class="var">result</span>);
 } <span class="kw">catch</span> (<span class="var">error</span>) {
-  <span class="cmt">// Ghi log lỗi</span>
-  <span class="var">console</span>.<span class="fn">error</span>(<span class="str">"Workflow failed:"</span>, <span class="var">error</span>);
-
-  <span class="cmt">// Gửi alert</span>
+  <span class="var">console</span>.<span class="fn">error</span>(<span class="str">"Failed:"</span>, <span class="var">error</span>);
   <span class="kw">await</span> <span class="fn">sendSlackAlert</span>({
-    <span class="prop">message</span>: <span class="var">error</span>.<span class="prop">message</span>,
-    <span class="prop">workflow</span>: <span class="str">"payment"</span>
+    <span class="prop">message</span>: <span class="var">error</span>.<span class="prop">message</span>
   });
 }</pre>
+                <div class="playground" id="pg-error1">
+                  <div class="playground-bar">
+                    <div class="traffic-lights"><span class="tl tl-red"></span><span class="tl tl-yellow"></span><span
+                        class="tl tl-green"></span></div>
+                    <span class="playground-filename">try-catch.js</span>
+                    <button class="btn-run" onclick="runCode('pg-error1')"><svg viewBox="0 0 10 10" fill="currentColor">
+                        <polygon points="2,1 9,5 2,9" />
+                      </svg> Chạy</button>
+                  </div>
+                  <div class="playground-editor">
+                    <textarea class="code-editable" spellcheck="false" rows="25">async function callAPI(endpoint, fail) {
+  if (fail) throw new Error(&quot;504 Gateway Timeout: &quot; + endpoint);
+  return { code: 200, data: &quot;OK&quot;, endpoint };
+}
+
+(async () =&gt; {
+  // Case 1: thành công
+  try {
+    const res = await callAPI(&quot;/api/orders&quot;, false);
+    console.log(&quot;✅ Thành công:&quot;, res);
+  } catch (e) {
+    console.error(&quot;❌ Lỗi:&quot;, e.message);
+  }
+
+  // Case 2: thất bại (đổi false → true ở trên để test)
+  try {
+    const res = await callAPI(&quot;/api/payment&quot;, true);
+    console.log(&quot;✅ Thành công:&quot;, res);
+  } catch (e) {
+    console.error(&quot;❌ Lỗi:&quot;, e.message);
+    console.log(&quot;📢 Slack: [CRITICAL] Payment API down!&quot;);
+    console.log(&quot;🔄 Error Workflow đã kích hoạt...&quot;);
+  }
+})();</textarea>
+                  </div>
+                  <div class="playground-output">
+                    <div class="output-label ok">Output</div>
+                    <div class="output-body"></div>
+                  </div>
+                </div>
               </div>
               <div class="node-panel">
                 <div class="panel-label n8n">🔴 n8n Node</div>
@@ -1919,26 +2190,18 @@
                   <div class="node-type"><span class="node-dot"></span> Error Trigger (Workflow riêng)</div>
                   <div class="node-title">Handle Workflow Errors</div>
                   <div class="node-config">
-                    <div class="config-row">
-                      <span class="config-key">Bắt lỗi từ</span>
-                      <span class="config-val highlight">$execution.error</span>
-                    </div>
-                    <div class="config-row">
-                      <span class="config-key">Workflow</span>
-                      <span class="config-val highlight">$execution.workflow.name</span>
-                    </div>
+                    <div class="config-row"><span class="config-key">Bắt lỗi từ</span><span
+                        class="config-val highlight">$execution.error</span></div>
+                    <div class="config-row"><span class="config-key">Workflow</span><span
+                        class="config-val highlight">$execution.workflow.name</span></div>
                   </div>
                 </div>
-                <div style="margin-top:10px">
-                  <div class="n8n-node">
-                    <div class="node-type"><span class="node-dot"></span> Slack Node (sau Error Trigger)</div>
-                    <div class="node-title">Alert on Error</div>
-                    <div class="node-config">
-                      <div class="config-row">
-                        <span class="config-key">Message</span>
-                        <span class="config-val highlight">❌ {{ $json.error.message }}</span>
-                      </div>
-                    </div>
+                <div class="n8n-node">
+                  <div class="node-type"><span class="node-dot"></span> Slack Node</div>
+                  <div class="node-title">Alert on Error</div>
+                  <div class="node-config">
+                    <div class="config-row"><span class="config-key">Message</span><span class="config-val highlight">❌
+                        {{ $json.error.message }}</span></div>
                   </div>
                 </div>
               </div>
@@ -1946,20 +2209,15 @@
             <div class="compare-full">
               <div class="explain-box">
                 <span class="explain-icon">💡</span>
-                <div class="explain-text">
-                  n8n có 2 cách xử lý lỗi: (1) <strong>Error Workflow</strong> — tạo workflow riêng với trigger
-                  <em>Error Trigger</em>,
-                  set nó trong Settings của workflow chính như global catch block. (2) Node-level: bật
-                  <strong>"Continue On Fail"</strong> trong node options — giống <code>try/catch</code> chỉ cho một
-                  block nhỏ,
-                  data lỗi sẽ được pass tiếp với <code>$json.error</code>.
-                </div>
+                <div class="explain-text">n8n có 2 cách: (1) <strong>Error Workflow</strong> — tạo workflow riêng với
+                  trigger <em>Error Trigger</em>, set trong Settings. (2) Bật <strong>"Continue On Fail"</strong> trong
+                  node — giống try/catch local.</div>
               </div>
             </div>
           </div>
+
         </div>
 
-        <!-- ===== QUICK REFERENCE ===== -->
         <div class="section" id="quickref">
           <div class="section-header">
             <div class="section-num">📋</div>
@@ -1968,9 +2226,8 @@
               <div class="section-subtitle">Bảng tra cứu nhanh JS → n8n</div>
             </div>
           </div>
-
           <div class="compare-card">
-            <div style="overflow-x: auto; padding: 0 4px;">
+            <div style="overflow-x:auto">
               <table class="ref-table">
                 <thead>
                   <tr>
@@ -1982,103 +2239,103 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td style="color: var(--text)">Gán biến</td>
+                    <td style="color:var(--text)">Gán biến</td>
                     <td class="td-js">const x = value</td>
                     <td class="td-n8n">Edit Fields (Set)</td>
                     <td class="td-desc">Set field value</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">If-Else</td>
+                    <td style="color:var(--text)">If-Else</td>
                     <td class="td-js">if (cond) {} else {}</td>
                     <td class="td-n8n">IF Node</td>
                     <td class="td-desc">2 output ports: True/False</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">Switch-Case</td>
+                    <td style="color:var(--text)">Switch-Case</td>
                     <td class="td-js">switch(val) { case: }</td>
                     <td class="td-n8n">Switch Node</td>
                     <td class="td-desc">Multi-branch routing</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">forEach/for</td>
+                    <td style="color:var(--text)">forEach/for</td>
                     <td class="td-js">arr.forEach(fn)</td>
                     <td class="td-n8n">Auto (built-in)</td>
                     <td class="td-desc">n8n tự loop qua items</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">Array.map()</td>
+                    <td style="color:var(--text)">Array.map()</td>
                     <td class="td-js">arr.map(fn)</td>
                     <td class="td-n8n">Code Node</td>
                     <td class="td-desc">Run once for all items</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">Array.filter()</td>
+                    <td style="color:var(--text)">Array.filter()</td>
                     <td class="td-js">arr.filter(fn)</td>
                     <td class="td-n8n">Filter Node / IF</td>
                     <td class="td-desc">Lọc items theo điều kiện</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">Array.reduce()</td>
+                    <td style="color:var(--text)">Array.reduce()</td>
                     <td class="td-js">arr.reduce(fn)</td>
-                    <td class="td-n8n">Aggregate + Code Node</td>
+                    <td class="td-n8n">Aggregate + Code</td>
                     <td class="td-desc">Tổng hợp dữ liệu</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">Object spread</td>
+                    <td style="color:var(--text)">Object spread</td>
                     <td class="td-js">{...a, ...b}</td>
                     <td class="td-n8n">Merge Node</td>
                     <td class="td-desc">Kết hợp 2 data sources</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">fetch/axios</td>
+                    <td style="color:var(--text)">fetch/axios</td>
                     <td class="td-js">await fetch(url)</td>
                     <td class="td-n8n">HTTP Request Node</td>
                     <td class="td-desc">Gọi external API</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">Function</td>
+                    <td style="color:var(--text)">Function</td>
                     <td class="td-js">function myFn(){}</td>
                     <td class="td-n8n">Code Node</td>
                     <td class="td-desc">Custom logic</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">Module/Import</td>
-                    <td class="td-js">import fn from './util'</td>
+                    <td style="color:var(--text)">Module/Import</td>
+                    <td class="td-js">import fn from &#x27;./util&#x27;</td>
                     <td class="td-n8n">Execute Workflow</td>
                     <td class="td-desc">Gọi sub-workflow</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">setInterval/cron</td>
-                    <td class="td-js">cron.schedule("0 8 * * *")</td>
+                    <td style="color:var(--text)">setInterval/cron</td>
+                    <td class="td-js">cron.schedule(&quot;0 8 * * *&quot;)</td>
                     <td class="td-n8n">Schedule Trigger</td>
                     <td class="td-desc">Chạy theo lịch</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">Event listener</td>
-                    <td class="td-js">app.post('/hook', fn)</td>
+                    <td style="color:var(--text)">Event listener</td>
+                    <td class="td-js">app.post(&#x27;/hook&#x27;, fn)</td>
                     <td class="td-n8n">Webhook Trigger</td>
                     <td class="td-desc">Nhận HTTP events</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">try/catch</td>
+                    <td style="color:var(--text)">try/catch</td>
                     <td class="td-js">try {} catch(e) {}</td>
-                    <td class="td-n8n">Error Workflow / Continue on Fail</td>
+                    <td class="td-n8n">Error Workflow</td>
                     <td class="td-desc">Xử lý lỗi</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">Promise.all()</td>
+                    <td style="color:var(--text)">Promise.all()</td>
                     <td class="td-js">await Promise.all([...])</td>
                     <td class="td-n8n">Merge Node (Wait for All)</td>
                     <td class="td-desc">Chờ nhiều nhánh</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">setTimeout/delay</td>
+                    <td style="color:var(--text)">setTimeout/delay</td>
                     <td class="td-js">await delay(1000)</td>
                     <td class="td-n8n">Wait Node</td>
                     <td class="td-desc">Dừng workflow X giây</td>
                   </tr>
                   <tr>
-                    <td style="color: var(--text)">console.log()</td>
+                    <td style="color:var(--text)">console.log()</td>
                     <td class="td-js">console.log(data)</td>
                     <td class="td-n8n">Execution Log (built-in)</td>
                     <td class="td-desc">Xem output mỗi node</td>
@@ -2088,38 +2345,37 @@
             </div>
           </div>
 
-          <!-- TIP CARDS -->
           <div class="tips-grid">
             <div class="tip-card">
               <div class="tip-icon">🔁</div>
               <div class="tip-title">n8n tự động loop</div>
-              <div class="tip-desc">Không cần viết forEach. Mỗi node tự chạy cho tất cả items trong input — đây là điểm
-                khác biệt lớn nhất so với JS.</div>
+              <div class="tip-desc">Không cần viết forEach. Mỗi node tự chạy cho tất cả items trong input — điểm khác
+                biệt lớn nhất so với JS.</div>
             </div>
             <div class="tip-card">
               <div class="tip-icon">📦</div>
               <div class="tip-title">items thay cho array</div>
               <div class="tip-desc">Trong Code Node, <code>items</code> = mảng JS. Mỗi item có cấu trúc
-                <code>{ json: {...}, binary: {...} }</code> — luôn return đúng format này.
+                <code>{ json: {...} }</code> — luôn return đúng format này.
               </div>
             </div>
             <div class="tip-card">
               <div class="tip-icon">🔗</div>
               <div class="tip-title">Expression = template literal</div>
-              <div class="tip-desc"><code>{{ $json.name }}</code> trong n8n giống như <code>${variable}</code> trong JS
+              <div class="tip-desc"><code>{{ $json.name }}</code> trong n8n giống <code>${variable}</code> trong JS
                 template literal — dùng trong bất kỳ field nào.</div>
             </div>
             <div class="tip-card">
               <div class="tip-icon">🔑</div>
               <div class="tip-title">Credentials thay cho env</div>
-              <div class="tip-desc">API keys, tokens lưu trong Credentials (giống <code>.env</code> file). Không bao giờ
-                hardcode vào workflow — tái sử dụng được và bảo mật hơn.</div>
+              <div class="tip-desc">API keys, tokens lưu trong Credentials giống <code>.env</code> file. Không hardcode
+                vào workflow — bảo mật và tái sử dụng được.</div>
             </div>
             <div class="tip-card">
               <div class="tip-icon">🧵</div>
               <div class="tip-title">Wire = data pipe</div>
-              <div class="tip-desc">Kéo dây giữa nodes = function call chain trong JS. Data chạy từ trái sang phải, mỗi
-                node nhận output của node trước.</div>
+              <div class="tip-desc">Kéo dây giữa nodes = function call chain trong JS. Data chạy từ trái sang phải.
+              </div>
             </div>
             <div class="tip-card">
               <div class="tip-icon">🚀</div>
@@ -2145,26 +2401,23 @@
     const sections = document.querySelectorAll('.section');
     const revealObs = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.08 });
+    }, { threshold: 0.05 });
     sections.forEach(s => revealObs.observe(s));
 
     const sectionIds = ['variables', 'conditions', 'loops', 'functions', 'http', 'transforms', 'async', 'errors', 'quickref'];
 
-    // Sidebar nav click
     function sidebarNav(id, el) {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
       el.classList.add('active');
     }
 
-    // Mobile pill click
     function mobilePill(id, el) {
       document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
       el.classList.add('active');
     }
 
-    // Sync active on scroll
     window.addEventListener('scroll', () => {
       let current = sectionIds[0];
       sectionIds.forEach(id => {
@@ -2178,13 +2431,89 @@
         p.classList.toggle('active', sectionIds[i] === current);
       });
     });
+
+    /* =====================
+       RUN CODE ENGINE
+    ===================== */
+    function runCode(playgroundId) {
+      const pg = document.getElementById(playgroundId);
+      const textarea = pg.querySelector('.code-editable');
+      const output = pg.querySelector('.playground-output');
+      const btn = pg.querySelector('.btn-run');
+      const label = output.querySelector('.output-label');
+      const body = output.querySelector('.output-body');
+
+      const code = textarea.value;
+      const logs = [];
+
+      // Override console
+      const fakeConsole = {
+        log: (...a) => logs.push({ type: 'log', text: a.map(fmt).join(' ') }),
+        warn: (...a) => logs.push({ type: 'warn', text: '⚠ ' + a.map(fmt).join(' ') }),
+        error: (...a) => logs.push({ type: 'err', text: '✗ ' + a.map(fmt).join(' ') }),
+        info: (...a) => logs.push({ type: 'info', text: 'ℹ ' + a.map(fmt).join(' ') }),
+      };
+
+      function fmt(v) {
+        if (v === null) return 'null';
+        if (v === undefined) return 'undefined';
+        if (typeof v === 'object') {
+          try { return JSON.stringify(v, null, 2); } catch (e) { return String(v); }
+        }
+        return String(v);
+      }
+
+      btn.classList.add('running');
+      btn.innerHTML = `<svg viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="4"/></svg> Chạy...`;
+
+      setTimeout(() => {
+        try {
+          const fn = new Function('console', code);
+          const result = fn(fakeConsole);
+          if (result !== undefined) {
+            logs.push({ type: 'ret', text: '→ ' + fmt(result) });
+          }
+          label.className = 'output-label ok';
+          label.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="#4ade80"><circle cx="5" cy="5" r="5"/></svg> Output`;
+          btn.classList.remove('running');
+          btn.innerHTML = `<svg viewBox="0 0 10 10" fill="currentColor"><polygon points="2,1 9,5 2,9"/></svg> Chạy`;
+        } catch (e) {
+          logs.push({ type: 'err', text: '✗ ' + e.message });
+          label.className = 'output-label err';
+          label.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="#f87171"><circle cx="5" cy="5" r="5"/></svg> Lỗi`;
+          btn.classList.remove('running');
+          btn.classList.add('error');
+          btn.innerHTML = `<svg viewBox="0 0 10 10" fill="currentColor"><polygon points="2,1 9,5 2,9"/></svg> Chạy`;
+          setTimeout(() => btn.classList.remove('error'), 1500);
+        }
+
+        if (logs.length === 0) {
+          body.innerHTML = `<div class="output-line info">// Không có output — thêm console.log() để xem kết quả</div>`;
+        } else {
+          body.innerHTML = logs.map(l =>
+            `<div class="output-line ${l.type}">${escHtml(l.text)}</div>`
+          ).join('');
+        }
+        output.classList.add('show');
+      }, 120);
+    }
+
+    function escHtml(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Tab key inside textarea
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Tab' && e.target.classList.contains('code-editable')) {
+        e.preventDefault();
+        const ta = e.target;
+        const s = ta.selectionStart, end = ta.selectionEnd;
+        ta.value = ta.value.substring(0, s) + '  ' + ta.value.substring(end);
+        ta.selectionStart = ta.selectionEnd = s + 2;
+      }
+    });
+
   </script>
-  <a href="javascript_introduction.html"
-    style="position:fixed;bottom:30px;left:30px;background:var(--js,#f7df1e);color:#000;padding:12px 24px;border-radius:50px;font-weight:700;font-family:'Syne',sans-serif;font-size:14px;text-decoration:none;box-shadow:0 4px 20px rgba(247,223,30,0.3);z-index:9999;transition:all 0.2s;display:flex;align-items:center;gap:8px"
-    onmouseover="this.style.transform='translateY(-3px) scale(1.02)'" onmouseout="this.style.transform='none'">
-    ⬅ JavaScript
-  </a>
 </body>
 
 </html>
-```

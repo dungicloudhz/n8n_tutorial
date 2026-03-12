@@ -159,6 +159,61 @@
       border-left-color: var(--js)
     }
 
+    /* ══ PAGE NAV ══ */
+    .page-nav-section {
+      padding: 14px 12px 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px
+    }
+
+    .page-nav-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--light);
+      padding: 0 8px;
+      margin-bottom: 6px
+    }
+
+    .page-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 7px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all .18s;
+      margin-bottom: 3px
+    }
+
+    .page-link:hover {
+      background: var(--surface2);
+      color: var(--text)
+    }
+
+    .page-link.active {
+      background: var(--js-dim);
+      color: var(--js);
+      font-weight: 700
+    }
+
+    .page-link .pg-icon {
+      font-size: 13px;
+      flex-shrink: 0
+    }
+
+    .page-link .pg-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      opacity: .55;
+      margin-left: auto
+    }
+
     .nav-a .dot {
       width: 5px;
       height: 5px;
@@ -920,6 +975,23 @@
       <div class="sb-badge">JS</div>
       <h2>JavaScript</h2>
       <p>Hướng dẫn cho người mới bắt đầu</p>
+    </div>
+
+    <!-- ── PAGE NAVIGATION ── -->
+    <div class="page-nav-section">
+      <div class="page-nav-label">Bộ tài liệu</div>
+      <a href="html_css_introduction.html" class="page-link">
+        <span class="pg-icon">🏗️</span> HTML &amp; CSS
+        <span class="pg-num">01</span>
+      </a>
+      <a href="javascript_introduction.html" class="page-link active">
+        <span class="pg-icon">⚡</span> JavaScript
+        <span class="pg-num">02</span>
+      </a>
+      <a href="n8n_js_guide.html" class="page-link">
+        <span class="pg-icon">🔴</span> JS → n8n
+        <span class="pg-num">03</span>
+      </a>
     </div>
 
     <div class="nav-sec">Cơ bản</div>
@@ -2451,16 +2523,6 @@ console.log('✅ To-do List đã sẵn sàng!');</textarea>
       });
     });
   </script>
-  <a href="html_css_introduction.html"
-    style="position:fixed;bottom:30px;left:30px;background:var(--html,#ff6b35);color:#fff;padding:12px 24px;border-radius:50px;font-weight:700;font-family:'Be Vietnam Pro',sans-serif;font-size:14px;text-decoration:none;box-shadow:0 4px 20px rgba(255,107,53,0.3);z-index:9999;transition:all 0.2s;display:flex;align-items:center;gap:8px"
-    onmouseover="this.style.transform='translateY(-3px) scale(1.02)'" onmouseout="this.style.transform='none'">
-    ⬅ HTML & CSS
-  </a>
-  <a href="n8n_js_guide.html"
-    style="position:fixed;bottom:30px;right:30px;background:var(--n8n,#ea4b71);color:#fff;padding:12px 24px;border-radius:50px;font-weight:700;font-family:'Be Vietnam Pro',sans-serif;font-size:14px;text-decoration:none;box-shadow:0 4px 20px rgba(234,75,113,0.3);z-index:9999;transition:all 0.2s;display:flex;align-items:center;gap:8px"
-    onmouseover="this.style.transform='translateY(-3px) scale(1.02)'" onmouseout="this.style.transform='none'">
-    n8n JS Guide ➔
-  </a>
 </body>
 
 </html>
