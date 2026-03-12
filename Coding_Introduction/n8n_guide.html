@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>n8n Toàn Tập — Hướng dẫn từ Zero đến Hero</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   VARIABLES
+══════════════════════════════════════ */
+:root {
+  --bg:         #080810;
+  --s1:         #0e0e1c;
+  --s2:         #131326;
+  --s3:         #18182e;
+  --s4:         #1e1e38;
+  --border:     #222240;
+  --border2:    #2c2c50;
+  --text:       #e6e6f2;
+  --muted:      #666698;
+  --faint:      #363660;
+
+  --n8n:        #ff6584;
+  --n8n-d:      #cc3355;
+  --n8n-dim:    rgba(255,101,132,.11);
+  --n8n-glow:   rgba(255,101,132,.20);
+
+  --green:      #40d88e;
+  --green-dim:  rgba(64,216,142,.10);
+  --blue:       #5ba8ff;
+  --blue-dim:   rgba(91,168,255,.10);
+  --purple:     #a07af4;
+  --purple-dim: rgba(160,122,244,.10);
+  --yellow:     #ffd060;
+  --yellow-dim: rgba(255,208,96,.10);
+  --teal:       #30d8c0;
+  --teal-dim:   rgba(48,216,192,.10);
+  --orange:     #ff8c50;
+  --orange-dim: rgba(255,140,80,.10);
+
+  --code-bg:    #05050e;
+}
+
+* { margin:0; padding:0; box-sizing:border-box }
+html { scroll-behavior:smooth }
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar { width:5px }
+::-webkit-scrollbar-track { background: transparent }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius:3px }
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+.sidebar {
+  position:fixed; left:0; top:0; width:258px; height:100vh;
+  background:var(--s1); border-right:1px solid var(--border);
+  overflow-y:auto; z-index:400;
+  display:flex; flex-direction:column;
+}
+.sb-logo {
+  padding:20px 18px 16px;
+  border-bottom:1px solid var(--border);
+}
+.sb-brand {
+  display:flex; align-items:center; gap:11px; margin-bottom:12px;
+}
+.logo-icon {
+  width:40px; height:40px; border-radius:10px; flex-shrink:0;
+  background:linear-gradient(135deg, var(--n8n), var(--n8n-d));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#fff;
+  box-shadow: 0 0 24px var(--n8n-glow);
+  letter-spacing:-1px;
+}
+.logo-text h2 { font-size:15px; font-weight:800; letter-spacing:-.4px }
+.logo-text p  { font-size:10.5px; color:var(--muted); margin-top:2px }
+
+.prog-wrap { height:3px; background:var(--border); border-radius:2px; overflow:hidden }
+.prog-bar  { height:100%; background:linear-gradient(90deg,var(--n8n),var(--purple)); width:0%; transition:width .4s; border-radius:2px }
+
+.nav-section { padding:10px 0 4px }
+.nav-sect-label {
+  padding:8px 18px 3px;
+  font-size:9.5px; font-weight:700;
+  letter-spacing:1.8px; text-transform:uppercase;
+  color:var(--faint);
+}
+.nav-link {
+  display:flex; align-items:center; gap:9px;
+  padding:7px 18px; color:var(--muted);
+  text-decoration:none; font-size:12.5px; font-weight:600;
+  border-left:2px solid transparent; transition:all .14s;
+}
+.nav-link:hover, .nav-link.active {
+  color:var(--text);
+  background:rgba(255,101,132,.07);
+  border-left-color:var(--n8n);
+}
+.nav-link .ico { font-size:13px; flex-shrink:0; width:16px; text-align:center }
+.nav-badge {
+  margin-left:auto; font-size:9px; font-weight:700;
+  padding:2px 7px; border-radius:100px;
+  background:var(--n8n-dim); color:var(--n8n);
+}
+
+/* ══ PAGE NAV ══ */
+.page-nav-section {
+  padding: 15px 18px 5px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 5px;
+}
+.page-nav-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 8px;
+}
+.page-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: all .14s;
+  margin-bottom: 2px;
+}
+.page-link:hover {
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+}
+.page-link.active {
+  background: var(--n8n-dim);
+  color: var(--n8n);
+  font-weight: 700;
+}
+.page-link .pg-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.page-link .pg-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  opacity: 0.5;
+  margin-left: auto;
+}
+
+/* ══════════════════════════════════════
+   MAIN
+══════════════════════════════════════ */
+.main { margin-left:258px; min-height:100vh }
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero {
+  padding:80px 64px 64px;
+  position:relative; overflow:hidden;
+  border-bottom:1px solid var(--border);
+  background:
+    radial-gradient(ellipse 70% 55% at 65% 35%, rgba(255,101,132,.07) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 65% at 15% 85%, rgba(160,122,244,.04) 0%, transparent 55%),
+    var(--bg);
+}
+.hero-dots {
+  position:absolute; inset:0; pointer-events:none;
+  background-image: radial-gradient(circle, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size:28px 28px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+.hero-glow {
+  position:absolute; right:-100px; top:-100px; width:500px; height:500px;
+  background:radial-gradient(circle, rgba(255,101,132,.06) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--n8n-dim); border:1px solid var(--n8n-glow);
+  color:var(--n8n); padding:5px 16px; border-radius:100px;
+  font-size:11.5px; font-weight:700; margin-bottom:26px; letter-spacing:.3px;
+}
+.hero-eyebrow .pulse {
+  width:6px; height:6px; border-radius:50%; background:var(--n8n);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+.hero h1 {
+  font-size:58px; font-weight:900;
+  letter-spacing:-2.5px; line-height:1.02; margin-bottom:18px;
+}
+.h-pink { color:var(--n8n) }
+.h-grad {
+  background:linear-gradient(135deg,var(--n8n) 0%,var(--purple) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-desc {
+  font-size:16px; color:var(--muted); max-width:520px;
+  line-height:1.72; margin-bottom:30px;
+}
+.hero-chips { display:flex; gap:8px; flex-wrap:wrap }
+.chip {
+  padding:5px 14px; border-radius:7px; font-size:12px; font-weight:700;
+}
+.chip-r { background:var(--n8n-dim); color:var(--n8n) }
+.chip-g { background:var(--green-dim); color:var(--green) }
+.chip-p { background:var(--purple-dim); color:var(--purple) }
+.chip-b { background:var(--blue-dim); color:var(--blue) }
+
+/* ══════════════════════════════════════
+   CONTENT
+══════════════════════════════════════ */
+.content { padding:56px 64px; max-width:1000px }
+
+/* ══════════════════════════════════════
+   SECTION
+══════════════════════════════════════ */
+.section { margin-bottom:76px }
+.sec-head {
+  display:flex; align-items:flex-start; gap:14px;
+  margin-bottom:34px; padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.sec-tag {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+  color:var(--n8n); background:var(--n8n-dim); border:1px solid var(--n8n-glow);
+  padding:3px 10px; border-radius:5px; margin-top:5px; flex-shrink:0; letter-spacing:.5px;
+}
+.sec-title { font-size:24px; font-weight:800; letter-spacing:-.6px; margin-bottom:5px }
+.sec-sub   { font-size:13px; color:var(--muted) }
+
+/* ══════════════════════════════════════
+   SUBSECTION
+══════════════════════════════════════ */
+.sub { margin-bottom:42px }
+.sub-title {
+  font-size:14.5px; font-weight:700; margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.sub-title::before {
+  content:''; display:inline-block; width:14px; height:3px;
+  background:var(--n8n); border-radius:2px; flex-shrink:0;
+}
+.sub p, .sub ul, .sub ol {
+  color:var(--muted); font-size:13.5px; margin-bottom:12px; line-height:1.75;
+}
+.sub ul, .sub ol { padding-left:22px }
+.sub li { margin-bottom:5px }
+.sub strong { color:var(--text) }
+
+/* ══════════════════════════════════════
+   GRID CARDS
+══════════════════════════════════════ */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0 }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0 }
+.grid-auto { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; margin:16px 0 }
+
+.card {
+  background:var(--s1); border:1px solid var(--border); border-radius:11px;
+  padding:16px; transition:all .2s; cursor:default;
+}
+.card:hover { border-color:var(--n8n); transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.35) }
+.card-icon { font-size:26px; margin-bottom:9px }
+.card-title { font-size:13px; font-weight:700; margin-bottom:4px }
+.card-desc  { font-size:12px; color:var(--muted); line-height:1.55 }
+
+/* ══════════════════════════════════════
+   WORKFLOW VISUAL
+══════════════════════════════════════ */
+.wf-canvas {
+  background:var(--s1); border:1px solid var(--border); border-radius:13px;
+  padding:24px 28px; margin:16px 0; overflow-x:auto;
+}
+.wf-heading {
+  font-size:10px; font-weight:700; color:var(--muted);
+  letter-spacing:1.2px; text-transform:uppercase; margin-bottom:20px;
+  display:flex; align-items:center; gap:8px;
+}
+.wf-heading::before {
+  content:''; width:20px; height:1px; background:var(--border2);
+}
+
+.wf-row { display:flex; align-items:center; gap:0; min-width:max-content }
+.wf-col { display:flex; flex-direction:column; gap:10px }
+
+.wnode-wrap { display:flex; flex-direction:column; align-items:center; gap:6px }
+.wnode {
+  background:var(--s2); border:1.5px solid var(--border2); border-radius:11px;
+  padding:12px 15px; min-width:98px; text-align:center;
+  transition:all .25s; cursor:default; position:relative;
+}
+.wnode:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,0,0,.45) }
+.wnode .w-ico  { font-size:20px; margin-bottom:5px }
+.wnode .w-name { font-size:11px; font-weight:700; line-height:1.3 }
+.wnode .w-sub  { font-size:9.5px; color:var(--muted); margin-top:2px }
+.wnode-lbl {
+  font-size:9.5px; font-weight:700; padding:2px 9px;
+  border-radius:100px; white-space:nowrap;
+}
+
+/* Node color variants */
+.wn-t .wnode { border-color:rgba(64,216,142,.45) }
+.wn-t .wnode:hover { box-shadow:0 12px 32px rgba(0,0,0,.45), 0 0 20px rgba(64,216,142,.12) }
+.wn-t .w-ico, .wn-t .w-name { color:var(--green) }
+.wn-t .wnode-lbl { background:var(--green-dim); color:var(--green) }
+
+.wn-p .wnode { border-color:rgba(91,168,255,.4) }
+.wn-p .w-ico, .wn-p .w-name { color:var(--blue) }
+.wn-p .wnode-lbl { background:var(--blue-dim); color:var(--blue) }
+
+.wn-l .wnode { border-color:rgba(160,122,244,.4) }
+.wn-l .w-ico, .wn-l .w-name { color:var(--purple) }
+.wn-l .wnode-lbl { background:var(--purple-dim); color:var(--purple) }
+
+.wn-c .wnode { border-color:rgba(255,208,96,.4) }
+.wn-c .w-ico, .wn-c .w-name { color:var(--yellow) }
+.wn-c .wnode-lbl { background:var(--yellow-dim); color:var(--yellow) }
+
+.wn-a .wnode { border-color:rgba(255,101,132,.4) }
+.wn-a .wnode:hover { box-shadow:0 12px 32px rgba(0,0,0,.45), 0 0 20px rgba(255,101,132,.12) }
+.wn-a .w-ico, .wn-a .w-name { color:var(--n8n) }
+.wn-a .wnode-lbl { background:var(--n8n-dim); color:var(--n8n) }
+
+.wn-d .wnode { border-color:rgba(48,216,192,.4) }
+.wn-d .w-ico, .wn-d .w-name { color:var(--teal) }
+.wn-d .wnode-lbl { background:var(--teal-dim); color:var(--teal) }
+
+/* Connector arrow */
+.wf-arr {
+  display:flex; align-items:center; padding:0 3px; margin-top:-22px; flex-shrink:0;
+}
+.arr-line { width:28px; height:2px; background:var(--border2) }
+.arr-head {
+  width:0; height:0;
+  border-top:5px solid transparent;
+  border-bottom:5px solid transparent;
+  border-left:8px solid var(--border2);
+}
+
+/* ══════════════════════════════════════
+   CODE BLOCKS
+══════════════════════════════════════ */
+.cblock {
+  background:var(--code-bg); border:1px solid var(--border);
+  border-radius:11px; overflow:hidden; margin:14px 0;
+}
+.cb-head {
+  display:flex; align-items:center; gap:8px; padding:10px 16px;
+  background:#070710; border-bottom:1px solid var(--border);
+}
+.cb-dots { display:flex; gap:5px }
+.cbd { width:10px; height:10px; border-radius:50% }
+.r { background:#ff5f56 } .y { background:#febc2e } .g { background:#28c840 }
+.cb-name {
+  font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--muted); margin-left:4px;
+}
+.cb-tag {
+  margin-left:auto; font-size:9.5px; font-weight:700;
+  padding:2px 8px; border-radius:4px; background:var(--n8n-dim); color:var(--n8n);
+}
+.cb-body { padding:18px 22px; overflow-x:auto }
+.cb-body pre {
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+  line-height:1.8; color:#c8c8e8; tab-size:2; white-space:pre;
+}
+
+/* syntax */
+.kw{color:#ff7b7b} .fn{color:#ffc060} .st{color:#70e0a0}
+.nm{color:#b0a0f8} .cm{color:#303060;font-style:italic} .vr{color:#90c8ff}
+.pr{color:#80e8b0} .op{color:#c8c8e8} .ht{color:var(--n8n)} .se{color:var(--teal)}
+
+/* ══════════════════════════════════════
+   INFO BOXES
+══════════════════════════════════════ */
+.info {
+  border-radius:9px; padding:13px 16px; font-size:13.5px;
+  margin:14px 0; display:flex; gap:10px; line-height:1.65;
+}
+.info-ico { font-size:16px; flex-shrink:0; margin-top:1px }
+.i-n8n  { background:var(--n8n-dim);    border:1px solid var(--n8n-glow);                color:#d05070 }
+.i-ok   { background:var(--green-dim);  border:1px solid rgba(64,216,142,.2);            color:#28a860 }
+.i-warn { background:var(--yellow-dim); border:1px solid rgba(255,208,96,.2);            color:#c09000 }
+.i-note { background:var(--purple-dim); border:1px solid rgba(160,122,244,.2);           color:#8060d0 }
+.i-blue { background:var(--blue-dim);   border:1px solid rgba(91,168,255,.2);            color:#3878d0 }
+
+/* ══════════════════════════════════════
+   TABLE
+══════════════════════════════════════ */
+.tbl { width:100%; border-collapse:collapse; font-size:13px; margin:14px 0; border-radius:11px; overflow:hidden }
+.tbl th {
+  background:var(--s3); padding:10px 14px; text-align:left;
+  font-weight:700; font-size:9.5px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted);
+  border-bottom:1px solid var(--border2);
+}
+.tbl td {
+  padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.04);
+  color:var(--muted); vertical-align:top;
+}
+.tbl tr:hover td { background:rgba(255,255,255,.025) }
+.tbl code {
+  font-family:'JetBrains Mono',monospace; font-size:11.5px;
+  background:var(--code-bg); padding:2px 7px; border-radius:4px; color:var(--teal);
+}
+.c-g{color:var(--green)} .c-b{color:var(--blue)} .c-n{color:var(--n8n)}
+.c-p{color:var(--purple)} .c-y{color:var(--yellow)}
+
+/* ══════════════════════════════════════
+   STEP LIST
+══════════════════════════════════════ */
+.steps { display:flex; flex-direction:column; margin:16px 0 }
+.step  { display:flex; gap:16px }
+.step-L { display:flex; flex-direction:column; align-items:center; width:36px; flex-shrink:0 }
+.step-num {
+  width:36px; height:36px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:800;
+  color:var(--n8n); background:var(--n8n-dim); border:2px solid var(--n8n-glow);
+}
+.step-line { width:2px; flex:1; background:var(--border); margin:5px 0; min-height:16px }
+.step-B { padding:4px 0 28px }
+.step-B h4 { font-size:14px; font-weight:700; margin-bottom:6px }
+.step-B p  { font-size:13px; color:var(--muted); line-height:1.65 }
+
+/* ══════════════════════════════════════
+   COMPARE SPLIT
+══════════════════════════════════════ */
+.split-view {
+  display:grid; grid-template-columns:1fr 1fr; gap:0;
+  border-radius:11px; overflow:hidden; border:1px solid var(--border2); margin:14px 0;
+}
+.split-pane { }
+.split-head {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 16px; font-size:11.5px; font-weight:700; letter-spacing:.3px;
+}
+.sp-before .split-head { background:#080815; border-bottom:1px solid rgba(255,208,96,.15); color:var(--yellow) }
+.sp-after .split-head  { background:#08120a; border-bottom:1px solid rgba(64,216,142,.15); color:var(--green); border-left:1px solid var(--border2) }
+.sp-badge {
+  margin-left:auto; font-size:9.5px; font-weight:700;
+  padding:2px 8px; border-radius:100px;
+}
+.sp-before .sp-badge { background:var(--yellow-dim); color:var(--yellow) }
+.sp-after .sp-badge  { background:var(--green-dim);  color:var(--green)  }
+.split-body {
+  padding:16px 18px;
+  background:var(--code-bg);
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.8; min-height:90px;
+}
+.sp-after .split-body { border-left:1px solid var(--border2); background:#040c06 }
+.split-body pre { white-space:pre-wrap; word-break:break-word }
+
+/* ══════════════════════════════════════
+   DEMO BOX (interactive canvas mock)
+══════════════════════════════════════ */
+.demo-box {
+  background:var(--s1); border:1px solid var(--border);
+  border-radius:12px; overflow:hidden; margin:16px 0;
+}
+.demo-box-head {
+  display:flex; align-items:center; gap:8px; padding:10px 18px;
+  background:var(--s2); border-bottom:1px solid var(--border);
+  font-size:11px; font-weight:700; color:var(--muted); letter-spacing:.5px;
+}
+.live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 1.4s infinite }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+.demo-body { padding:22px 24px }
+
+/* ══════════════════════════════════════
+   NODE TYPE GALLERY
+══════════════════════════════════════ */
+.node-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin:16px 0 }
+.ng-card {
+  background:var(--s1); border:1px solid var(--border); border-radius:10px;
+  padding:14px; transition:all .2s;
+}
+.ng-card:hover { border-color:var(--n8n); transform:translateY(-2px) }
+.ng-icon { font-size:24px; margin-bottom:8px }
+.ng-name { font-size:12.5px; font-weight:700; margin-bottom:3px }
+.ng-desc { font-size:11.5px; color:var(--muted); line-height:1.5 }
+.ng-badge {
+  display:inline-block; font-size:9px; font-weight:700;
+  padding:2px 8px; border-radius:100px; margin-top:8px;
+}
+
+/* ══════════════════════════════════════
+   ANATOMY DIAGRAM
+══════════════════════════════════════ */
+.anatomy-wrap {
+  background:var(--s1); border:1px solid var(--border); border-radius:12px;
+  padding:24px; margin:16px 0; display:grid;
+  grid-template-columns:auto 1fr; gap:28px; align-items:start;
+}
+.anat-node {
+  background:var(--s2); border:2px solid var(--n8n); border-radius:13px;
+  padding:22px 26px; text-align:center; min-width:128px; position:relative;
+  box-shadow:0 0 32px var(--n8n-glow);
+}
+.anat-inp {
+  position:absolute; left:-10px; top:50%; transform:translateY(-50%);
+  width:10px; height:10px; border-radius:50%; background:var(--green);
+  box-shadow:0 0 10px rgba(64,216,142,.6);
+}
+.anat-out {
+  position:absolute; right:-10px; top:50%; transform:translateY(-50%);
+  width:10px; height:10px; border-radius:50%; background:var(--n8n);
+  box-shadow:0 0 10px var(--n8n-glow);
+}
+.anat-ico  { font-size:28px; margin-bottom:8px }
+.anat-name { font-size:13px; font-weight:800; color:var(--n8n) }
+.anat-type { font-size:10px; color:var(--muted); margin-top:3px }
+
+.anat-items { display:flex; flex-direction:column; gap:10px }
+.anat-item {
+  display:flex; align-items:flex-start; gap:10px;
+  background:var(--s2); border:1px solid var(--border); border-radius:8px; padding:10px 14px;
+}
+.anat-dot  { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:5px }
+.anat-text strong { font-size:12.5px; font-weight:700; display:block; margin-bottom:2px }
+.anat-text span   { font-size:11.5px; color:var(--muted) }
+
+/* ══════════════════════════════════════
+   CHEAT SHEET
+══════════════════════════════════════ */
+.cheat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0 }
+.cheat-card {
+  background:var(--s1); border:1px solid var(--border); border-radius:10px; padding:16px;
+}
+.cheat-card h4 {
+  font-size:11.5px; font-weight:700; color:var(--n8n);
+  text-transform:uppercase; letter-spacing:.8px; margin-bottom:12px;
+}
+.cheat-row {
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:5px 0; border-bottom:1px solid rgba(255,255,255,.04); font-size:12.5px;
+}
+.cheat-row:last-child { border-bottom:none }
+.ck { color:var(--muted) }
+.cv { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--teal) }
+
+/* ══════════════════════════════════════
+   ROADMAP
+══════════════════════════════════════ */
+.roadmap { display:flex; flex-direction:column }
+.rm-row  { display:flex; gap:16px }
+.rm-L    { display:flex; flex-direction:column; align-items:center; width:34px; flex-shrink:0 }
+.rm-num  { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0 }
+.rm-line { width:2px; flex:1; background:var(--border); margin:5px 0; min-height:16px }
+.rm-body { padding:3px 0 26px }
+.rm-body h4 { font-size:14px; font-weight:800; margin-bottom:4px }
+.rm-body p  { font-size:13px; color:var(--muted) }
+
+/* ══════════════════════════════════════
+   INLINE CODE
+══════════════════════════════════════ */
+p code, li code, td code {
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+  background:rgba(48,216,192,.1); color:var(--teal);
+  padding:2px 6px; border-radius:4px;
+}
+
+/* divider */
+hr.dv { border:none; border-top:1px solid var(--border); margin:60px 0 }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+.footer {
+  border-top:1px solid var(--border); padding:28px 64px;
+  display:flex; align-items:center; gap:12px; font-size:12px; color:var(--muted);
+}
+.footer a { color:var(--n8n); text-decoration:none }
+.footer a:hover { text-decoration:underline }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:900px) {
+  .sidebar{display:none} .main{margin-left:0}
+  .hero,.content,.footer{padding-left:22px;padding-right:22px}
+  .hero{padding-top:44px} .hero h1{font-size:36px;letter-spacing:-1.5px}
+  .cheat-grid,.grid-2,.split-view{grid-template-columns:1fr}
+  .anatomy-wrap{grid-template-columns:1fr}
+  .sp-after .split-head,.sp-after .split-body{border-left:none;border-top:1px solid var(--border2)}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ SIDEBAR ══════════════════════ -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-brand">
+      <div class="logo-icon">n8n</div>
+      <div class="logo-text">
+        <h2>n8n Toàn Tập</h2>
+        <p>Zero → Hero Guide</p>
+      </div>
+    </div>
+    <div class="prog-wrap"><div class="prog-bar" id="pbar"></div></div>
+  </div>
+
+  <!-- ── PAGE NAVIGATION ── -->
+  <div class="page-nav-section">
+    <div class="page-nav-label">Bộ tài liệu</div>
+    <a href="html_css_introduction.html" class="page-link">
+      <span class="pg-icon">🏗️</span> HTML &amp; CSS
+      <span class="pg-num">01</span>
+    </a>
+    <a href="javascript_introduction.html" class="page-link">
+      <span class="pg-icon">⚡</span> JavaScript
+      <span class="pg-num">02</span>
+    </a>
+    <a href="n8n_js_guide.html" class="page-link">
+      <span class="pg-icon">🔴</span> JS → n8n
+      <span class="pg-num">03</span>
+    </a>
+    <a href="n8n_guide.html" class="page-link active">
+      <span class="pg-icon">🚀</span> n8n Toàn Tập
+      <span class="pg-num">04</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">Bắt Đầu</div>
+    <a href="#s01" class="nav-link"><span class="ico">🤔</span>n8n là gì?</a>
+    <a href="#s02" class="nav-link"><span class="ico">⚡</span>Cài đặt nhanh<span class="nav-badge">START</span></a>
+    <a href="#s03" class="nav-link"><span class="ico">🗺️</span>Giao diện & Canvas</a>
+    <a href="#s04" class="nav-link"><span class="ico">🧩</span>Nodes — Khái niệm cốt lõi</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-sect-label">Dữ Liệu</div>
+    <a href="#s05" class="nav-link"><span class="ico">📦</span>Items & JSON Flow</a>
+    <a href="#s06" class="nav-link"><span class="ico">💬</span>Expressions {{ }}</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-sect-label">Nodes Quan Trọng</div>
+    <a href="#s07" class="nav-link"><span class="ico">⏰</span>Triggers</a>
+    <a href="#s08" class="nav-link"><span class="ico">📝</span>Set & Edit Fields</a>
+    <a href="#s09" class="nav-link"><span class="ico">❓</span>IF / Switch</a>
+    <a href="#s10" class="nav-link"><span class="ico">🌐</span>HTTP Request</a>
+    <a href="#s11" class="nav-link"><span class="ico">⚙️</span>Code Node (JS)</a>
+    <a href="#s12" class="nav-link"><span class="ico">🔁</span>Loop & Merge</a>
+    <a href="#s13" class="nav-link"><span class="ico">🔐</span>Credentials</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-sect-label">Thực Hành</div>
+    <a href="#s14" class="nav-link"><span class="ico">🏗️</span>Workflow đầu tiên</a>
+    <a href="#s15" class="nav-link"><span class="ico">🐛</span>Debug & Xử lý lỗi</a>
+    <a href="#s16" class="nav-link"><span class="ico">📋</span>Cheat Sheet</a>
+    <a href="#s17" class="nav-link"><span class="ico">🗺️</span>Lộ trình học tiếp</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════ MAIN ══════════════════════ -->
+<div class="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-eyebrow"><div class="pulse"></div>Automation · Open Source · Low-code</div>
+  <h1>Học <span class="h-pink">n8n</span><br><span class="h-grad">từ A đến Z</span></h1>
+  <p class="hero-desc">Nền tảng automation mạnh mẽ nhất — kết nối 400+ ứng dụng, tự động hóa mọi quy trình làm việc. Không cần code để bắt đầu, nhưng biết code thì vô giới hạn.</p>
+  <div class="hero-chips">
+    <span class="chip chip-r">🔴 n8n Self-hosted / Cloud</span>
+    <span class="chip chip-g">✅ 400+ Integrations</span>
+    <span class="chip chip-p">⚡ Visual Workflow Builder</span>
+    <span class="chip chip-b">🆓 Free & Open Source</span>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- ═════════════════════════════════
+     S01 — N8N LÀ GÌ?
+═════════════════════════════════ -->
+<div class="section" id="s01">
+  <div class="sec-head">
+    <span class="sec-tag">01</span>
+    <div>
+      <h2 class="sec-title">n8n là gì?</h2>
+      <p class="sec-sub">Automation platform — Nối mọi thứ lại, chạy tự động 24/7</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <p><strong>n8n</strong> (đọc là "n-eight-n") là công cụ automation workflow mã nguồn mở. Bạn kéo thả các "node" (khối chức năng) vào canvas, nối chúng lại → workflow tự chạy khi có sự kiện xảy ra.</p>
+
+    <div class="grid-4">
+      <div class="card"><div class="card-icon">🔗</div><div class="card-title">400+ Integrations</div><div class="card-desc">Gmail, Slack, Google Sheets, Notion, GitHub, Stripe, Airtable...</div></div>
+      <div class="card"><div class="card-icon">👁️</div><div class="card-title">Visual Builder</div><div class="card-desc">Kéo-thả trực quan, nhìn thấy data chạy qua từng bước real-time</div></div>
+      <div class="card"><div class="card-icon">💻</div><div class="card-title">Code khi cần</div><div class="card-desc">Viết JS/Python trong Code Node khi cần logic phức tạp</div></div>
+      <div class="card"><div class="card-icon">🆓</div><div class="card-title">Self-host miễn phí</div><div class="card-desc">Open source, không giới hạn workflow, dữ liệu thuộc về bạn</div></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">n8n so với Zapier và Make</div>
+    <table class="tbl">
+      <thead><tr><th>Tiêu chí</th><th>n8n</th><th>Zapier</th><th>Make (Integromat)</th></tr></thead>
+      <tbody>
+        <tr><td>Giá</td><td class="c-g"><strong>Miễn phí (self-host)</strong></td><td>$19.99+/tháng</td><td>$9+/tháng</td></tr>
+        <tr><td>Self-hosting</td><td class="c-g">✅ Đầy đủ</td><td>❌ Không</td><td>❌ Không</td></tr>
+        <tr><td>Code tùy ý</td><td class="c-g">✅ JS + Python</td><td>❌ Giới hạn</td><td>⚠️ Giới hạn</td></tr>
+        <tr><td>Số workflow</td><td class="c-g">Không giới hạn</td><td>Theo plan</td><td>Theo plan</td></tr>
+        <tr><td>Integrations</td><td>400+ (cộng đồng đóng góp)</td><td>6,000+</td><td>1,500+</td></tr>
+        <tr><td>Độ khó</td><td>⚡ Cần học hơn</td><td>😊 Dễ nhất</td><td>😊 Trung bình</td></tr>
+      </tbody>
+    </table>
+    <div class="info i-ok"><span class="info-ico">💡</span><span><strong>Khi nào chọn n8n?</strong> Khi bạn muốn tự host, cần logic code phức tạp, hoặc không muốn trả subscription mãi mãi. Chi phí dài hạn = chi phí server (VPS $5–10/tháng).</span></div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Ví dụ workflow thực tế</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">Ví dụ: Tự động gửi email chào mừng khi nhận form đăng ký</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">📋</div><div class="w-name">Form Trigger</div><div class="w-sub">Người dùng submit</div></div>
+          <div class="wnode-lbl">TRIGGER</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">📝</div><div class="w-name">Set Node</div><div class="w-sub">Format tên, email</div></div>
+          <div class="wnode-lbl">PROCESS</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">❓</div><div class="w-name">IF Node</div><div class="w-sub">Email hợp lệ?</div></div>
+          <div class="wnode-lbl">LOGIC</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-a">
+          <div class="wnode"><div class="w-ico">📧</div><div class="w-name">Gmail</div><div class="w-sub">Gửi email chào</div></div>
+          <div class="wnode-lbl">ACTION</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">📊</div><div class="w-name">Google Sheets</div><div class="w-sub">Lưu vào database</div></div>
+          <div class="wnode-lbl">SAVE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S02 — CÀI ĐẶT
+═════════════════════════════════ -->
+<div class="section" id="s02">
+  <div class="sec-head">
+    <span class="sec-tag">02</span>
+    <div>
+      <h2 class="sec-title">Cài đặt & Khởi động</h2>
+      <p class="sec-sub">3 cách chạy n8n — chọn cái phù hợp với bạn</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cách 1 — n8n Cloud ✅ (Dễ nhất cho người mới)</div>
+    <p>Không cần cài gì, có ngay trong 2 phút. Phù hợp để học và test. 14 ngày dùng thử miễn phí.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-L"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Truy cập <a href="https://n8n.io" style="color:var(--n8n)">n8n.io</a> → "Get started"</h4><p>Đăng ký bằng email hoặc GitHub. Instance của bạn được tạo tự động tại <code>yourname.n8n.cloud</code>.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Tạo workflow đầu tiên</h4><p>Click nút <strong>"+ New Workflow"</strong> → canvas trống xuất hiện → kéo thả nodes vào bắt đầu build.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">3</div></div>
+        <div class="step-B"><h4>Kích hoạt và chạy</h4><p>Click <strong>"Execute Workflow"</strong> để test thủ công, hoặc toggle <strong>"Active"</strong> để workflow chạy tự động theo trigger.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cách 2 — npx (Nhanh nhất trên máy local)</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Terminal</span><span class="cb-tag">Node.js 18+ required</span></div>
+      <div class="cb-body"><pre><span class="cm"># Chạy n8n ngay, không cần cài đặt</span>
+npx n8n
+
+<span class="cm"># Mở browser tại:</span>
+<span class="st">http://localhost:5678</span>
+
+<span class="cm"># Lần sau khởi động lại:</span>
+npx n8n start</pre></div>
+    </div>
+    <div class="info i-note"><span class="info-ico">📌</span><span>Data được lưu trong <code>~/.n8n/</code> trên máy tính của bạn. Mỗi lần chạy <code>npx n8n</code> sẽ tiếp tục từ lần trước.</span></div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cách 3 — Docker (Khuyến nghị cho production)</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">docker-compose.yml</span><span class="cb-tag">Docker</span></div>
+      <div class="cb-body"><pre><span class="kw">version</span>: <span class="st">'3.8'</span>
+
+<span class="kw">services</span>:
+  <span class="kw">n8n</span>:
+    <span class="kw">image</span>: docker.n8n.io/n8nio/n8n
+    <span class="kw">ports</span>:
+      - <span class="st">"5678:5678"</span>
+    <span class="kw">environment</span>:
+      - <span class="nm">N8N_BASIC_AUTH_ACTIVE</span>=true
+      - <span class="nm">N8N_BASIC_AUTH_USER</span>=admin
+      - <span class="nm">N8N_BASIC_AUTH_PASSWORD</span>=your_password
+      - <span class="nm">GENERIC_TIMEZONE</span>=Asia/Ho_Chi_Minh
+    <span class="kw">volumes</span>:
+      - ~/.n8n:/home/node/.n8n    <span class="cm"># lưu data</span>
+    <span class="kw">restart</span>: unless-stopped</pre></div>
+    </div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Terminal</span></div>
+      <div class="cb-body"><pre>docker compose up -d
+<span class="cm"># Truy cập: http://localhost:5678</span></pre></div>
+    </div>
+    <div class="info i-blue"><span class="info-ico">💡</span><span>Để học → dùng <strong>Cloud hoặc npx</strong>. Để chạy production ổn định 24/7 → dùng <strong>Docker trên VPS</strong> (DigitalOcean, Hetzner, Railway...).</span></div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S03 — GIAO DIỆN
+═════════════════════════════════ -->
+<div class="section" id="s03">
+  <div class="sec-head">
+    <span class="sec-tag">03</span>
+    <div>
+      <h2 class="sec-title">Giao diện & Canvas</h2>
+      <p class="sec-sub">Làm quen với màn hình làm việc chính của n8n</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Bố cục giao diện n8n Editor</div>
+    <!-- Mô phỏng giao diện n8n -->
+    <div class="demo-box">
+      <div class="demo-box-head"><div class="live-dot"></div>n8n Workflow Editor — Mô phỏng</div>
+      <div class="demo-body" style="padding:0">
+        <div style="background:var(--s2);border-radius:0 0 12px 12px;overflow:hidden;font-size:12px">
+          <!-- Top bar -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--s3);border-bottom:1px solid var(--border)">
+            <div style="display:flex;align-items:center;gap:14px">
+              <span style="color:var(--n8n);font-weight:900;font-size:15px">n8n</span>
+              <span style="color:var(--muted)">Workflows /</span>
+              <span style="color:var(--text);font-weight:600">Daily Report</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div style="background:var(--green-dim);border:1px solid rgba(64,216,142,.3);color:var(--green);padding:4px 12px;border-radius:100px;font-size:10.5px;font-weight:700">▶ Execute</div>
+              <div style="background:var(--n8n-dim);border:1px solid var(--n8n-glow);color:var(--n8n);padding:4px 12px;border-radius:100px;font-size:10.5px;font-weight:700">⚡ Active</div>
+              <div style="background:var(--border);padding:4px 12px;border-radius:100px;font-size:10.5px;color:var(--muted)">⋯ Menu</div>
+            </div>
+          </div>
+
+          <div style="display:flex;min-height:240px">
+            <!-- Icon sidebar -->
+            <div style="width:50px;background:var(--s3);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:18px;padding:16px 0">
+              <div style="font-size:17px;opacity:.5" title="Nodes Panel">⊞</div>
+              <div style="font-size:17px;opacity:.5" title="Executions">⏱</div>
+              <div style="font-size:17px;opacity:.5" title="Variables">📌</div>
+              <div style="font-size:17px;opacity:.5" title="Settings">⚙️</div>
+            </div>
+
+            <!-- Canvas -->
+            <div style="flex:1;position:relative;overflow:hidden;
+              background-image:radial-gradient(circle,rgba(255,255,255,.035) 1px,transparent 1px);
+              background-size:24px 24px;background-color:var(--bg)">
+
+              <!-- Nodes on canvas -->
+              <div style="position:absolute;top:50%;left:50%;transform:translate(-56%,-50%);display:flex;align-items:center;gap:0">
+                <div style="background:var(--s2);border:1.5px solid rgba(64,216,142,.5);border-radius:9px;padding:10px 14px;text-align:center;color:var(--green);font-weight:700;font-size:10.5px;min-width:78px">
+                  <div style="font-size:17px;margin-bottom:3px">⏰</div>Schedule
+                  <div style="font-size:8.5px;color:var(--muted);margin-top:1px">Every day 8am</div>
+                </div>
+                <div style="width:28px;height:2px;background:var(--border2);position:relative"><div style="position:absolute;right:-5px;top:-4px;border:4px solid transparent;border-left:7px solid var(--border2)"></div></div>
+                <div style="background:var(--s2);border:1.5px solid rgba(91,168,255,.5);border-radius:9px;padding:10px 14px;text-align:center;color:var(--blue);font-weight:700;font-size:10.5px;min-width:78px">
+                  <div style="font-size:17px;margin-bottom:3px">📊</div>Sheets
+                  <div style="font-size:8.5px;color:var(--muted);margin-top:1px">Get rows</div>
+                </div>
+                <div style="width:28px;height:2px;background:var(--border2);position:relative"><div style="position:absolute;right:-5px;top:-4px;border:4px solid transparent;border-left:7px solid var(--border2)"></div></div>
+                <div style="background:var(--s2);border:2px solid rgba(255,208,96,.6);border-radius:9px;padding:10px 14px;text-align:center;color:var(--yellow);font-weight:700;font-size:10.5px;min-width:78px;box-shadow:0 0 18px rgba(255,208,96,.15)">
+                  <div style="font-size:17px;margin-bottom:3px">⚙️</div>Code
+                  <div style="font-size:8.5px;color:var(--muted);margin-top:1px">Calculate total</div>
+                </div>
+                <div style="width:28px;height:2px;background:var(--border2);position:relative"><div style="position:absolute;right:-5px;top:-4px;border:4px solid transparent;border-left:7px solid var(--border2)"></div></div>
+                <div style="background:var(--s2);border:1.5px solid rgba(255,101,132,.4);border-radius:9px;padding:10px 14px;text-align:center;color:var(--n8n);font-weight:700;font-size:10.5px;min-width:78px">
+                  <div style="font-size:17px;margin-bottom:3px">💬</div>Slack
+                  <div style="font-size:8.5px;color:var(--muted);margin-top:1px">Send report</div>
+                </div>
+              </div>
+
+              <!-- Labels -->
+              <div style="position:absolute;top:14px;left:16px;font-size:10px;color:var(--faint);font-weight:700">CANVAS — Kéo thả nodes vào đây</div>
+              <div style="position:absolute;bottom:10px;right:14px;font-size:10px;color:var(--faint)">Scroll để zoom · Drag để di chuyển</div>
+            </div>
+
+            <!-- Right panel -->
+            <div style="width:210px;background:var(--s3);border-left:1px solid var(--border);padding:14px;font-size:11px">
+              <div style="color:var(--yellow);font-weight:700;font-size:12px;margin-bottom:12px">⚙️ Code Node</div>
+              <div style="color:var(--muted);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Mode</div>
+              <div style="background:var(--s4);border:1px solid var(--border2);border-radius:5px;padding:6px 10px;margin-bottom:12px;font-size:11px">Run Once for All Items</div>
+              <div style="color:var(--muted);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">JavaScript</div>
+              <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#c0c0e0;line-height:1.7">
+                <span style="color:#ff7b7b">const</span> items = $input.<span style="color:#ffc060">all</span>();<br>
+                <span style="color:#ff7b7b">return</span> items.<span style="color:#ffc060">map</span>(i => ({<br>
+                &nbsp;&nbsp;<span style="color:#80e8b0">json</span>: i.json<br>
+                }));
+              </div>
+              <div style="margin-top:10px;background:var(--green-dim);border:1px solid rgba(64,216,142,.2);border-radius:5px;padding:6px 10px;color:var(--green);font-size:10px">✅ 3 items processed</div>
+            </div>
+          </div>
+
+          <!-- Bottom output panel -->
+          <div style="border-top:1px solid var(--border);padding:10px 16px;background:var(--bg);display:flex;align-items:center;gap:10px;font-size:10.5px">
+            <span style="color:var(--muted)">Output:</span>
+            <span style="background:var(--green-dim);color:var(--green);padding:2px 8px;border-radius:4px;font-weight:700">3 items</span>
+            <span style="color:var(--faint)">→ id, name, total, processedAt</span>
+            <span style="margin-left:auto;color:var(--muted)">Execution time: 0.3s</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">5 khu vực giao diện cần biết</div>
+    <table class="tbl">
+      <thead><tr><th>Khu vực</th><th>Tên gọi</th><th>Chức năng chính</th></tr></thead>
+      <tbody>
+        <tr><td>🔝 Top bar</td><td><strong>Toolbar</strong></td><td>Tên workflow, nút Execute, toggle Active/Inactive, Save, Share</td></tr>
+        <tr><td>⬅️ Icon bar</td><td><strong>Left Sidebar</strong></td><td>Node panel (thêm node), Executions history, Variables, Settings</td></tr>
+        <tr><td>🖼️ Giữa</td><td><strong>Canvas</strong></td><td>Vùng kéo-thả chính — nơi xây dựng và kết nối nodes</td></tr>
+        <tr><td>➡️ Phải</td><td><strong>Node Config Panel</strong></td><td>Cấu hình node đang chọn: parameters, credentials, options</td></tr>
+        <tr><td>⬇️ Dưới</td><td><strong>Output Panel</strong></td><td>Xem dữ liệu output sau khi execute từng node</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S04 — NODES
+═════════════════════════════════ -->
+<div class="section" id="s04">
+  <div class="sec-head">
+    <span class="sec-tag">04</span>
+    <div>
+      <h2 class="sec-title">Nodes — Khối xây dựng cơ bản</h2>
+      <p class="sec-sub">Mỗi node là một hành động — kết hợp lại thành workflow</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Giải phẫu một Node</div>
+    <div class="anatomy-wrap">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+        <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase">INPUT</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:22px;height:2px;background:var(--green)"></div>
+          <div class="anat-node">
+            <div class="anat-inp"></div>
+            <div class="anat-out"></div>
+            <div class="anat-ico">📧</div>
+            <div class="anat-name">Gmail Node</div>
+            <div class="anat-type">Action · Google</div>
+          </div>
+          <div style="width:22px;height:2px;background:var(--n8n)"></div>
+        </div>
+        <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase">OUTPUT</div>
+      </div>
+      <div class="anat-items">
+        <div class="anat-item"><div class="anat-dot" style="background:var(--green)"></div><div class="anat-text"><strong>Input (chấm xanh — bên trái)</strong><span>Nhận dữ liệu từ node trước. Có thể từ 0 (trigger), 1, hoặc nhiều nguồn.</span></div></div>
+        <div class="anat-item"><div class="anat-dot" style="background:var(--n8n)"></div><div class="anat-text"><strong>Output (chấm hồng — bên phải)</strong><span>Trả dữ liệu sang node tiếp theo. IF/Switch có nhiều output.</span></div></div>
+        <div class="anat-item"><div class="anat-dot" style="background:var(--yellow)"></div><div class="anat-text"><strong>Body (phần thân)</strong><span>Click để mở panel cấu hình bên phải: chọn operation, điền tham số, kết nối credential.</span></div></div>
+        <div class="anat-item"><div class="anat-dot" style="background:var(--purple)"></div><div class="anat-text"><strong>Status (badge góc)</strong><span>Hiển thị ✅ thành công, ❌ lỗi, hoặc số items sau khi execute.</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">4 loại node chính</div>
+    <div class="grid-4">
+      <div class="card" style="border-color:rgba(64,216,142,.2)">
+        <div class="card-icon">⚡</div>
+        <div class="card-title" style="color:var(--green)">Trigger Nodes</div>
+        <div class="card-desc">Node đầu tiên. Xác định KHI NÀO workflow chạy. Ví dụ: Webhook, Schedule, Email nhận, Form submit...</div>
+      </div>
+      <div class="card" style="border-color:rgba(91,168,255,.2)">
+        <div class="card-icon">🔧</div>
+        <div class="card-title" style="color:var(--blue)">Action Nodes</div>
+        <div class="card-desc">Thực hiện hành động trong app. Ví dụ: Gmail gửi email, Slack nhắn tin, Sheets ghi row...</div>
+      </div>
+      <div class="card" style="border-color:rgba(160,122,244,.2)">
+        <div class="card-icon">🧩</div>
+        <div class="card-title" style="color:var(--purple)">Logic Nodes</div>
+        <div class="card-desc">Điều khiển luồng. IF, Switch, Merge, Loop, Wait, Error Trigger, Stop...</div>
+      </div>
+      <div class="card" style="border-color:rgba(255,208,96,.2)">
+        <div class="card-icon">⚙️</div>
+        <div class="card-title" style="color:var(--yellow)">Transform Nodes</div>
+        <div class="card-desc">Xử lý dữ liệu. Set, Edit Fields, Code Node, Remove Duplicates, Aggregate...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cách thêm và cấu hình Node</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-L"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Click <code>+</code> hoặc kéo từ output</h4><p>Bấm dấu <code>+</code> trên canvas, hoặc kéo từ chấm tròn output của node hiện tại. Panel tìm kiếm node xuất hiện.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Tìm kiếm tên node</h4><p>Gõ tên app: <code>gmail</code>, <code>slack</code>, <code>sheets</code>... hoặc gõ chức năng: <code>if</code>, <code>http</code>, <code>code</code>...</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Chọn Operation</h4><p>Mỗi node có nhiều operations. Ví dụ Gmail: <em>Send Email</em>, <em>Get Emails</em>, <em>Reply</em>... Chọn đúng operation cần dùng.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">4</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Điền tham số và kết nối Credential</h4><p>Điền các field cần thiết. Nếu node cần xác thực (Gmail, Slack...), nhấn <strong>"Add Credential"</strong> để kết nối tài khoản.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">5</div></div>
+        <div class="step-B"><h4>Test Step</h4><p>Nhấn <strong>"Test step"</strong> (hoặc <kbd>Ctrl+Enter</kbd>) để chạy riêng node đó và xem output ngay trong panel bên dưới.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S05 — ITEMS & DATA
+═════════════════════════════════ -->
+<div class="section" id="s05">
+  <div class="sec-head">
+    <span class="sec-tag">05</span>
+    <div>
+      <h2 class="sec-title">Items &amp; JSON Data Flow</h2>
+      <p class="sec-sub">Dữ liệu trong n8n là mảng JSON — mỗi phần tử là một "item"</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu trúc Items</div>
+    <p>Mọi dữ liệu di chuyển giữa các node đều ở dạng <strong>array of items</strong>. Mỗi item bắt buộc có field <code>json</code> chứa object dữ liệu, và có thể có field <code>binary</code> cho file.</p>
+
+    <div class="split-view">
+      <div class="split-pane sp-before">
+        <div class="split-head"><span>📦 Cấu trúc chuẩn n8n</span><span class="sp-badge">n8n</span></div>
+        <div class="split-body"><pre><span class="cm">// Dữ liệu giữa các node</span>
+[
+  {
+    <span class="pr">json</span>: {
+      <span class="pr">id</span>: <span class="nm">1</span>,
+      <span class="pr">name</span>: <span class="st">"Nguyễn Minh"</span>,
+      <span class="pr">email</span>: <span class="st">"minh@test.com"</span>,
+      <span class="pr">amount</span>: <span class="nm">500000</span>
+    }
+  },
+  {
+    <span class="pr">json</span>: {
+      <span class="pr">id</span>: <span class="nm">2</span>,
+      <span class="pr">name</span>: <span class="st">"Trần Lan"</span>,
+      <span class="pr">email</span>: <span class="st">"lan@test.com"</span>,
+      <span class="pr">amount</span>: <span class="nm">1200000</span>
+    }
+  }
+]</pre></div>
+      </div>
+      <div class="split-pane sp-after">
+        <div class="split-head"><span>⚙️ Đọc trong Code Node</span><span class="sp-badge">JS</span></div>
+        <div class="split-body"><pre><span class="cm">// Lấy tất cả items</span>
+<span class="kw">const</span> <span class="vr">items</span> = <span class="vr">$input</span>.<span class="fn">all</span>();
+
+<span class="cm">// Item đầu tiên</span>
+<span class="kw">const</span> <span class="vr">first</span> = <span class="vr">$input</span>.<span class="fn">first</span>();
+<span class="vr">first</span>.<span class="pr">json</span>.<span class="pr">name</span>   <span class="cm">// "Nguyễn Minh"</span>
+<span class="vr">first</span>.<span class="pr">json</span>.<span class="pr">amount</span> <span class="cm">// 500000</span>
+
+<span class="cm">// Duyệt qua tất cả</span>
+<span class="vr">items</span>.<span class="fn">forEach</span>(<span class="vr">item</span> => {
+  <span class="fn">console</span>.<span class="pr">log</span>(<span class="vr">item</span>.<span class="pr">json</span>.<span class="pr">name</span>);
+});</pre></div>
+      </div>
+    </div>
+
+    <div class="info i-n8n"><span class="info-ico">⚠️</span><span>Quan trọng nhất: Mỗi node <strong>xử lý từng item một</strong> theo mặc định. Nếu 3 items vào Gmail node → Gmail gửi <strong>3 email riêng biệt</strong>. Đây là behavior cốt lõi cần hiểu!</span></div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Data flow qua các nodes</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">Dữ liệu biến đổi qua từng node</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">📊</div><div class="w-name">Google Sheets</div><div class="w-sub">Output: 5 items</div></div>
+          <div class="wnode-lbl" style="background:var(--blue-dim);color:var(--blue)">5 items</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">📝</div><div class="w-name">Set Node</div><div class="w-sub">Thêm field "total"</div></div>
+          <div class="wnode-lbl" style="background:var(--teal-dim);color:var(--teal)">5→5 items</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">🔍</div><div class="w-name">Filter</div><div class="w-sub">total &gt; 100.000đ</div></div>
+          <div class="wnode-lbl" style="background:var(--purple-dim);color:var(--purple)">5→3 items</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-a">
+          <div class="wnode"><div class="w-ico">📧</div><div class="w-name">Gmail</div><div class="w-sub">Gửi 3 email</div></div>
+          <div class="wnode-lbl" style="background:var(--n8n-dim);color:var(--n8n)">3 emails</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S06 — EXPRESSIONS
+═════════════════════════════════ -->
+<div class="section" id="s06">
+  <div class="sec-head">
+    <span class="sec-tag">06</span>
+    <div>
+      <h2 class="sec-title">Expressions <code>{{ }}</code></h2>
+      <p class="sec-sub">Dùng JavaScript mini trong bất kỳ field nào của node</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <p>Bất kỳ field nào trong n8n đều cho phép dùng <code>{{ }}</code> để viết biểu thức JavaScript. Click biểu tượng <strong>⚡ Expression</strong> bên cạnh field để bật chế độ expression.</p>
+
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">n8n Expressions — Cú pháp cơ bản</span></div>
+      <div class="cb-body"><pre><span class="cm">// ── Lấy field từ item hiện tại ──</span>
+{{ <span class="vr">$json</span>.<span class="pr">name</span> }}                     <span class="cm">// Field đơn giản</span>
+{{ <span class="vr">$json</span>.<span class="pr">address</span>.<span class="pr">city</span> }}             <span class="cm">// Nested object</span>
+{{ <span class="vr">$json</span>.<span class="pr">tags</span>[<span class="nm">0</span>] }}                  <span class="cm">// Phần tử mảng đầu tiên</span>
+
+<span class="cm">// ── Tính toán ──</span>
+{{ <span class="vr">$json</span>.<span class="pr">price</span> * <span class="vr">$json</span>.<span class="pr">qty</span> }}         <span class="cm">// Phép nhân</span>
+{{ <span class="vr">$json</span>.<span class="pr">score</span> >= <span class="nm">90</span> ? <span class="st">'A'</span> : <span class="st">'B'</span> }} <span class="cm">// Ternary</span>
+
+<span class="cm">// ── Xử lý chuỗi ──</span>
+{{ <span class="vr">$json</span>.<span class="pr">name</span>.<span class="fn">toUpperCase</span>() }}        <span class="cm">// In hoa</span>
+{{ <span class="vr">$json</span>.<span class="pr">email</span>.<span class="fn">trim</span>().<span class="fn">toLowerCase</span>() }} <span class="cm">// Chuẩn hóa email</span>
+{{ <span class="st">`Xin chào ${<span class="vr">$json</span>.<span class="pr">name</span>}!`</span> }}      <span class="cm">// Template literal</span>
+
+<span class="cm">// ── Ngày giờ (Luxon) ──</span>
+{{ <span class="vr">$now</span>.<span class="fn">toISO</span>() }}                    <span class="cm">// ISO string hiện tại</span>
+{{ <span class="vr">$now</span>.<span class="fn">toFormat</span>(<span class="st">'dd/MM/yyyy'</span>) }}    <span class="cm">// Format ngày VN</span>
+{{ <span class="vr">$today</span>.<span class="fn">toISODate</span>() }}              <span class="cm">// Chỉ ngày hôm nay</span>
+{{ <span class="vr">$now</span>.<span class="fn">minus</span>({ <span class="pr">days</span>: <span class="nm">7</span> }).<span class="fn">toISO</span>() }} <span class="cm">// 7 ngày trước</span>
+
+<span class="cm">// ── Lấy data từ node khác ──</span>
+{{ <span class="vr">$</span>(<span class="st">'Set Node'</span>).<span class="fn">first</span>().<span class="pr">json</span>.<span class="pr">total</span> }}
+{{ <span class="vr">$</span>(<span class="st">'HTTP Request'</span>).<span class="fn">all</span>().<span class="pr">length</span> }}</pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Bảng biến đặc biệt trong Expression</div>
+    <table class="tbl">
+      <thead><tr><th>Biến</th><th>Loại</th><th>Ý nghĩa</th></tr></thead>
+      <tbody>
+        <tr><td><code>$json</code></td><td class="c-g">Object</td><td>Dữ liệu của item đang xử lý (shorthand cho <code>$input.item.json</code>)</td></tr>
+        <tr><td><code>$input.all()</code></td><td class="c-b">Array</td><td>Tất cả items từ node trước</td></tr>
+        <tr><td><code>$input.first()</code></td><td class="c-b">Item</td><td>Item đầu tiên từ node trước</td></tr>
+        <tr><td><code>$('NodeName').first()</code></td><td class="c-b">Item</td><td>Item đầu tiên từ một node cụ thể theo tên</td></tr>
+        <tr><td><code>$now</code></td><td class="c-p">DateTime</td><td>Thời gian hiện tại (Luxon DateTime object)</td></tr>
+        <tr><td><code>$today</code></td><td class="c-p">DateTime</td><td>Ngày hôm nay (không có giờ phút giây)</td></tr>
+        <tr><td><code>$env.KEY</code></td><td class="c-y">String</td><td>Biến môi trường đã cấu hình trong Settings</td></tr>
+        <tr><td><code>$workflow.id</code></td><td class="c-y">String</td><td>ID của workflow hiện tại</td></tr>
+        <tr><td><code>$execution.id</code></td><td class="c-y">String</td><td>ID của lần chạy này (unique mỗi execution)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S07 — TRIGGERS
+═════════════════════════════════ -->
+<div class="section" id="s07">
+  <div class="sec-head">
+    <span class="sec-tag">07</span>
+    <div>
+      <h2 class="sec-title">Trigger Nodes</h2>
+      <p class="sec-sub">Node đầu tiên — Xác định KHI NÀO workflow được khởi động</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Các trigger phổ biến nhất</div>
+    <div class="node-gallery">
+      <div class="ng-card">
+        <div class="ng-icon">⏰</div>
+        <div class="ng-name">Schedule Trigger</div>
+        <div class="ng-desc">Chạy theo lịch cố định: mỗi 5 phút, hàng ngày 8h, thứ 2 hàng tuần...</div>
+        <div class="ng-badge" style="background:var(--green-dim);color:var(--green)">Cron / Interval</div>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">🔗</div>
+        <div class="ng-name">Webhook Trigger</div>
+        <div class="ng-desc">Nhận HTTP request. n8n cấp URL, app bên ngoài POST vào để trigger.</div>
+        <div class="ng-badge" style="background:var(--blue-dim);color:var(--blue)">HTTP POST/GET</div>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">📧</div>
+        <div class="ng-name">Email Trigger</div>
+        <div class="ng-desc">Khi nhận email mới. Hỗ trợ Gmail, Outlook, IMAP.</div>
+        <div class="ng-badge" style="background:var(--n8n-dim);color:var(--n8n)">Gmail / IMAP</div>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">📋</div>
+        <div class="ng-name">Form Trigger</div>
+        <div class="ng-desc">n8n tạo sẵn form HTML. Người dùng submit form → workflow chạy.</div>
+        <div class="ng-badge" style="background:var(--purple-dim);color:var(--purple)">Built-in Form</div>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">💬</div>
+        <div class="ng-name">Chat Trigger</div>
+        <div class="ng-desc">Tạo AI chatbot. Nhận tin nhắn từ người dùng qua giao diện chat.</div>
+        <div class="ng-badge" style="background:var(--teal-dim);color:var(--teal)">AI Agent</div>
+      </div>
+      <div class="ng-card">
+        <div class="ng-icon">🖱️</div>
+        <div class="ng-name">Manual Trigger</div>
+        <div class="ng-desc">Chạy bằng tay khi click Execute. Dùng để test hoặc chạy 1 lần.</div>
+        <div class="ng-badge" style="background:var(--yellow-dim);color:var(--yellow)">Manual</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Schedule Trigger — Cấu hình cron</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Cron expressions hay dùng</span></div>
+      <div class="cb-body"><pre><span class="cm">Cú pháp: phút giờ ngày tháng thứ</span>
+<span class="cm">         min  hr  dom mon dow</span>
+
+<span class="st">0 8 * * *</span>       <span class="cm">→ Mỗi ngày lúc 08:00</span>
+<span class="st">0 8 * * 1-5</span>    <span class="cm">→ Thứ 2-6 lúc 08:00 (ngày làm việc)</span>
+<span class="st">*/5 * * * *</span>    <span class="cm">→ Mỗi 5 phút</span>
+<span class="st">*/30 9-17 * * 1-5</span> <span class="cm">→ Mỗi 30 phút trong giờ hành chính</span>
+<span class="st">0 9 * * 1</span>      <span class="cm">→ Thứ 2 hàng tuần lúc 09:00</span>
+<span class="st">0 0 1 * *</span>      <span class="cm">→ Đầu mỗi tháng (ngày 1 lúc 00:00)</span>
+<span class="st">0 7,12,18 * * *</span> <span class="cm">→ Mỗi ngày lúc 7h, 12h, 18h</span></pre></div>
+    </div>
+    <div class="info i-ok"><span class="info-ico">🌏</span><span>Luôn chọn timezone <strong>Asia/Ho_Chi_Minh</strong> (UTC+7) trong Schedule Trigger để tránh lệch giờ!</span></div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Webhook Trigger — Nhận data từ bên ngoài</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Webhook — Cách hoạt động</span></div>
+      <div class="cb-body"><pre><span class="cm">1. Bạn thêm Webhook Trigger vào workflow</span>
+<span class="cm">2. n8n cấp URL dạng:</span>
+   <span class="st">https://your.n8n.cloud/webhook/abc123xyz</span>
+
+<span class="cm">3. App bên ngoài gọi vào URL đó:</span>
+<span class="fn">POST</span> https://your.n8n.cloud/webhook/abc123xyz
+{
+  <span class="pr">"event"</span>: <span class="st">"order.created"</span>,
+  <span class="pr">"orderId"</span>: <span class="st">"ORD-001"</span>,
+  <span class="pr">"customer"</span>: <span class="st">"Nguyen Minh"</span>,
+  <span class="pr">"amount"</span>: <span class="nm">500000</span>
+}
+
+<span class="cm">4. Webhook Trigger nhận data → workflow chạy</span>
+<span class="cm">   $json.event    → "order.created"</span>
+<span class="cm">   $json.orderId  → "ORD-001"</span></pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S08 — SET NODE
+═════════════════════════════════ -->
+<div class="section" id="s08">
+  <div class="sec-head">
+    <span class="sec-tag">08</span>
+    <div>
+      <h2 class="sec-title">Set &amp; Edit Fields Node</h2>
+      <p class="sec-sub">Thêm, sửa, đổi tên, xóa field — node dùng nhiều nhất</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Set Node làm được gì?</div>
+    <div class="grid-4">
+      <div class="card"><div class="card-icon">➕</div><div class="card-title">Thêm field mới</div><div class="card-desc">Tính toán và thêm field mới từ dữ liệu hiện có</div></div>
+      <div class="card"><div class="card-icon">✏️</div><div class="card-title">Sửa field cũ</div><div class="card-desc">Ghi đè giá trị, format lại, chuẩn hóa dữ liệu</div></div>
+      <div class="card"><div class="card-icon">🔄</div><div class="card-title">Đổi tên field</div><div class="card-desc">Rename để khớp với API yêu cầu format khác</div></div>
+      <div class="card"><div class="card-icon">🗑️</div><div class="card-title">Xóa field</div><div class="card-desc">Bỏ bớt field không cần, làm sạch data trước khi gửi</div></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Ví dụ — Set Node trong thực tế</div>
+    <div class="demo-box">
+      <div class="demo-box-head"><div class="live-dot"></div>Set Node — Trước và Sau</div>
+      <div class="demo-body">
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:start">
+          <!-- Input -->
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px">Input Item</div>
+            <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.9">
+              <div><span style="color:var(--muted)">first_name:</span> <span style="color:var(--st)">"  nguyen  "</span></div>
+              <div><span style="color:var(--muted)">last_name:</span>  <span style="color:var(--st)">"MINH"</span></div>
+              <div><span style="color:var(--muted)">price:</span>      <span style="color:#b0a0f8">150000</span></div>
+              <div><span style="color:var(--muted)">qty:</span>        <span style="color:#b0a0f8">3</span></div>
+              <div><span style="color:var(--muted)">status:</span>    <span style="color:var(--st)">"PENDING"</span></div>
+            </div>
+          </div>
+          <!-- Node -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:24px">
+            <div style="background:var(--s3);border:1.5px solid rgba(48,216,192,.4);border-radius:9px;padding:10px 14px;text-align:center;min-width:80px">
+              <div style="font-size:18px;margin-bottom:4px">📝</div>
+              <div style="font-size:11px;font-weight:700;color:var(--teal)">Set Node</div>
+            </div>
+            <div style="color:var(--faint);font-size:22px">→</div>
+          </div>
+          <!-- Output -->
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px">Output Item</div>
+            <div style="background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.9">
+              <div><span style="color:var(--muted)">first_name:</span> <span style="color:var(--st)">"  nguyen  "</span></div>
+              <div><span style="color:var(--muted)">last_name:</span>  <span style="color:var(--st)">"MINH"</span></div>
+              <div style="border-top:1px solid var(--border);margin-top:4px;padding-top:4px">
+                <div><span style="color:var(--green)">fullName:</span>   <span style="color:var(--st)">"Nguyen Minh"</span></div>
+                <div><span style="color:var(--green)">total:</span>      <span style="color:#b0a0f8">450000</span></div>
+                <div><span style="color:var(--green)">totalVND:</span>   <span style="color:var(--st)">"450.000đ"</span></div>
+                <div><span style="color:var(--green)">status:</span>     <span style="color:var(--st)">"pending"</span></div>
+                <div><span style="color:var(--green)">updatedAt:</span>  <span style="color:var(--st)">"2025-01-15"</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Config rows -->
+        <div style="margin-top:18px;background:var(--s2);border:1px solid var(--border);border-radius:9px;overflow:hidden">
+          <div style="padding:8px 14px;background:var(--s3);border-bottom:1px solid var(--border);font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Fields to Set</div>
+          <div style="padding:12px 14px;display:flex;flex-direction:column;gap:7px">
+            <div style="display:flex;align-items:center;gap:10px;font-size:12px">
+              <div style="width:100px;color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:11px">fullName</div>
+              <div style="color:var(--muted);font-size:10.5px;width:70px">Expression</div>
+              <div style="flex:1;background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--yellow)">{{ $json.first_name.trim() + " " + $json.last_name }}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:12px">
+              <div style="width:100px;color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:11px">total</div>
+              <div style="color:var(--muted);font-size:10.5px;width:70px">Expression</div>
+              <div style="flex:1;background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--yellow)">{{ $json.price * $json.qty }}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:12px">
+              <div style="width:100px;color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:11px">status</div>
+              <div style="color:var(--muted);font-size:10.5px;width:70px">Expression</div>
+              <div style="flex:1;background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--yellow)">{{ $json.status.toLowerCase() }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info i-ok"><span class="info-ico">💡</span><span>Bật <strong>"Keep Only Set"</strong> nếu chỉ muốn giữ các field đã set, bỏ hết field cũ. Tắt đi để merge với dữ liệu hiện có.</span></div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S09 — IF / SWITCH
+═════════════════════════════════ -->
+<div class="section" id="s09">
+  <div class="sec-head">
+    <span class="sec-tag">09</span>
+    <div>
+      <h2 class="sec-title">IF &amp; Switch — Rẽ nhánh</h2>
+      <p class="sec-sub">Điều hướng workflow theo điều kiện và giá trị</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">IF Node — 2 nhánh TRUE / FALSE</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">IF Node: Phân loại khách hàng VIP và thường</div>
+      <div style="display:flex;align-items:flex-start;gap:0">
+        <div class="wnode-wrap wn-t" style="margin-top:24px">
+          <div class="wnode"><div class="w-ico">🔗</div><div class="w-name">Webhook</div><div class="w-sub">Nhận đơn hàng</div></div>
+        </div>
+        <div class="wf-arr" style="margin-top:44px"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l" style="margin-top:24px">
+          <div class="wnode"><div class="w-ico">❓</div><div class="w-name">IF Node</div><div class="w-sub">amount ≥ 1.000.000?</div></div>
+          <div class="wnode-lbl">CONDITION</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+          <!-- TRUE -->
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:28px;height:2px;background:var(--green)"></div>
+            <div style="font-size:9.5px;font-weight:700;background:var(--green-dim);color:var(--green);padding:2px 9px;border-radius:100px;white-space:nowrap">✅ TRUE</div>
+            <div class="wnode-wrap wn-a">
+              <div class="wnode" style="min-width:82px"><div class="w-ico">⭐</div><div class="w-name">VIP Email</div></div>
+            </div>
+            <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+            <div class="wnode-wrap wn-p">
+              <div class="wnode" style="min-width:82px"><div class="w-ico">📊</div><div class="w-name">VIP Sheet</div></div>
+            </div>
+          </div>
+          <!-- FALSE -->
+          <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+            <div style="width:28px;height:2px;background:var(--n8n)"></div>
+            <div style="font-size:9.5px;font-weight:700;background:var(--n8n-dim);color:var(--n8n);padding:2px 9px;border-radius:100px;white-space:nowrap">❌ FALSE</div>
+            <div class="wnode-wrap wn-d">
+              <div class="wnode" style="min-width:82px"><div class="w-ico">📧</div><div class="w-name">Normal Email</div></div>
+            </div>
+            <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+            <div class="wnode-wrap wn-p">
+              <div class="wnode" style="min-width:82px"><div class="w-ico">📊</div><div class="w-name">Normal Sheet</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info i-note"><span class="info-ico">📌</span><span>IF Node hỗ trợ kết hợp nhiều điều kiện bằng <strong>AND</strong> (tất cả phải đúng) hoặc <strong>OR</strong> (chỉ cần 1 đúng). Hỗ trợ so sánh: số, chuỗi, boolean, ngày, regex, array...</span></div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Switch Node — Nhiều nhánh theo giá trị</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">Switch Node: Xử lý theo phương thức thanh toán</div>
+      <div style="display:flex;align-items:flex-start;gap:0">
+        <div class="wnode-wrap wn-l" style="margin-top:20px">
+          <div class="wnode"><div class="w-ico">🔀</div><div class="w-name">Switch</div><div class="w-sub">{{ $json.payment }}</div></div>
+          <div class="wnode-lbl">4 outputs</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding-left:0;margin-top:6px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:26px;height:2px;background:var(--purple)"></div>
+            <div style="font-size:9.5px;font-weight:700;background:var(--purple-dim);color:var(--purple);padding:2px 8px;border-radius:4px">"momo"</div>
+            <div class="wnode-wrap wn-l"><div class="wnode" style="min-width:80px"><div class="w-ico">💜</div><div class="w-name">MoMo API</div></div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:26px;height:2px;background:var(--blue)"></div>
+            <div style="font-size:9.5px;font-weight:700;background:var(--blue-dim);color:var(--blue);padding:2px 8px;border-radius:4px">"vnpay"</div>
+            <div class="wnode-wrap wn-p"><div class="wnode" style="min-width:80px"><div class="w-ico">🏦</div><div class="w-name">VNPay API</div></div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:26px;height:2px;background:var(--yellow)"></div>
+            <div style="font-size:9.5px;font-weight:700;background:var(--yellow-dim);color:var(--yellow);padding:2px 8px;border-radius:4px">"cod"</div>
+            <div class="wnode-wrap wn-c"><div class="wnode" style="min-width:80px"><div class="w-ico">💵</div><div class="w-name">COD Process</div></div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:26px;height:2px;background:var(--muted)"></div>
+            <div style="font-size:9.5px;font-weight:700;background:var(--s3);color:var(--muted);padding:2px 8px;border-radius:4px">Default</div>
+            <div class="wnode-wrap wn-a"><div class="wnode" style="min-width:80px"><div class="w-ico">⚠️</div><div class="w-name">Error Alert</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S10 — HTTP REQUEST
+═════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="sec-head">
+    <span class="sec-tag">10</span>
+    <div>
+      <h2 class="sec-title">HTTP Request Node</h2>
+      <p class="sec-sub">Gọi bất kỳ REST API nào — không cần viết code</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình cơ bản</div>
+    <table class="tbl">
+      <thead><tr><th>Field</th><th>Ví dụ</th><th>Mô tả</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Method</strong></td><td class="c-g">GET / POST / PUT / DELETE</td><td>Loại HTTP request</td></tr>
+        <tr><td><strong>URL</strong></td><td><code>https://api.example.com/users/{{ $json.id }}</code></td><td>URL API, có thể dùng Expression</td></tr>
+        <tr><td><strong>Authentication</strong></td><td>Bearer Token, Basic, API Key</td><td>Cách xác thực với API</td></tr>
+        <tr><td><strong>Headers</strong></td><td><code>Content-Type: application/json</code></td><td>HTTP headers tuỳ chỉnh</td></tr>
+        <tr><td><strong>Body</strong></td><td>JSON / Form Data</td><td>Dữ liệu gửi đi (chỉ dùng cho POST/PUT)</td></tr>
+        <tr><td><strong>Query Parameters</strong></td><td><code>limit=10&page={{ $json.page }}</code></td><td>URL parameters (?key=value)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Ví dụ GET và POST</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">GET — Lấy danh sách users</span></div>
+      <div class="cb-body"><pre>Method: <span class="st">GET</span>
+URL:    <span class="st">https://jsonplaceholder.typicode.com/users</span>
+Auth:   None
+
+<span class="cm">// Response tự động trở thành items:</span>
+[
+  { <span class="pr">json</span>: { <span class="pr">id</span>: <span class="nm">1</span>, <span class="pr">name</span>: <span class="st">"Leanne Graham"</span>, <span class="pr">email</span>: <span class="st">"sincere@april.biz"</span> } },
+  { <span class="pr">json</span>: { <span class="pr">id</span>: <span class="nm">2</span>, <span class="pr">name</span>: <span class="st">"Ervin Howell"</span>, <span class="pr">email</span>: <span class="st">"shanna@melissa.tv"</span> } },
+  <span class="cm">// ...</span>
+]</pre></div>
+    </div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">POST — Tạo đơn hàng mới</span></div>
+      <div class="cb-body"><pre>Method: <span class="st">POST</span>
+URL:    <span class="st">https://api.yourstore.com/orders</span>
+Headers:
+  Content-Type:  application/json
+  Authorization: Bearer {{ $env.STORE_API_KEY }}
+
+Body (JSON):
+{
+  <span class="pr">"customerId"</span>: <span class="st">"{{ $json.customerId }}"</span>,
+  <span class="pr">"items"</span>: {{ $json.cartItems }},
+  <span class="pr">"total"</span>: {{ $json.total }},
+  <span class="pr">"note"</span>: <span class="st">"Order via n8n at {{ $now.toISO() }}"</span>
+}</pre></div>
+    </div>
+    <div class="info i-warn"><span class="info-ico">⚠️</span><span>Không hardcode API keys trong URL hoặc Body! Lưu vào <strong>n8n Credentials</strong> hoặc <strong>Environment Variables</strong>, rồi dùng <code>{{ $env.MY_KEY }}</code> để truy cập an toàn.</span></div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S11 — CODE NODE
+═════════════════════════════════ -->
+<div class="section" id="s11">
+  <div class="sec-head">
+    <span class="sec-tag">11</span>
+    <div>
+      <h2 class="sec-title">Code Node — JavaScript tự do</h2>
+      <p class="sec-sub">Node mạnh nhất — viết bất kỳ logic nào bằng JS</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Template Code Node chuẩn</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Cấu trúc cơ bản</span><span class="cb-tag">JavaScript</span></div>
+      <div class="cb-body"><pre><span class="cm">// ── BƯỚC 1: Lấy dữ liệu từ node trước ──</span>
+<span class="kw">const</span> <span class="vr">items</span> = <span class="vr">$input</span>.<span class="fn">all</span>();    <span class="cm">// Tất cả items</span>
+<span class="kw">const</span> <span class="vr">first</span> = <span class="vr">$input</span>.<span class="fn">first</span>(); <span class="cm">// Chỉ item đầu</span>
+
+<span class="cm">// ── BƯỚC 2: Xử lý dữ liệu ──</span>
+<span class="kw">const</span> <span class="vr">results</span> = <span class="vr">items</span>.<span class="fn">map</span>(<span class="vr">item</span> => {
+  <span class="kw">const</span> { <span class="vr">name</span>, <span class="vr">price</span>, <span class="vr">qty</span> } = <span class="vr">item</span>.<span class="pr">json</span>;
+
+  <span class="cm">// Logic tùy ý...</span>
+  <span class="kw">const</span> <span class="vr">total</span>    = <span class="vr">price</span> * <span class="vr">qty</span>;
+  <span class="kw">const</span> <span class="vr">discount</span> = <span class="vr">total</span> > <span class="nm">1000000</span> ? <span class="vr">total</span> * <span class="nm">0.1</span> : <span class="nm">0</span>;
+  <span class="kw">const</span> <span class="vr">tier</span>     = <span class="vr">total</span> > <span class="nm">2000000</span> ? <span class="st">'Gold'</span> : <span class="st">'Silver'</span>;
+
+  <span class="cm">// ── BƯỚC 3: Return đúng cấu trúc ──</span>
+  <span class="kw">return</span> {
+    <span class="pr">json</span>: {             <span class="cm">// ← BẮT BUỘC phải có field 'json'</span>
+      ...<span class="vr">item</span>.<span class="pr">json</span>,    <span class="cm">// giữ tất cả fields cũ</span>
+      <span class="pr">total</span>,           <span class="cm">// thêm fields mới</span>
+      <span class="pr">discount</span>,
+      <span class="pr">tier</span>,
+      <span class="pr">processedAt</span>: <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toISOString</span>(),
+    }
+  };
+});
+
+<span class="cm">// ── BẮT BUỘC: return array of items ──</span>
+<span class="kw">return</span> <span class="vr">results</span>;</pre></div>
+    </div>
+    <div class="info i-n8n"><span class="info-ico">🔴</span><span>Quy tắc vàng của Code Node: Return luôn là <strong>array</strong>, mỗi phần tử luôn là object có field <strong><code>json</code></strong>. Quên return hoặc sai format → node báo lỗi ngay!</span></div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Biến đặc biệt trong Code Node</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Biến đặc biệt — n8n Built-ins</span></div>
+      <div class="cb-body"><pre><span class="cm">// ── Input ──</span>
+<span class="vr">$input</span>.<span class="fn">all</span>()                 <span class="cm">// Array tất cả items</span>
+<span class="vr">$input</span>.<span class="fn">first</span>().<span class="pr">json</span>.<span class="pr">name</span>    <span class="cm">// Truy cập field</span>
+<span class="vr">$input</span>.<span class="fn">last</span>()               <span class="cm">// Item cuối</span>
+<span class="vr">$input</span>.<span class="fn">all</span>().<span class="pr">length</span>         <span class="cm">// Số lượng items</span>
+
+<span class="cm">// ── Lấy từ node cụ thể ──</span>
+<span class="vr">$</span>(<span class="st">'Tên Node'</span>).<span class="fn">all</span>()         <span class="cm">// Tất cả items từ node đó</span>
+<span class="vr">$</span>(<span class="st">'Tên Node'</span>).<span class="fn">first</span>().<span class="pr">json</span>  <span class="cm">// Item đầu từ node đó</span>
+
+<span class="cm">// ── Thời gian (Luxon) ──</span>
+<span class="vr">$now</span>                         <span class="cm">// DateTime hiện tại</span>
+<span class="vr">$now</span>.<span class="fn">toISO</span>()                 <span class="cm">// ISO string</span>
+<span class="vr">$now</span>.<span class="fn">toFormat</span>(<span class="st">'dd/MM/yyyy'</span>)  <span class="cm">// Format tùy chỉnh</span>
+<span class="vr">$now</span>.<span class="fn">minus</span>({ <span class="pr">days</span>: <span class="nm">1</span> })       <span class="cm">// Trừ 1 ngày</span>
+
+<span class="cm">// ── Meta ──</span>
+<span class="vr">$env</span>.<span class="pr">MY_KEY</span>                   <span class="cm">// Environment variable</span>
+<span class="vr">$workflow</span>.<span class="pr">id</span>                  <span class="cm">// Workflow ID</span>
+<span class="vr">$execution</span>.<span class="pr">id</span>                 <span class="cm">// Execution ID (unique)</span></pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Khi nào dùng Code Node thay vì Set Node?</div>
+    <div class="grid-2">
+      <div class="card" style="border-color:rgba(48,216,192,.25)">
+        <div class="card-icon">📝</div>
+        <div class="card-title" style="color:var(--teal)">Dùng Set Node khi:</div>
+        <div class="card-desc">
+          <ul style="padding-left:16px;color:var(--muted);font-size:12.5px;line-height:1.8">
+            <li>Thêm / đổi tên field đơn giản</li>
+            <li>Tính toán cơ bản: +, ×, chuỗi...</li>
+            <li>Format ngày với <code>$now.toFormat()</code></li>
+            <li>Không cần loop, filter, reduce</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(255,208,96,.25)">
+        <div class="card-icon">⚙️</div>
+        <div class="card-title" style="color:var(--yellow)">Dùng Code Node khi:</div>
+        <div class="card-desc">
+          <ul style="padding-left:16px;color:var(--muted);font-size:12.5px;line-height:1.8">
+            <li>Cần <code>filter</code>, <code>map</code>, <code>reduce</code></li>
+            <li>Logic phức tạp, nhiều điều kiện</li>
+            <li>Gộp/biến đổi nhiều items</li>
+            <li>Gọi API với <code>await fetch()</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S12 — LOOP & MERGE
+═════════════════════════════════ -->
+<div class="section" id="s12">
+  <div class="sec-head">
+    <span class="sec-tag">12</span>
+    <div>
+      <h2 class="sec-title">Loop &amp; Merge Node</h2>
+      <p class="sec-sub">Xử lý hàng nghìn items và gộp nhiều nhánh lại</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Split In Batches — Loop qua items theo nhóm</div>
+    <p>Khi có nhiều items (hàng trăm hoặc nghìn), dùng <strong>Split In Batches</strong> để xử lý từng nhóm nhỏ, tránh timeout và rate limit API.</p>
+    <div class="wf-canvas">
+      <div class="wf-heading">Pattern: Gửi 1000 email — Chia nhóm 50, delay 1s giữa các nhóm</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">📊</div><div class="w-name">Google Sheets</div><div class="w-sub">1000 subscribers</div></div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">🔁</div><div class="w-name">Split Batches</div><div class="w-sub">Batch size: 50</div></div>
+          <div class="wnode-lbl">LOOP</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-a">
+          <div class="wnode"><div class="w-ico">📧</div><div class="w-name">Gmail</div><div class="w-sub">Gửi 50 email</div></div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">⏱️</div><div class="w-name">Wait</div><div class="w-sub">1 giây</div></div>
+        </div>
+        <div style="display:flex;align-items:center;padding:0 6px;margin-top:-22px">
+          <div style="border-top:2px dashed var(--purple);border-left:2px dashed var(--purple);width:24px;height:20px;border-radius:4px 0 0 0"></div>
+          <div style="color:var(--purple);font-size:9.5px;font-weight:700;white-space:nowrap;margin-left:4px">↩ Lặp lại batch tiếp theo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Merge Node — Gộp nhiều nhánh</div>
+    <table class="tbl">
+      <thead><tr><th>Mode</th><th>Chức năng</th><th>Dùng khi</th></tr></thead>
+      <tbody>
+        <tr><td class="c-g"><strong>Append</strong></td><td>Gộp tất cả items từ các nhánh thành 1 array lớn</td><td>Sau IF/Switch, muốn xử lý chung cả 2 nhánh</td></tr>
+        <tr><td class="c-b"><strong>Merge By Index</strong></td><td>Ghép item 1 nhánh A với item 1 nhánh B</td><td>2 nguồn có cùng số items, cùng thứ tự</td></tr>
+        <tr><td class="c-p"><strong>Merge By Key</strong></td><td>Ghép theo field chung (như SQL JOIN)</td><td>2 nguồn có field chung: <code>userId</code>, <code>email</code>...</td></tr>
+        <tr><td class="c-n"><strong>Wait for All</strong></td><td>Chờ tất cả input xong mới tiếp tục</td><td>Chạy song song và cần kết quả đồng bộ</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S13 — CREDENTIALS
+═════════════════════════════════ -->
+<div class="section" id="s13">
+  <div class="sec-head">
+    <span class="sec-tag">13</span>
+    <div>
+      <h2 class="sec-title">Credentials — Kết nối tài khoản</h2>
+      <p class="sec-sub">Lưu trữ và quản lý thông tin xác thực an toàn</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Credential là gì và cách tạo</div>
+    <p><strong>Credential</strong> là nơi n8n lưu trữ API keys, OAuth tokens, username/password... một cách an toàn (được mã hóa). Tạo 1 lần, dùng lại trong nhiều workflow.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-L"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Mở Settings → Credentials</h4><p>Trong giao diện n8n, vào menu bên trái → <strong>Credentials</strong>. Hoặc khi cấu hình node, click <strong>"Add Credential"</strong>.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Chọn loại và nhập thông tin</h4><p>Tìm tên service (Gmail, Slack, etc.). Làm theo hướng dẫn: có thể là OAuth2 (đăng nhập browser), API Key (copy paste), hoặc Basic Auth.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">3</div></div>
+        <div class="step-B"><h4>Test và Save</h4><p>Click <strong>"Test connection"</strong> để kiểm tra. Sau khi save, credential xuất hiện trong dropdown của node tương ứng.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Các loại xác thực phổ biến</div>
+    <table class="tbl">
+      <thead><tr><th>Loại</th><th>Dùng cho</th><th>Cách lấy</th></tr></thead>
+      <tbody>
+        <tr><td><strong>OAuth2</strong></td><td>Gmail, Google Sheets, Slack, GitHub...</td><td>Đăng nhập qua browser, n8n tự lấy token</td></tr>
+        <tr><td><strong>API Key</strong></td><td>OpenAI, SendGrid, Stripe, Notion...</td><td>Lấy từ trang Settings của service đó</td></tr>
+        <tr><td><strong>Bearer Token</strong></td><td>Custom APIs, REST APIs</td><td>Copy token và paste vào field</td></tr>
+        <tr><td><strong>Basic Auth</strong></td><td>Username/Password APIs</td><td>Nhập username và password</td></tr>
+        <tr><td><strong>Header Auth</strong></td><td>Custom header (X-API-Key...)</td><td>Chỉ định header name và value</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S14 — WORKFLOW ĐẦU TIÊN
+═════════════════════════════════ -->
+<div class="section" id="s14">
+  <div class="sec-head">
+    <span class="sec-tag">14</span>
+    <div>
+      <h2 class="sec-title">Workflow đầu tiên — Báo cáo hàng ngày</h2>
+      <p class="sec-sub">Hướng dẫn từng bước xây dựng workflow hoàn chỉnh</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu: Mỗi sáng 8h gửi báo cáo doanh thu qua Slack</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">Daily Revenue Report Workflow</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">⏰</div><div class="w-name">Schedule</div><div class="w-sub">0 8 * * * (8h/ngày)</div></div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">📊</div><div class="w-name">Google Sheets</div><div class="w-sub">Lấy đơn hôm qua</div></div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">⚙️</div><div class="w-name">Code Node</div><div class="w-sub">Tính tổng, % tăng</div></div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">📝</div><div class="w-name">Set Node</div><div class="w-sub">Format message</div></div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-a">
+          <div class="wnode"><div class="w-ico">💬</div><div class="w-name">Slack</div><div class="w-sub">Gửi #báo-cáo</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-L"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Schedule Trigger — Hàng ngày lúc 8h</h4>
+          <p>Thêm <strong>Schedule Trigger</strong> → chọn <strong>Custom (Cron)</strong> → nhập <code>0 8 * * *</code> → timezone: <strong>Asia/Ho_Chi_Minh</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Google Sheets — Đọc đơn hàng hôm qua</h4>
+          <p>Thêm <strong>Google Sheets</strong> → Operation: <strong>Get Many</strong> → chọn spreadsheet/sheet → thêm Filter: <code>date equals {{ $today.minus({days:1}).toISODate() }}</code>. Thêm Credential Gmail/Google.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Code Node — Tính toán thống kê</h4>
+          <div class="cblock" style="margin-top:10px">
+            <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node</span></div>
+            <div class="cb-body"><pre><span class="kw">const</span> <span class="vr">rows</span> = <span class="vr">$input</span>.<span class="fn">all</span>();
+
+<span class="kw">const</span> <span class="vr">total</span>  = <span class="vr">rows</span>.<span class="fn">reduce</span>((<span class="vr">s</span>,<span class="vr">i</span>) => <span class="vr">s</span> + <span class="vr">i</span>.<span class="pr">json</span>.<span class="pr">amount</span>, <span class="nm">0</span>);
+<span class="kw">const</span> <span class="vr">orders</span> = <span class="vr">rows</span>.<span class="pr">length</span>;
+<span class="kw">const</span> <span class="vr">avg</span>    = <span class="vr">orders</span> > <span class="nm">0</span> ? <span class="nm">Math</span>.<span class="fn">round</span>(<span class="vr">total</span> / <span class="vr">orders</span>) : <span class="nm">0</span>;
+
+<span class="kw">return</span> [{
+  <span class="pr">json</span>: {
+    <span class="pr">total</span>,
+    <span class="pr">orders</span>,
+    <span class="pr">avg</span>,
+    <span class="pr">totalFmt</span>: <span class="vr">total</span>.<span class="fn">toLocaleString</span>(<span class="st">'vi-VN'</span>) + <span class="st">'đ'</span>
+  }
+}];</pre></div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">4</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Set Node — Format tin nhắn Slack</h4>
+          <p>Thêm field <code>message</code>, dùng Expression:</p>
+          <div class="cblock" style="margin-top:8px">
+            <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Expression trong Set Node</span></div>
+            <div class="cb-body"><pre>📊 *Báo cáo {{ $now.toFormat('dd/MM/yyyy') }}*
+
+💰 Doanh thu: *{{ $json.totalFmt }}*
+📦 Số đơn: *{{ $json.orders }}*
+📈 TB/đơn: *{{ $json.avg.toLocaleString('vi-VN') }}đ*</pre></div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">5</div></div>
+        <div class="step-B">
+          <h4>Slack — Gửi thông báo</h4>
+          <p>Thêm <strong>Slack</strong> node → Operation: <strong>Send Message</strong> → Channel: <code>#bao-cao</code> → Text: <code>{{ $json.message }}</code>. Thêm Slack credential → Toggle <strong>"Active"</strong>. Xong! 🎉</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S15 — DEBUG & ERROR
+═════════════════════════════════ -->
+<div class="section" id="s15">
+  <div class="sec-head">
+    <span class="sec-tag">15</span>
+    <div>
+      <h2 class="sec-title">Debug &amp; Xử lý lỗi</h2>
+      <p class="sec-sub">Tìm và sửa bug — kỹ năng thiết yếu khi dùng n8n</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Lỗi thường gặp và cách sửa</div>
+    <table class="tbl">
+      <thead><tr><th>Lỗi</th><th>Nguyên nhân</th><th>Cách xử lý</th></tr></thead>
+      <tbody>
+        <tr><td class="c-n"><strong>Authentication failed</strong></td><td>Credential hết hạn hoặc sai thông tin</td><td>Settings → Credentials → Reconnect / cập nhật token</td></tr>
+        <tr><td class="c-n"><strong>Cannot read property of undefined</strong></td><td>Truy cập field không tồn tại trong item</td><td>Dùng optional chaining: <code>$json.user?.email ?? ''</code></td></tr>
+        <tr><td class="c-n"><strong>return is not an array</strong></td><td>Code Node return sai format</td><td>Đảm bảo: <code>return [{ json: {...} }]</code></td></tr>
+        <tr><td class="c-n"><strong>Rate limit exceeded</strong></td><td>Gọi API quá nhanh / quá nhiều</td><td>Thêm <strong>Wait Node</strong> (1–2s) sau mỗi API call</td></tr>
+        <tr><td class="c-n"><strong>Execution timeout</strong></td><td>Workflow chạy quá lâu (&gt;60s default)</td><td>Tăng timeout trong Settings hoặc dùng batching</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Quy trình debug hiệu quả</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-L"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Test từng node riêng lẻ</h4><p>Click vào node → nhấn <strong>"Test step"</strong> (<kbd>Ctrl+Enter</kbd>) → xem output panel bên dưới. Kiểm tra đúng data chưa trước khi chạy cả workflow.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Console.log trong Code Node</h4>
+          <div class="cblock" style="margin-top:8px">
+            <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Debug tip</span></div>
+            <div class="cb-body"><pre><span class="kw">const</span> <span class="vr">items</span> = <span class="vr">$input</span>.<span class="fn">all</span>();
+<span class="fn">console</span>.<span class="pr">log</span>(<span class="st">'Số items:'</span>, <span class="vr">items</span>.<span class="pr">length</span>);
+<span class="fn">console</span>.<span class="pr">log</span>(<span class="st">'Item đầu:'</span>, <span class="nm">JSON</span>.<span class="fn">stringify</span>(<span class="vr">items</span>[<span class="nm">0</span>].<span class="pr">json</span>, <span class="kw">null</span>, <span class="nm">2</span>));
+
+<span class="cm">// Logs xuất hiện trong output panel khi Test Step</span></pre></div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Execution History</h4><p>Icon đồng hồ bên trái → xem danh sách tất cả lần chạy. Click vào lần nào để xem data tại từng node trong lần đó. Rất hữu ích khi debug lỗi production.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">4</div></div>
+        <div class="step-B"><h4>Error Workflow</h4><p>Settings → Error Workflow → chọn workflow xử lý lỗi. Khi bất kỳ workflow nào fail, n8n tự kích hoạt Error Workflow → bạn có thể gửi alert qua Slack/email tự động.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S16 — CHEAT SHEET
+═════════════════════════════════ -->
+<div class="section" id="s16">
+  <div class="sec-head">
+    <span class="sec-tag">16</span>
+    <div>
+      <h2 class="sec-title">Cheat Sheet — Tra cứu nhanh</h2>
+      <p class="sec-sub">Tổng hợp cú pháp, shortcut và pattern hay dùng nhất</p>
+    </div>
+  </div>
+
+  <div class="cheat-grid">
+    <div class="cheat-card">
+      <h4>📥 Đọc Input (Code Node)</h4>
+      <div class="cheat-row"><span class="ck">Tất cả items</span><span class="cv">$input.all()</span></div>
+      <div class="cheat-row"><span class="ck">Item đầu tiên</span><span class="cv">$input.first()</span></div>
+      <div class="cheat-row"><span class="ck">Item cuối cùng</span><span class="cv">$input.last()</span></div>
+      <div class="cheat-row"><span class="ck">Field của item</span><span class="cv">$input.first().json.name</span></div>
+      <div class="cheat-row"><span class="ck">Số lượng items</span><span class="cv">$input.all().length</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>🔗 Lấy từ Node khác</h4>
+      <div class="cheat-row"><span class="ck">Tất cả items</span><span class="cv">$('NodeName').all()</span></div>
+      <div class="cheat-row"><span class="ck">Item đầu tiên</span><span class="cv">$('NodeName').first()</span></div>
+      <div class="cheat-row"><span class="ck">Field cụ thể</span><span class="cv">$('Node').first().json.id</span></div>
+      <div class="cheat-row"><span class="ck">Số items</span><span class="cv">$('Node').all().length</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>📅 Ngày giờ (Luxon)</h4>
+      <div class="cheat-row"><span class="ck">Hiện tại ISO</span><span class="cv">$now.toISO()</span></div>
+      <div class="cheat-row"><span class="ck">Format ngày VN</span><span class="cv">$now.toFormat('dd/MM/yyyy')</span></div>
+      <div class="cheat-row"><span class="ck">Hôm nay</span><span class="cv">$today.toISODate()</span></div>
+      <div class="cheat-row"><span class="ck">Trừ N ngày</span><span class="cv">$now.minus({days:N})</span></div>
+      <div class="cheat-row"><span class="ck">Cộng N giờ</span><span class="cv">$now.plus({hours:N})</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>⚙️ Meta & Môi trường</h4>
+      <div class="cheat-row"><span class="ck">Env variable</span><span class="cv">$env.MY_API_KEY</span></div>
+      <div class="cheat-row"><span class="ck">Workflow ID</span><span class="cv">$workflow.id</span></div>
+      <div class="cheat-row"><span class="ck">Execution ID</span><span class="cv">$execution.id</span></div>
+      <div class="cheat-row"><span class="ck">Webhook URL</span><span class="cv">$execution.resumeUrl</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>🔢 Return trong Code Node</h4>
+      <div class="cheat-row"><span class="ck">Trả 1 item</span><span class="cv">return [{ json: {…} }]</span></div>
+      <div class="cheat-row"><span class="ck">Transform items</span><span class="cv">return items.map(i=&gt;({json:i.json}))</span></div>
+      <div class="cheat-row"><span class="ck">Thêm field</span><span class="cv">return [{json:{...i.json, x:1}}]</span></div>
+      <div class="cheat-row"><span class="ck">Lọc items</span><span class="cv">return items.filter(i=&gt;i.json.ok)</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>⌨️ Keyboard Shortcuts</h4>
+      <div class="cheat-row"><span class="ck">Execute workflow</span><span class="cv">Ctrl + Enter</span></div>
+      <div class="cheat-row"><span class="ck">Lưu workflow</span><span class="cv">Ctrl + S</span></div>
+      <div class="cheat-row"><span class="ck">Copy node</span><span class="cv">Ctrl + C</span></div>
+      <div class="cheat-row"><span class="ck">Paste node</span><span class="cv">Ctrl + V</span></div>
+      <div class="cheat-row"><span class="ck">Fit canvas</span><span class="cv">Ctrl + Shift + H</span></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═════════════════════════════════
+     S17 — LỘ TRÌNH
+═════════════════════════════════ -->
+<div class="section" id="s17">
+  <div class="sec-head">
+    <span class="sec-tag">17</span>
+    <div>
+      <h2 class="sec-title">Lộ trình học tiếp theo</h2>
+      <p class="sec-sub">Từ người mới đến n8n Expert — 6 giai đoạn</p>
+    </div>
+  </div>
+
+  <div class="roadmap">
+    <div class="rm-row">
+      <div class="rm-L">
+        <div class="rm-num" style="background:var(--n8n-dim);color:var(--n8n);border:2px solid var(--n8n-glow)">1</div>
+        <div class="rm-line"></div>
+      </div>
+      <div class="rm-body">
+        <h4 style="color:var(--n8n)">Nắm vững Core Nodes</h4>
+        <p>Thực hành với: Set, IF, Switch, HTTP Request, Code Node, Merge. Tự build 5 workflow đơn giản (Webhook → xử lý → gửi thông báo). Thời gian: 1–2 tuần.</p>
+      </div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-L">
+        <div class="rm-num" style="background:var(--green-dim);color:var(--green);border:2px solid rgba(64,216,142,.28)">2</div>
+        <div class="rm-line"></div>
+      </div>
+      <div class="rm-body">
+        <h4 style="color:var(--green)">Integrations thực tế</h4>
+        <p>Google Sheets, Gmail, Slack, Telegram, Notion, Airtable. Học cách handle pagination, rate limits, webhook signature verification.</p>
+      </div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-L">
+        <div class="rm-num" style="background:var(--blue-dim);color:var(--blue);border:2px solid rgba(91,168,255,.28)">3</div>
+        <div class="rm-line"></div>
+      </div>
+      <div class="rm-body">
+        <h4 style="color:var(--blue)">JavaScript nâng cao</h4>
+        <p>Thành thạo Code Node: array methods, async/await, try/catch, fetch API, xử lý JSON phức tạp. Tham khảo trang <strong>JavaScript × n8n</strong> trong bộ học này.</p>
+      </div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-L">
+        <div class="rm-num" style="background:var(--purple-dim);color:var(--purple);border:2px solid rgba(160,122,244,.28)">4</div>
+        <div class="rm-line"></div>
+      </div>
+      <div class="rm-body">
+        <h4 style="color:var(--purple)">AI & LLM Integration</h4>
+        <p>Kết nối OpenAI, Gemini, Claude vào workflow. Build AI agents tự động phân loại email, tóm tắt nội dung, chatbot hỗ trợ khách hàng.</p>
+      </div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-L">
+        <div class="rm-num" style="background:var(--yellow-dim);color:var(--yellow);border:2px solid rgba(255,208,96,.28)">5</div>
+        <div class="rm-line"></div>
+      </div>
+      <div class="rm-body">
+        <h4 style="color:var(--yellow)">Production & Best Practices</h4>
+        <p>Error handling, retry logic, sub-workflows, workflow versioning, environment variables, monitoring. Deploy n8n trên VPS (Hetzner, DigitalOcean) với Nginx + SSL.</p>
+      </div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-L">
+        <div class="rm-num" style="background:var(--teal-dim);color:var(--teal);border:2px solid rgba(48,216,192,.28)">6</div>
+      </div>
+      <div class="rm-body">
+        <h4 style="color:var(--teal)">Custom Nodes & Contribute</h4>
+        <p>Viết custom node bằng TypeScript. Trigger workflow qua n8n REST API. Đóng góp template cho cộng đồng <a href="https://n8n.io/workflows" style="color:var(--n8n)">n8n.io/workflows</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="info i-ok" style="margin-top:22px">
+    <span class="info-ico">🔗</span>
+    <div style="font-size:13.5px">
+      <strong style="color:var(--text)">Tài nguyên học tập:</strong><br>
+      <span style="color:var(--muted)">
+        <a href="https://docs.n8n.io" style="color:var(--n8n)">docs.n8n.io</a> — Tài liệu chính thức &nbsp;·&nbsp;
+        <a href="https://community.n8n.io" style="color:var(--n8n)">community.n8n.io</a> — Forum hỏi đáp &nbsp;·&nbsp;
+        <a href="https://n8n.io/workflows" style="color:var(--n8n)">n8n.io/workflows</a> — 1000+ templates miễn phí &nbsp;·&nbsp;
+        <a href="https://www.youtube.com/@n8n-io" style="color:var(--n8n)">YouTube n8n</a> — Video tutorials
+      </span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<div class="footer">
+  <span>🔴 n8n Toàn Tập · Hướng dẫn từ Zero đến Hero · Bộ học Web &amp; Automation</span>
+  <span style="margin-left:auto;color:var(--faint)">17 chủ đề · Dành cho người mới hoàn toàn</span>
+</div>
+</div><!-- /main -->
+
+<script>
+// ── Progress bar khi scroll ──
+window.addEventListener('scroll', () => {
+  const el = document.documentElement;
+  const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+  document.getElementById('pbar').style.width = Math.min(pct, 100) + '%';
+}, { passive: true });
+
+// ── Active nav highlight ──
+const sections = document.querySelectorAll('.section[id]');
+const links    = document.querySelectorAll('.nav-link[href^="#"]');
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+    }
+  });
+}, { threshold: 0.2, rootMargin: '-60px 0px -60% 0px' });
+
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
