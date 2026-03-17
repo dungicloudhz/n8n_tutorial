@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>n8n Labs — Hướng dẫn bài tập từ Cơ Bản đến Nâng Cao</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   VARIABLES
+══════════════════════════════════════ */
+:root {
+  --bg:         #080810;
+  --s1:         #0e0e1c;
+  --s2:         #131326;
+  --s3:         #18182e;
+  --s4:         #1e1e38;
+  --border:     #222240;
+  --border2:    #2c2c50;
+  --text:       #e6e6f2;
+  --muted:      #666698;
+  --faint:      #363660;
+
+  --n8n:        #ff6584;
+  --n8n-d:      #cc3355;
+  --n8n-dim:    rgba(255,101,132,.11);
+  --n8n-glow:   rgba(255,101,132,.20);
+
+  --green:      #40d88e;
+  --green-dim:  rgba(64,216,142,.10);
+  --blue:       #5ba8ff;
+  --blue-dim:   rgba(91,168,255,.10);
+  --purple:     #a07af4;
+  --purple-dim: rgba(160,122,244,.10);
+  --yellow:     #ffd060;
+  --yellow-dim: rgba(255,208,96,.10);
+  --teal:       #30d8c0;
+  --teal-dim:   rgba(48,216,192,.10);
+  --orange:     #ff8c50;
+  --orange-dim: rgba(255,140,80,.10);
+
+  --code-bg:    #05050e;
+}
+
+* { margin:0; padding:0; box-sizing:border-box }
+html { scroll-behavior:smooth }
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar { width:5px }
+::-webkit-scrollbar-track { background: transparent }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius:3px }
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+.sidebar {
+  position:fixed; left:0; top:0; width:258px; height:100vh;
+  background:var(--s1); border-right:1px solid var(--border);
+  overflow-y:auto; z-index:400;
+  display:flex; flex-direction:column;
+}
+.sb-logo {
+  padding:20px 18px 16px;
+  border-bottom:1px solid var(--border);
+}
+.sb-brand {
+  display:flex; align-items:center; gap:11px; margin-bottom:12px;
+}
+.logo-icon {
+  width:40px; height:40px; border-radius:10px; flex-shrink:0;
+  background:linear-gradient(135deg, var(--n8n), var(--n8n-d));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#fff;
+  box-shadow: 0 0 24px var(--n8n-glow);
+  letter-spacing:-1px;
+}
+.logo-text h2 { font-size:15px; font-weight:800; letter-spacing:-.4px }
+.logo-text p  { font-size:10.5px; color:var(--muted); margin-top:2px }
+
+.prog-wrap { height:3px; background:var(--border); border-radius:2px; overflow:hidden }
+.prog-bar  { height:100%; background:linear-gradient(90deg,var(--n8n),var(--purple)); width:0%; transition:width .4s; border-radius:2px }
+
+.nav-section { padding:10px 0 4px }
+.nav-sect-label {
+  padding:8px 18px 3px;
+  font-size:9.5px; font-weight:700;
+  letter-spacing:1.8px; text-transform:uppercase;
+  color:var(--faint);
+}
+.nav-link {
+  display:flex; align-items:center; gap:9px;
+  padding:7px 18px; color:var(--muted);
+  text-decoration:none; font-size:12.5px; font-weight:600;
+  border-left:2px solid transparent; transition:all .14s;
+}
+.nav-link:hover, .nav-link.active {
+  color:var(--text);
+  background:rgba(255,101,132,.07);
+  border-left-color:var(--n8n);
+}
+.nav-link .ico { font-size:13px; flex-shrink:0; width:16px; text-align:center }
+.nav-badge {
+  margin-left:auto; font-size:9px; font-weight:700;
+  padding:2px 7px; border-radius:100px;
+  background:var(--n8n-dim); color:var(--n8n);
+}
+.nav-badge-g {
+  margin-left:auto; font-size:9px; font-weight:700;
+  padding:2px 7px; border-radius:100px;
+  background:var(--green-dim); color:var(--green);
+}
+.nav-badge-b {
+  margin-left:auto; font-size:9px; font-weight:700;
+  padding:2px 7px; border-radius:100px;
+  background:var(--blue-dim); color:var(--blue);
+}
+.nav-badge-p {
+  margin-left:auto; font-size:9px; font-weight:700;
+  padding:2px 7px; border-radius:100px;
+  background:var(--purple-dim); color:var(--purple);
+}
+.nav-badge-y {
+  margin-left:auto; font-size:9px; font-weight:700;
+  padding:2px 7px; border-radius:100px;
+  background:var(--yellow-dim); color:var(--yellow);
+}
+
+/* ══ PAGE NAV ══ */
+.page-nav-section {
+  padding: 15px 18px 5px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 5px;
+}
+.page-nav-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 8px;
+}
+.page-link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: all .14s;
+  margin-bottom: 2px;
+}
+.page-link:hover {
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+}
+.page-link.active {
+  background: var(--n8n-dim);
+  color: var(--n8n);
+  font-weight: 700;
+}
+.page-link .pg-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.page-link .pg-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  opacity: 0.5;
+  margin-left: auto;
+}
+
+/* ══════════════════════════════════════
+   MAIN
+══════════════════════════════════════ */
+.main { margin-left:258px; min-height:100vh }
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero {
+  padding:80px 64px 64px;
+  position:relative; overflow:hidden;
+  border-bottom:1px solid var(--border);
+  background:
+    radial-gradient(ellipse 70% 55% at 65% 35%, rgba(255,101,132,.08) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 65% at 15% 85%, rgba(64,216,142,.04) 0%, transparent 55%),
+    var(--bg);
+}
+.hero-dots {
+  position:absolute; inset:0; pointer-events:none;
+  background-image: radial-gradient(circle, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size:28px 28px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+.hero-glow {
+  position:absolute; right:-100px; top:-100px; width:500px; height:500px;
+  background:radial-gradient(circle, rgba(255,101,132,.06) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--n8n-dim); border:1px solid rgba(255,101,132,.3);
+  color:var(--n8n); padding:5px 16px; border-radius:100px;
+  font-size:11.5px; font-weight:700; margin-bottom:26px; letter-spacing:.3px;
+}
+.hero-eyebrow .pulse {
+  width:6px; height:6px; border-radius:50%; background:var(--n8n);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+.hero h1 {
+  font-size:54px; font-weight:900;
+  letter-spacing:-2.5px; line-height:1.02; margin-bottom:18px;
+}
+.h-pink { color:var(--n8n) }
+.h-green { color:var(--green) }
+.h-grad {
+  background:linear-gradient(135deg,var(--n8n) 0%,var(--orange) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-desc {
+  font-size:16px; color:var(--muted); max-width:560px;
+  line-height:1.72; margin-bottom:30px;
+}
+.hero-chips { display:flex; gap:8px; flex-wrap:wrap }
+.chip {
+  padding:5px 14px; border-radius:7px; font-size:12px; font-weight:700;
+}
+.chip-r { background:var(--n8n-dim); color:var(--n8n) }
+.chip-g { background:var(--green-dim); color:var(--green) }
+.chip-p { background:var(--purple-dim); color:var(--purple) }
+.chip-b { background:var(--blue-dim); color:var(--blue) }
+.chip-y { background:var(--yellow-dim); color:var(--yellow) }
+.chip-o { background:var(--orange-dim); color:var(--orange) }
+
+/* ══════════════════════════════════════
+   CONTENT
+══════════════════════════════════════ */
+.content { padding:56px 64px; max-width:1000px }
+
+/* ══════════════════════════════════════
+   SECTION
+══════════════════════════════════════ */
+.section { margin-bottom:76px }
+.sec-head {
+  display:flex; align-items:flex-start; gap:14px;
+  margin-bottom:34px; padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.sec-tag {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+  color:var(--n8n); background:var(--n8n-dim); border:1px solid var(--n8n-glow);
+  padding:3px 10px; border-radius:5px; margin-top:5px; flex-shrink:0; letter-spacing:.5px;
+}
+.sec-tag-g {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+  color:var(--green); background:var(--green-dim); border:1px solid rgba(64,216,142,.25);
+  padding:3px 10px; border-radius:5px; margin-top:5px; flex-shrink:0; letter-spacing:.5px;
+}
+.sec-tag-b {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+  color:var(--blue); background:var(--blue-dim); border:1px solid rgba(91,168,255,.25);
+  padding:3px 10px; border-radius:5px; margin-top:5px; flex-shrink:0; letter-spacing:.5px;
+}
+.sec-tag-p {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+  color:var(--purple); background:var(--purple-dim); border:1px solid rgba(160,122,244,.25);
+  padding:3px 10px; border-radius:5px; margin-top:5px; flex-shrink:0; letter-spacing:.5px;
+}
+.sec-tag-y {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+  color:var(--yellow); background:var(--yellow-dim); border:1px solid rgba(255,208,96,.25);
+  padding:3px 10px; border-radius:5px; margin-top:5px; flex-shrink:0; letter-spacing:.5px;
+}
+.sec-title { font-size:24px; font-weight:800; letter-spacing:-.6px; margin-bottom:5px }
+.sec-sub   { font-size:13px; color:var(--muted) }
+
+/* ══════════════════════════════════════
+   SUBSECTION
+══════════════════════════════════════ */
+.sub { margin-bottom:42px }
+.sub-title {
+  font-size:14.5px; font-weight:700; margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.sub-title::before {
+  content:''; display:inline-block; width:14px; height:3px;
+  background:var(--n8n); border-radius:2px; flex-shrink:0;
+}
+.sub p, .sub ul, .sub ol {
+  color:var(--muted); font-size:13.5px; margin-bottom:12px; line-height:1.75;
+}
+.sub ul, .sub ol { padding-left:22px }
+.sub li { margin-bottom:5px }
+.sub strong { color:var(--text) }
+
+/* ══════════════════════════════════════
+   GRID CARDS
+══════════════════════════════════════ */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0 }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0 }
+.grid-auto { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; margin:16px 0 }
+
+.card {
+  background:var(--s1); border:1px solid var(--border); border-radius:11px;
+  padding:16px; transition:all .2s; cursor:default;
+}
+.card:hover { border-color:var(--n8n); transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.35) }
+.card-icon { font-size:26px; margin-bottom:9px }
+.card-title { font-size:13px; font-weight:700; margin-bottom:4px }
+.card-desc  { font-size:12px; color:var(--muted); line-height:1.55 }
+
+/* ══════════════════════════════════════
+   LAB CARD
+══════════════════════════════════════ */
+.lab-grid { display:flex; flex-direction:column; gap:14px; margin:16px 0 }
+.lab-card {
+  background:var(--s1); border:1px solid var(--border); border-radius:13px;
+  padding:20px 22px; transition:all .2s; position:relative; overflow:hidden;
+}
+.lab-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:3px 0 0 3px;
+}
+.lab-card.lv-basic::before  { background:var(--green) }
+.lab-card.lv-mid::before    { background:var(--blue) }
+.lab-card.lv-adv::before    { background:var(--purple) }
+.lab-card.lv-expert::before { background:var(--n8n) }
+
+.lab-card:hover { border-color:var(--border2); transform:translateY(-2px); box-shadow:0 10px 32px rgba(0,0,0,.4) }
+.lab-card-head { display:flex; align-items:center; gap:12px; margin-bottom:10px }
+.lab-num {
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+  padding:3px 10px; border-radius:6px; flex-shrink:0;
+}
+.lab-num-g { background:var(--green-dim); color:var(--green) }
+.lab-num-b { background:var(--blue-dim); color:var(--blue) }
+.lab-num-p { background:var(--purple-dim); color:var(--purple) }
+.lab-num-r { background:var(--n8n-dim); color:var(--n8n) }
+
+.lab-title { font-size:15px; font-weight:800; letter-spacing:-.3px; flex:1 }
+.lab-time {
+  font-size:10.5px; font-weight:700; color:var(--muted);
+  display:flex; align-items:center; gap:5px; flex-shrink:0;
+}
+.lab-desc { font-size:13px; color:var(--muted); line-height:1.65; margin-bottom:12px }
+.lab-tags { display:flex; gap:6px; flex-wrap:wrap }
+.lab-tag {
+  font-size:10.5px; font-weight:700; padding:2px 10px; border-radius:100px;
+}
+
+/* ══════════════════════════════════════
+   WORKFLOW VISUAL
+══════════════════════════════════════ */
+.wf-canvas {
+  background:var(--s1); border:1px solid var(--border); border-radius:13px;
+  padding:24px 28px; margin:16px 0; overflow-x:auto;
+}
+.wf-heading {
+  font-size:10px; font-weight:700; color:var(--muted);
+  letter-spacing:1.2px; text-transform:uppercase; margin-bottom:20px;
+  display:flex; align-items:center; gap:8px;
+}
+.wf-heading::before {
+  content:''; width:20px; height:1px; background:var(--border2);
+}
+
+.wf-row { display:flex; align-items:center; gap:0; min-width:max-content }
+.wf-col { display:flex; flex-direction:column; gap:10px }
+
+.wnode-wrap { display:flex; flex-direction:column; align-items:center; gap:6px }
+.wnode {
+  background:var(--s2); border:1.5px solid var(--border2); border-radius:11px;
+  padding:12px 15px; min-width:98px; text-align:center;
+  transition:all .25s; cursor:default; position:relative;
+}
+.wnode:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,0,0,.45) }
+.wnode .w-ico  { font-size:20px; margin-bottom:5px }
+.wnode .w-name { font-size:11px; font-weight:700; line-height:1.3 }
+.wnode .w-sub  { font-size:9.5px; color:var(--muted); margin-top:2px }
+.wnode-lbl {
+  font-size:9.5px; font-weight:700; padding:2px 9px;
+  border-radius:100px; white-space:nowrap;
+}
+
+.wn-t .wnode { border-color:rgba(64,216,142,.45) }
+.wn-t .wnode:hover { box-shadow:0 12px 32px rgba(0,0,0,.45), 0 0 20px rgba(64,216,142,.12) }
+.wn-t .w-ico, .wn-t .w-name { color:var(--green) }
+.wn-t .wnode-lbl { background:var(--green-dim); color:var(--green) }
+
+.wn-p .wnode { border-color:rgba(91,168,255,.4) }
+.wn-p .w-ico, .wn-p .w-name { color:var(--blue) }
+.wn-p .wnode-lbl { background:var(--blue-dim); color:var(--blue) }
+
+.wn-l .wnode { border-color:rgba(160,122,244,.4) }
+.wn-l .w-ico, .wn-l .w-name { color:var(--purple) }
+.wn-l .wnode-lbl { background:var(--purple-dim); color:var(--purple) }
+
+.wn-c .wnode { border-color:rgba(255,208,96,.4) }
+.wn-c .w-ico, .wn-c .w-name { color:var(--yellow) }
+.wn-c .wnode-lbl { background:var(--yellow-dim); color:var(--yellow) }
+
+.wn-a .wnode { border-color:rgba(255,101,132,.4) }
+.wn-a .wnode:hover { box-shadow:0 12px 32px rgba(0,0,0,.45), 0 0 20px rgba(255,101,132,.12) }
+.wn-a .w-ico, .wn-a .w-name { color:var(--n8n) }
+.wn-a .wnode-lbl { background:var(--n8n-dim); color:var(--n8n) }
+
+.wn-d .wnode { border-color:rgba(48,216,192,.4) }
+.wn-d .w-ico, .wn-d .w-name { color:var(--teal) }
+.wn-d .wnode-lbl { background:var(--teal-dim); color:var(--teal) }
+
+.wn-o .wnode { border-color:rgba(255,140,80,.4) }
+.wn-o .w-ico, .wn-o .w-name { color:var(--orange) }
+.wn-o .wnode-lbl { background:var(--orange-dim); color:var(--orange) }
+
+.wf-arr {
+  display:flex; align-items:center; padding:0 3px; margin-top:-22px; flex-shrink:0;
+}
+.arr-line { width:28px; height:2px; background:var(--border2) }
+.arr-head {
+  width:0; height:0;
+  border-top:5px solid transparent;
+  border-bottom:5px solid transparent;
+  border-left:8px solid var(--border2);
+}
+
+/* ══════════════════════════════════════
+   CODE BLOCKS
+══════════════════════════════════════ */
+.cblock {
+  background:var(--code-bg); border:1px solid var(--border);
+  border-radius:11px; overflow:hidden; margin:14px 0;
+}
+.cb-head {
+  display:flex; align-items:center; gap:8px; padding:10px 16px;
+  background:var(--s2); border-bottom:1px solid var(--border);
+}
+.cb-dots { display:flex; gap:5px }
+.cbd { width:10px; height:10px; border-radius:50% }
+.cbd.r { background:#ff5f56 } .cbd.y { background:#ffbd2e } .cbd.g { background:#27c93f }
+.cb-name { font-size:11px; font-weight:700; color:var(--muted); flex:1 }
+.cb-tag {
+  font-size:9px; font-weight:700; padding:2px 8px; border-radius:5px;
+  background:var(--n8n-dim); color:var(--n8n);
+}
+.cb-body {
+  padding:18px 20px; overflow-x:auto;
+}
+.cb-body pre {
+  font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.7;
+  color:var(--text);
+}
+.kw { color:var(--purple) } .st { color:var(--green) } .cm { color:var(--faint) }
+.fn { color:var(--blue) }   .vr { color:var(--teal) }  .nm { color:var(--orange) }
+.pr { color:var(--n8n) }
+
+/* ══════════════════════════════════════
+   INFO BOXES
+══════════════════════════════════════ */
+.info {
+  display:flex; gap:12px; padding:14px 16px; border-radius:10px;
+  font-size:13px; margin:12px 0; line-height:1.65;
+}
+.info-ico { font-size:18px; flex-shrink:0; margin-top:1px }
+.i-ok   { background:var(--green-dim);  border:1px solid rgba(64,216,142,.2);  color:#28a06a }
+.i-warn { background:var(--yellow-dim); border:1px solid rgba(255,208,96,.2);  color:#b09030 }
+.i-err  { background:var(--n8n-dim);    border:1px solid rgba(255,101,132,.2); color:#c03050 }
+.i-note { background:var(--purple-dim); border:1px solid rgba(160,122,244,.2); color:#8060d0 }
+.i-blue { background:var(--blue-dim);   border:1px solid rgba(91,168,255,.2);  color:#3878d0 }
+
+/* ══════════════════════════════════════
+   TABLE
+══════════════════════════════════════ */
+.tbl { width:100%; border-collapse:collapse; font-size:13px; margin:14px 0; border-radius:11px; overflow:hidden }
+.tbl th {
+  background:var(--s3); padding:10px 14px; text-align:left;
+  font-weight:700; font-size:9.5px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted);
+  border-bottom:1px solid var(--border2);
+}
+.tbl td {
+  padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.04);
+  color:var(--muted); vertical-align:top;
+}
+.tbl tr:hover td { background:rgba(255,255,255,.025) }
+.tbl code {
+  font-family:'JetBrains Mono',monospace; font-size:11.5px;
+  background:var(--code-bg); padding:2px 7px; border-radius:4px; color:var(--teal);
+}
+.c-g{color:var(--green)} .c-b{color:var(--blue)} .c-n{color:var(--n8n)}
+.c-p{color:var(--purple)} .c-y{color:var(--yellow)} .c-t{color:var(--teal)} .c-o{color:var(--orange)}
+
+/* ══════════════════════════════════════
+   STEP LIST
+══════════════════════════════════════ */
+.steps { display:flex; flex-direction:column; margin:16px 0 }
+.step  { display:flex; gap:16px }
+.step-L { display:flex; flex-direction:column; align-items:center; width:36px; flex-shrink:0 }
+.step-num {
+  width:36px; height:36px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:800;
+  color:var(--n8n); background:var(--n8n-dim); border:2px solid var(--n8n-glow);
+}
+.step-line { width:2px; flex:1; background:var(--border); margin:5px 0; min-height:16px }
+.step-B { padding:4px 0 28px }
+.step-B h4 { font-size:14px; font-weight:700; margin-bottom:6px }
+.step-B p  { font-size:13px; color:var(--muted); line-height:1.65 }
+
+/* ══════════════════════════════════════
+   LEVEL BANNER
+══════════════════════════════════════ */
+.level-banner {
+  display:flex; align-items:center; gap:14px;
+  padding:16px 20px; border-radius:12px; margin-bottom:24px;
+}
+.lb-basic  { background:rgba(64,216,142,.07); border:1px solid rgba(64,216,142,.2) }
+.lb-mid    { background:rgba(91,168,255,.07); border:1px solid rgba(91,168,255,.2) }
+.lb-adv    { background:rgba(160,122,244,.07); border:1px solid rgba(160,122,244,.2) }
+.lb-expert { background:rgba(255,101,132,.07); border:1px solid rgba(255,101,132,.2) }
+.lb-icon { font-size:28px }
+.lb-title { font-size:15px; font-weight:800 }
+.lb-desc  { font-size:12.5px; color:var(--muted); margin-top:2px }
+.lb-count {
+  margin-left:auto; font-size:11px; font-weight:700;
+  padding:4px 12px; border-radius:100px; flex-shrink:0;
+}
+.lb-count-g { background:var(--green-dim); color:var(--green) }
+.lb-count-b { background:var(--blue-dim); color:var(--blue) }
+.lb-count-p { background:var(--purple-dim); color:var(--purple) }
+.lb-count-r { background:var(--n8n-dim); color:var(--n8n) }
+
+/* ══════════════════════════════════════
+   INLINE CODE
+══════════════════════════════════════ */
+p code, li code, td code {
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+  background:rgba(48,216,192,.1); color:var(--teal);
+  padding:2px 6px; border-radius:4px;
+}
+
+/* CHEAT SHEET */
+.cheat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0 }
+.cheat-card {
+  background:var(--s1); border:1px solid var(--border); border-radius:10px; padding:16px;
+}
+.cheat-card h4 {
+  font-size:11.5px; font-weight:700; color:var(--n8n);
+  text-transform:uppercase; letter-spacing:.8px; margin-bottom:12px;
+}
+.cheat-row {
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:5px 0; border-bottom:1px solid rgba(255,255,255,.04); font-size:12.5px;
+}
+.cheat-row:last-child { border-bottom:none }
+.ck { color:var(--muted) }
+.cv { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--teal) }
+
+/* divider */
+hr.dv { border:none; border-top:1px solid var(--border); margin:60px 0 }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+.footer {
+  border-top:1px solid var(--border); padding:28px 64px;
+  display:flex; align-items:center; gap:12px; font-size:12px; color:var(--muted);
+}
+.footer a { color:var(--n8n); text-decoration:none }
+.footer a:hover { text-decoration:underline }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:900px) {
+  .sidebar{display:none} .main{margin-left:0}
+  .hero,.content,.footer{padding-left:22px;padding-right:22px}
+  .hero h1{font-size:34px}
+  .grid-3,.grid-4{grid-template-columns:1fr 1fr}
+  .cheat-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px) {
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .hero h1{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-brand">
+      <div class="logo-icon">n8n</div>
+      <div class="logo-text">
+        <h2>n8n Labs</h2>
+        <p>Bài tập thực hành toàn tập</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGE NAVIGATION ── -->
+  <div class="page-nav-section">
+    <div class="page-nav-label">Bộ tài liệu</div>
+    <a href="html_css_introduction.html" class="page-link">
+      <span class="pg-icon">🏗️</span> HTML &amp; CSS
+      <span class="pg-num">01</span>
+    </a>
+    <a href="javascript_introduction.html" class="page-link">
+      <span class="pg-icon">⚡</span> JavaScript
+      <span class="pg-num">02</span>
+    </a>
+    <a href="n8n_js_guide.html" class="page-link">
+      <span class="pg-icon">🔴</span> JS → n8n
+      <span class="pg-num">03</span>
+    </a>
+    <a href="n8n_guide.html" class="page-link">
+      <span class="pg-icon">🚀</span> n8n Toàn Tập
+      <span class="pg-num">04</span>
+    </a>
+    <a href="ai_agent_n8n.html" class="page-link">
+      <span class="pg-icon">🤖</span> AI Agent
+      <span class="pg-num">05</span>
+    </a>
+    <a href="n8n-labs-guide.html" class="page-link active">
+      <span class="pg-icon">🧪</span> n8n Labs
+      <span class="pg-num">06</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">Tổng quan</div>
+    <a class="nav-link active" href="#s0"><span class="ico">🗺️</span>Lộ trình học<span class="nav-badge">Roadmap</span></a>
+    <a class="nav-link" href="#s1"><span class="ico">⚙️</span>Cài đặt môi trường</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">🟢 Cơ Bản (Beginner)</div>
+    <a class="nav-link" href="#s2"><span class="ico">📦</span>Lab 1 — Hello n8n<span class="nav-badge-g">B1</span></a>
+    <a class="nav-link" href="#s3"><span class="ico">⏰</span>Lab 2 — Scheduler<span class="nav-badge-g">B2</span></a>
+    <a class="nav-link" href="#s4"><span class="ico">🌐</span>Lab 3 — HTTP Request<span class="nav-badge-g">B3</span></a>
+    <a class="nav-link" href="#s5"><span class="ico">🔀</span>Lab 4 — IF & Switch<span class="nav-badge-g">B4</span></a>
+    <a class="nav-link" href="#s6"><span class="ico">📧</span>Lab 5 — Gửi Email/Slack<span class="nav-badge-g">B5</span></a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">🔵 Trung Cấp (Intermediate)</div>
+    <a class="nav-link" href="#s7"><span class="ico">🗄️</span>Lab 6 — Google Sheets<span class="nav-badge-b">M1</span></a>
+    <a class="nav-link" href="#s8"><span class="ico">🔁</span>Lab 7 — Loop & SplitInBatch<span class="nav-badge-b">M2</span></a>
+    <a class="nav-link" href="#s9"><span class="ico">🪝</span>Lab 8 — Webhook API<span class="nav-badge-b">M3</span></a>
+    <a class="nav-link" href="#s10"><span class="ico">💾</span>Lab 9 — Database CRUD<span class="nav-badge-b">M4</span></a>
+    <a class="nav-link" href="#s11"><span class="ico">🔧</span>Lab 10 — Code Node JS<span class="nav-badge-b">M5</span></a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">🟣 Nâng Cao (Advanced)</div>
+    <a class="nav-link" href="#s12"><span class="ico">🤖</span>Lab 11 — AI Chatbot<span class="nav-badge-p">A1</span></a>
+    <a class="nav-link" href="#s13"><span class="ico">🔍</span>Lab 12 — RAG Pipeline<span class="nav-badge-p">A2</span></a>
+    <a class="nav-link" href="#s14"><span class="ico">📊</span>Lab 13 — Dashboard Auto<span class="nav-badge-p">A3</span></a>
+    <a class="nav-link" href="#s15"><span class="ico">🚀</span>Lab 14 — Multi-Agent<span class="nav-badge-p">A4</span></a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">🔴 Expert</div>
+    <a class="nav-link" href="#s16"><span class="ico">🏗️</span>Lab 15 — Production Setup<span class="nav-badge">E1</span></a>
+    <a class="nav-link" href="#s17"><span class="ico">📋</span>Cheat Sheet</a>
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════
+     MAIN
+═══════════════════════════════════ -->
+<div class="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div style="position:relative">
+    <div class="hero-eyebrow">
+      <span class="pulse"></span>
+      Bộ tài liệu n8n Series · 15 Labs thực hành
+    </div>
+    <h1>
+      Thành thạo <span class="h-pink">n8n</span><br>
+      qua <span class="h-grad">Bài Lab</span> thực tế
+    </h1>
+    <p class="hero-desc">
+      Hành trình từ zero đến hero với n8n — 15 bài lab được thiết kế theo lộ trình tăng dần, mỗi lab xây dựng một workflow thực tế có thể dùng ngay trong công việc.
+    </p>
+    <div class="hero-chips">
+      <span class="chip chip-g">🟢 5 bài Cơ Bản</span>
+      <span class="chip chip-b">🔵 5 bài Trung Cấp</span>
+      <span class="chip chip-p">🟣 4 bài Nâng Cao</span>
+      <span class="chip chip-r">🔴 1 bài Expert</span>
+      <span class="chip chip-y">⏱️ ~30h tổng thời gian</span>
+      <span class="chip chip-o">🛠️ Workflow thực tế</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- ═══════════════════════════════════
+     S0 — LỘ TRÌNH
+═══════════════════════════════════ -->
+<div class="section" id="s0">
+  <div class="sec-head">
+    <span class="sec-tag">00</span>
+    <div>
+      <h2 class="sec-title">Lộ trình học n8n</h2>
+      <p class="sec-sub">Tổng quan 15 bài lab và thứ tự nên học để tối ưu</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Bản đồ học tập</div>
+    <p>Các bài lab được thiết kế theo <strong>4 cấp độ</strong>. Mỗi cấp xây dựng trên nền kiến thức cấp trước. Bạn nên hoàn thành đủ các bài trong một cấp trước khi lên cấp tiếp theo.</p>
+
+    <div class="grid-4" style="margin-top:18px">
+      <div class="card">
+        <div class="card-icon">🟢</div>
+        <div class="card-title" style="color:var(--green)">Cơ Bản</div>
+        <div class="card-desc">Lab 1–5 · ~8h<br>Trigger, nodes cơ bản, expressions, kết nối ứng dụng đơn giản</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔵</div>
+        <div class="card-title" style="color:var(--blue)">Trung Cấp</div>
+        <div class="card-desc">Lab 6–10 · ~10h<br>Database, Loop, Webhook, Code Node, xử lý dữ liệu phức tạp</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🟣</div>
+        <div class="card-title" style="color:var(--purple)">Nâng Cao</div>
+        <div class="card-desc">Lab 11–14 · ~10h<br>AI Agent, RAG, Multi-Agent, tích hợp LLM</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔴</div>
+        <div class="card-title" style="color:var(--n8n)">Expert</div>
+        <div class="card-desc">Lab 15 · ~2h<br>Triển khai production, bảo mật, scaling</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Tổng quan 15 bài lab</div>
+    <table class="tbl">
+      <thead>
+        <tr><th>#</th><th>Tên Lab</th><th>Cấp độ</th><th>Kỹ năng học được</th><th>Thời gian</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L01</td><td style="color:var(--text);font-weight:600">Hello n8n — Workflow đầu tiên</td><td><span style="background:var(--green-dim);color:var(--green);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Cơ bản</span></td><td>Manual Trigger, Set Node, Debug</td><td class="c-t">~1h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L02</td><td style="color:var(--text);font-weight:600">Tự động hóa với Scheduler</td><td><span style="background:var(--green-dim);color:var(--green);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Cơ bản</span></td><td>Schedule Trigger, Cron, Time zones</td><td class="c-t">~1h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L03</td><td style="color:var(--text);font-weight:600">Gọi API với HTTP Request</td><td><span style="background:var(--green-dim);color:var(--green);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Cơ bản</span></td><td>HTTP Request, Auth, JSON parsing</td><td class="c-t">~2h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L04</td><td style="color:var(--text);font-weight:600">Phân luồng IF & Switch</td><td><span style="background:var(--green-dim);color:var(--green);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Cơ bản</span></td><td>IF, Switch, Merge, Expressions</td><td class="c-t">~2h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L05</td><td style="color:var(--text);font-weight:600">Gửi thông báo Email / Slack</td><td><span style="background:var(--green-dim);color:var(--green);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Cơ bản</span></td><td>Gmail, Slack, Telegram, Error notify</td><td class="c-t">~2h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L06</td><td style="color:var(--text);font-weight:600">CRUD Google Sheets</td><td><span style="background:var(--blue-dim);color:var(--blue);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Trung cấp</span></td><td>Google Sheets, OAuth, Append/Update</td><td class="c-t">~2h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L07</td><td style="color:var(--text);font-weight:600">Xử lý danh sách với Loop</td><td><span style="background:var(--blue-dim);color:var(--blue);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Trung cấp</span></td><td>SplitInBatch, Loop, Rate limiting</td><td class="c-t">~2h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L08</td><td style="color:var(--text);font-weight:600">Xây Webhook API tùy chỉnh</td><td><span style="background:var(--blue-dim);color:var(--blue);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Trung cấp</span></td><td>Webhook, Respond node, Auth header</td><td class="c-t">~2h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L09</td><td style="color:var(--text);font-weight:600">Thao tác Database SQL</td><td><span style="background:var(--blue-dim);color:var(--blue);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Trung cấp</span></td><td>PostgreSQL/MySQL, CRUD, Upsert</td><td class="c-t">~2h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L10</td><td style="color:var(--text);font-weight:600">Viết code JS trong n8n</td><td><span style="background:var(--blue-dim);color:var(--blue);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Trung cấp</span></td><td>Code Node, $items, transform, library</td><td class="c-t">~2h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L11</td><td style="color:var(--text);font-weight:600">AI Chatbot với Memory</td><td><span style="background:var(--purple-dim);color:var(--purple);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Nâng cao</span></td><td>AI Agent, LLM, Window Buffer Memory</td><td class="c-t">~3h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L12</td><td style="color:var(--text);font-weight:600">RAG — Hỏi đáp tài liệu</td><td><span style="background:var(--purple-dim);color:var(--purple);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Nâng cao</span></td><td>Vector Store, Embeddings, Retrieval</td><td class="c-t">~3h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L13</td><td style="color:var(--text);font-weight:600">Báo cáo tự động hóa</td><td><span style="background:var(--purple-dim);color:var(--purple);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Nâng cao</span></td><td>Data aggregation, HTML report, Email</td><td class="c-t">~2h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L14</td><td style="color:var(--text);font-weight:600">Hệ thống Multi-Agent</td><td><span style="background:var(--purple-dim);color:var(--purple);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Nâng cao</span></td><td>Agent coordination, Sub-workflow, Tools</td><td class="c-t">~2h</td></tr>
+        <tr><td class="c-t" style="font-family:'JetBrains Mono',monospace;font-size:11px">L15</td><td style="color:var(--text);font-weight:600">Triển khai Production</td><td><span style="background:var(--n8n-dim);color:var(--n8n);padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700">Expert</span></td><td>Docker, ENV, Credentials, Monitoring</td><td class="c-t">~2h</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S1 — CÀI ĐẶT
+═══════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="sec-head">
+    <span class="sec-tag">SETUP</span>
+    <div>
+      <h2 class="sec-title">Cài đặt môi trường</h2>
+      <p class="sec-sub">Chuẩn bị trước khi bắt đầu các bài lab</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cài n8n bằng Docker (khuyến nghị)</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Terminal — Docker Compose</span><span class="cb-tag">Setup</span></div>
+      <div class="cb-body"><pre><span class="cm"># 1. Tạo thư mục dự án</span>
+mkdir n8n-labs && cd n8n-labs
+
+<span class="cm"># 2. Tạo file docker-compose.yml</span>
+cat &gt; docker-compose.yml &lt;&lt; <span class="st">'EOF'</span>
+version: <span class="st">'3.8'</span>
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    ports:
+      - <span class="st">"5678:5678"</span>
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=password123
+      - GENERIC_TIMEZONE=Asia/Ho_Chi_Minh
+      - N8N_ENCRYPTION_KEY=your-secret-key-here
+    volumes:
+      - n8n_data:/home/node/.n8n
+volumes:
+  n8n_data:
+<span class="st">EOF</span>
+
+<span class="cm"># 3. Khởi động</span>
+docker compose up -d
+
+<span class="cm"># 4. Mở trình duyệt: http://localhost:5678</span></pre></div>
+    </div>
+    <div class="info i-ok">
+      <span class="info-ico">✅</span>
+      <div><strong style="color:var(--text)">Hoặc dùng n8n Cloud:</strong> Đăng ký tại <a href="https://n8n.io" style="color:var(--n8n)">n8n.io</a> để có môi trường sẵn sàng ngay, không cần cài đặt. Phù hợp cho người mới bắt đầu.</div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Các công cụ cần chuẩn bị</div>
+    <div class="grid-3">
+      <div class="card"><div class="card-icon">🔑</div><div class="card-title">API Keys</div><div class="card-desc">OpenAI / Gemini API key để làm các bài AI (Lab 11–14)</div></div>
+      <div class="card"><div class="card-icon">📬</div><div class="card-title">Postman / curl</div><div class="card-desc">Test Webhook và HTTP Request trong Lab 3, 8</div></div>
+      <div class="card"><div class="card-icon">🗄️</div><div class="card-title">PostgreSQL</div><div class="card-desc">Cần cho Lab 9. Có thể dùng Docker hoặc Supabase free tier</div></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════════════
+     LEVEL: CƠ BẢN
+══════════════════════════════════════ -->
+<div class="level-banner lb-basic">
+  <div class="lb-icon">🟢</div>
+  <div>
+    <div class="lb-title" style="color:var(--green)">Cấp độ Cơ Bản — Beginner</div>
+    <div class="lb-desc">Lab 1 đến Lab 5 · Làm quen giao diện, nodes cơ bản, expressions và kết nối ứng dụng</div>
+  </div>
+  <div class="lb-count lb-count-g">5 Labs · ~8h</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     S2 — LAB 1
+═══════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="sec-head">
+    <span class="sec-tag-g">LAB 01</span>
+    <div>
+      <h2 class="sec-title">Hello n8n — Workflow đầu tiên</h2>
+      <p class="sec-sub">Làm quen giao diện, tạo workflow, debug và export/import</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Sau bài này bạn sẽ biết tạo workflow từ đầu, sử dụng <strong>Manual Trigger</strong>, <strong>Set Node</strong> để gán dữ liệu, xem output ở từng node và export workflow dưới dạng JSON.</p>
+
+    <div class="wf-canvas">
+      <div class="wf-heading">Workflow Lab 1 — Hello n8n</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">▶️</div><div class="w-name">Manual<br>Trigger</div></div>
+          <div class="wnode-lbl">Trigger</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">✏️</div><div class="w-name">Set Node</div><div class="w-sub">Gán data</div></div>
+          <div class="wnode-lbl">Transform</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">📋</div><div class="w-name">Code Node</div><div class="w-sub">Log output</div></div>
+          <div class="wnode-lbl">Debug</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Hướng dẫn từng bước</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-L"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Tạo workflow mới</h4><p>Vào <strong>Workflows → New Workflow</strong>. Đặt tên "Lab 01 - Hello n8n". Click <strong>Add first step</strong> và chọn <strong>Manual Trigger</strong>.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Thêm Set Node</h4><p>Click nút <strong>+</strong> sau Manual Trigger, tìm và chọn <strong>Set</strong>. Trong Set Node, thêm các field: <code>name</code> = <code>n8n Labs</code>, <code>version</code> = <code>1.0</code>, <code>timestamp</code> = <code>{{ $now.toISO() }}</code>.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Chạy và xem kết quả</h4><p>Click <strong>Execute Workflow</strong>. Click vào từng node để xem <strong>Input/Output</strong> data. Chú ý cách data được truyền từ node này sang node khác dưới dạng array of items.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">4</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Export và Import workflow</h4><p>Vào menu <strong>⋮ → Download</strong> để export JSON. Sau đó thử import lại bằng <strong>Workflows → Import from File</strong>. Đây là cách backup và share workflow.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Expressions cơ bản cần biết</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Expressions — Lab 1</span><span class="cb-tag">Cơ bản</span></div>
+      <div class="cb-body"><pre><span class="cm">// Lấy field từ item hiện tại</span>
+{{ $json.fieldName }}
+
+<span class="cm">// Thời gian hiện tại</span>
+{{ $now.toISO() }}
+{{ $now.toFormat(<span class="st">'dd/MM/yyyy HH:mm'</span>) }}
+
+<span class="cm">// Lấy data từ node khác theo tên</span>
+{{ $(<span class="st">'Set Node'</span>).first().json.name }}
+
+<span class="cm">// Tổng số items đang xử lý</span>
+{{ $items().length }}</pre></div>
+    </div>
+    <div class="info i-note">
+      <span class="info-ico">💡</span>
+      <div style="font-size:13px"><strong style="color:var(--text)">Tip:</strong> Nhấn <code>Ctrl+Space</code> khi đang gõ expression để autocomplete. n8n sẽ gợi ý các biến và function có sẵn.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S3 — LAB 2
+═══════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="sec-head">
+    <span class="sec-tag-g">LAB 02</span>
+    <div>
+      <h2 class="sec-title">Tự động hóa với Schedule Trigger</h2>
+      <p class="sec-sub">Chạy workflow theo lịch — cron expression, timezone và best practices</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Tạo workflow chạy <strong>tự động mỗi ngày lúc 8:00 sáng</strong>, lấy tỷ giá USD/VND từ API, và gửi thông báo qua Telegram. Học cách dùng cron expression và xử lý timezone Việt Nam.</p>
+
+    <div class="wf-canvas">
+      <div class="wf-heading">Workflow Lab 2 — Daily Rate Alert</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">⏰</div><div class="w-name">Schedule<br>Trigger</div><div class="w-sub">08:00 daily</div></div>
+          <div class="wnode-lbl">Cron</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">🌐</div><div class="w-name">HTTP<br>Request</div><div class="w-sub">Exchange API</div></div>
+          <div class="wnode-lbl">API Call</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">✏️</div><div class="w-name">Set Node</div><div class="w-sub">Format msg</div></div>
+          <div class="wnode-lbl">Transform</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-o">
+          <div class="wnode"><div class="w-ico">📱</div><div class="w-name">Telegram</div><div class="w-sub">Send msg</div></div>
+          <div class="wnode-lbl">Notify</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình Schedule Trigger</div>
+    <table class="tbl">
+      <thead><tr><th>Loại lịch</th><th>Cấu hình</th><th>Ý nghĩa</th></tr></thead>
+      <tbody>
+        <tr><td class="c-g">Every X minutes</td><td><code>Every 30 minutes</code></td><td>Chạy mỗi 30 phút — dùng cho polling</td></tr>
+        <tr><td class="c-b">Daily</td><td><code>At 08:00 AM</code></td><td>Mỗi ngày lúc 8 giờ sáng</td></tr>
+        <tr><td class="c-p">Weekly</td><td><code>Monday 09:00</code></td><td>Mỗi thứ Hai lúc 9 giờ</td></tr>
+        <tr><td class="c-y">Cron expression</td><td><code>0 8 * * 1-5</code></td><td>Thứ Hai–Sáu lúc 8:00 sáng</td></tr>
+        <tr><td class="c-o">Cron tùy chỉnh</td><td><code>0 9,17 * * *</code></td><td>Hai lần/ngày: 9h và 17h</td></tr>
+      </tbody>
+    </table>
+    <div class="info i-warn">
+      <span class="info-ico">⚠️</span>
+      <div style="font-size:13px"><strong style="color:var(--text)">Timezone:</strong> Nhớ set <code>GENERIC_TIMEZONE=Asia/Ho_Chi_Minh</code> trong biến môi trường Docker, hoặc chọn timezone trong từng Schedule Trigger node để tránh lệch giờ.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S4 — LAB 3
+═══════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="sec-head">
+    <span class="sec-tag-g">LAB 03</span>
+    <div>
+      <h2 class="sec-title">Gọi API với HTTP Request Node</h2>
+      <p class="sec-sub">GET/POST request, authentication, xử lý JSON response phức tạp</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Xây dựng workflow lấy danh sách repository GitHub phổ biến về <strong>AI/LLM</strong>, lọc theo số stars, và lưu vào Google Sheets. Thực hành pagination và xử lý nested JSON.</p>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình HTTP Request Node</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">HTTP Request — GitHub API</span><span class="cb-tag">GET</span></div>
+      <div class="cb-body"><pre><span class="cm">// Cấu hình HTTP Request Node:</span>
+Method:  GET
+URL:     https://api.github.com/search/repositories
+
+<span class="cm">// Query Parameters:</span>
+q:       llm+language:python
+sort:    stars
+order:   desc
+per_page: 30
+
+<span class="cm">// Headers:</span>
+Accept:           application/vnd.github.v3+json
+Authorization:    token {{ $env.GITHUB_TOKEN }}  <span class="cm">// nếu có</span>
+
+<span class="cm">// Sau đó dùng expression để lấy items:</span>
+{{ $json.items }}  <span class="cm">// array 30 repos</span>
+
+<span class="cm">// Lấy tên repo đầu tiên:</span>
+{{ $json.items[0].full_name }}</pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Xử lý response — Split Out Node</div>
+    <p>Sau HTTP Request, response là <strong>1 item</strong> chứa array <code>items[]</code>. Dùng <strong>Split Out Node</strong> để tách thành nhiều items riêng lẻ, mỗi item là 1 repo.</p>
+    <div class="info i-note">
+      <span class="info-ico">💡</span>
+      <div style="font-size:13px">Split Out Node → <strong>Field To Split Out</strong>: <code>items</code> → mỗi item sau đó có đầy đủ fields: <code>$json.name</code>, <code>$json.stargazers_count</code>, <code>$json.html_url</code>...</div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S5 — LAB 4
+═══════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="sec-head">
+    <span class="sec-tag-g">LAB 04</span>
+    <div>
+      <h2 class="sec-title">Phân luồng IF & Switch Node</h2>
+      <p class="sec-sub">Điều kiện, phân nhánh workflow, Merge node và xử lý nhiều trường hợp</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Xây workflow nhận đơn hàng từ form, phân loại theo <strong>giá trị đơn hàng</strong> (thấp/trung/cao), xử lý khác nhau và gửi email xác nhận phù hợp với từng loại.</p>
+
+    <div class="wf-canvas">
+      <div class="wf-heading">Workflow Lab 4 — Order Classification</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">🪝</div><div class="w-name">Webhook</div><div class="w-sub">Nhận đơn</div></div>
+          <div class="wnode-lbl">Trigger</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">🔀</div><div class="w-name">Switch</div><div class="w-sub">Phân loại</div></div>
+          <div class="wnode-lbl">Route</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">🔗</div><div class="w-name">Merge</div><div class="w-sub">Gộp lại</div></div>
+          <div class="wnode-lbl">Combine</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">📧</div><div class="w-name">Gmail</div><div class="w-sub">Send email</div></div>
+          <div class="wnode-lbl">Action</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình Switch Node</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Switch Node — Order Amount Classification</span><span class="cb-tag">Logic</span></div>
+      <div class="cb-body"><pre><span class="cm">// Switch Node — Mode: Rules</span>
+
+<span class="cm">// Rule 1 — Output 0 "small"</span>
+{{ $json.amount }}  &lt;  <span class="nm">500000</span>   → <span class="st">"small"</span>
+
+<span class="cm">// Rule 2 — Output 1 "medium"</span>
+{{ $json.amount }}  &lt;  <span class="nm">2000000</span>  → <span class="st">"medium"</span>
+
+<span class="cm">// Rule 3 (Fallback) — Output 2 "large"</span>
+<span class="cm">// Các items không khớp rule nào sẽ ra đây</span>
+
+<span class="cm">// Ở mỗi branch: dùng Set Node để thêm field</span>
+priority:  {{ $json.amount &gt; 2000000 ? <span class="st">'HIGH'</span> : <span class="st">'NORMAL'</span> }}
+label:     VIP Customer</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S6 — LAB 5
+═══════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="sec-head">
+    <span class="sec-tag-g">LAB 05</span>
+    <div>
+      <h2 class="sec-title">Gửi thông báo — Email & Slack & Telegram</h2>
+      <p class="sec-sub">Kết nối credentials, gửi thông báo đa kênh, Error Workflow</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Tạo <strong>Error Workflow</strong> — workflow đặc biệt chạy khi bất kỳ workflow nào khác bị lỗi. Gửi cảnh báo đồng thời qua Gmail, Slack và Telegram kèm thông tin chi tiết về lỗi.</p>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình kết nối Telegram Bot</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-L"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Tạo bot Telegram</h4><p>Nhắn tin <code>@BotFather</code> trên Telegram → <code>/newbot</code> → đặt tên và username → nhận <strong>Bot Token</strong>.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Lấy Chat ID</h4><p>Nhắn tin cho bot của bạn, sau đó truy cập: <code>https://api.telegram.org/bot&lt;TOKEN&gt;/getUpdates</code> → lấy giá trị <code>message.chat.id</code>.</p></div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-B"><h4>Thêm Credentials vào n8n</h4><p>Settings → Credentials → New → <strong>Telegram API</strong> → nhập Bot Token → Save. Sau đó chọn credential này trong Telegram Node.</p></div>
+      </div>
+    </div>
+
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Format Error Message</span><span class="cb-tag">Error Handler</span></div>
+      <div class="cb-body"><pre><span class="kw">const</span> <span class="vr">err</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>;
+
+<span class="kw">return</span> [{ <span class="pr">json</span>: {
+  <span class="pr">message</span>: <span class="st">`🚨 Workflow Error!
+━━━━━━━━━━━━━━━━━━
+📋 Workflow: ${err.workflow?.name ?? 'Unknown'}
+❌ Error: ${err.execution?.error?.message ?? 'N/A'}
+🕐 Time: ${$now.toFormat('HH:mm dd/MM/yyyy')}
+🔗 ID: ${err.execution?.id}`</span>,
+  <span class="pr">workflowId</span>: <span class="vr">err</span>.<span class="pr">workflow</span>?.<span class="pr">id</span>
+}}];</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════════════
+     LEVEL: TRUNG CẤP
+══════════════════════════════════════ -->
+<div class="level-banner lb-mid">
+  <div class="lb-icon">🔵</div>
+  <div>
+    <div class="lb-title" style="color:var(--blue)">Cấp độ Trung Cấp — Intermediate</div>
+    <div class="lb-desc">Lab 6 đến Lab 10 · Database, Loop, Webhook API, Code Node JavaScript</div>
+  </div>
+  <div class="lb-count lb-count-b">5 Labs · ~10h</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     S7 — LAB 6
+═══════════════════════════════════ -->
+<div class="section" id="s7">
+  <div class="sec-head">
+    <span class="sec-tag-b">LAB 06</span>
+    <div>
+      <h2 class="sec-title">CRUD Google Sheets</h2>
+      <p class="sec-sub">Đọc, ghi, cập nhật, xóa dữ liệu trong Google Sheets qua OAuth2</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Xây dựng hệ thống quản lý <strong>lead khách hàng</strong>: nhận lead từ Webhook, kiểm tra trùng lặp, thêm mới vào Sheets, và cập nhật trạng thái khi lead được xử lý.</p>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Các thao tác Google Sheets Node</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-icon">📖</div>
+        <div class="card-title">Read Rows</div>
+        <div class="card-desc">Đọc toàn bộ sheet hoặc theo filter. Dùng để check trùng lặp email trước khi thêm.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">➕</div>
+        <div class="card-title">Append Row</div>
+        <div class="card-desc">Thêm hàng mới vào cuối sheet. Mapping field name với header cột trong sheet.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">✏️</div>
+        <div class="card-title">Update Row</div>
+        <div class="card-desc">Cập nhật hàng theo row number. Cần dùng IF để tìm đúng row trước khi update.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🗑️</div>
+        <div class="card-title">Delete Row</div>
+        <div class="card-desc">Xóa hàng theo row number. Lưu ý index bắt đầu từ 1 (không tính header).</div>
+      </div>
+    </div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Kiểm tra email trùng lặp</span><span class="cb-tag">Dedup</span></div>
+      <div class="cb-body"><pre><span class="cm">// items[0] = data từ Webhook (lead mới)
+// items[1..n] = data từ Google Sheets (existing)</span>
+
+<span class="kw">const</span> <span class="vr">newLead</span> = <span class="fn">$input</span>.<span class="pr">all</span>()[<span class="nm">0</span>].<span class="pr">json</span>;
+<span class="kw">const</span> <span class="vr">existingEmails</span> = <span class="fn">$</span>(<span class="st">'Google Sheets'</span>).<span class="fn">all</span>()
+  .<span class="fn">map</span>(<span class="vr">i</span> => <span class="vr">i</span>.<span class="pr">json</span>.<span class="pr">email</span>?.<span class="fn">toLowerCase</span>());
+
+<span class="kw">const</span> <span class="vr">isDuplicate</span> = <span class="vr">existingEmails</span>.<span class="fn">includes</span>(<span class="vr">newLead</span>.<span class="pr">email</span>?.<span class="fn">toLowerCase</span>());
+
+<span class="kw">return</span> [{ <span class="pr">json</span>: { ...<span class="vr">newLead</span>, <span class="pr">isDuplicate</span>, <span class="pr">status</span>: <span class="st">'new'</span> } }];</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S8 — LAB 7
+═══════════════════════════════════ -->
+<div class="section" id="s8">
+  <div class="sec-head">
+    <span class="sec-tag-b">LAB 07</span>
+    <div>
+      <h2 class="sec-title">Xử lý danh sách với Loop & SplitInBatch</h2>
+      <p class="sec-sub">Duyệt qua mảng dữ liệu, rate limiting, xử lý hàng nghìn records hiệu quả</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Gửi email cá nhân hóa cho <strong>1000 khách hàng</strong> từ Google Sheets mà không bị giới hạn rate. Học cách dùng SplitInBatch để xử lý theo lô và Wait Node để delay giữa các lô.</p>
+
+    <div class="wf-canvas">
+      <div class="wf-heading">Workflow Lab 7 — Bulk Email với Rate Limiting</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">📋</div><div class="w-name">Google<br>Sheets</div><div class="w-sub">Read all</div></div>
+          <div class="wnode-lbl">Source</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">✂️</div><div class="w-name">Split In<br>Batch</div><div class="w-sub">50/batch</div></div>
+          <div class="wnode-lbl">Batch</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">📧</div><div class="w-name">Gmail</div><div class="w-sub">Send email</div></div>
+          <div class="wnode-lbl">Action</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">⏳</div><div class="w-name">Wait</div><div class="w-sub">1 second</div></div>
+          <div class="wnode-lbl">Delay</div>
+        </div>
+      </div>
+    </div>
+    <div class="info i-blue">
+      <span class="info-ico">ℹ️</span>
+      <div style="font-size:13px"><strong style="color:var(--text)">SplitInBatch:</strong> Kết nối output <code>loop</code> của SplitInBatch ngược lại vào đầu vào để tạo loop tự động. Sau khi xử lý hết 1 batch, node sẽ tự lấy batch tiếp theo.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S9 — LAB 8
+═══════════════════════════════════ -->
+<div class="section" id="s9">
+  <div class="sec-head">
+    <span class="sec-tag-b">LAB 08</span>
+    <div>
+      <h2 class="sec-title">Xây Webhook API tùy chỉnh</h2>
+      <p class="sec-sub">Tạo API endpoint thực sự với n8n — authentication, validation, response</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Xây dựng một <strong>mini REST API</strong> hoàn chỉnh để quản lý tasks: <code>POST /tasks</code> tạo task, <code>GET /tasks</code> lấy danh sách, validate input và trả về response JSON chuẩn.</p>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình Webhook với Authentication</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Webhook Node + Validation Code</span><span class="cb-tag">API</span></div>
+      <div class="cb-body"><pre><span class="cm">// Webhook Node config:</span>
+HTTP Method:     POST
+Path:            tasks
+Authentication:  Header Auth
+  Header Name:   X-API-Key
+  Header Value:  {{ $env.MY_API_SECRET }}
+Respond:         Using 'Respond to Webhook' node
+
+<span class="cm">// Code Node — Validate input:</span>
+<span class="kw">const</span> <span class="vr">body</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>.<span class="pr">body</span>;
+
+<span class="kw">if</span> (!<span class="vr">body</span>.<span class="pr">title</span>) {
+  <span class="kw">return</span> [{ <span class="pr">json</span>: {
+    <span class="pr">success</span>: <span class="kw">false</span>,
+    <span class="pr">error</span>: <span class="st">'title is required'</span>,
+    <span class="pr">statusCode</span>: <span class="nm">400</span>
+  }}];
+}
+
+<span class="kw">return</span> [{ <span class="pr">json</span>: {
+  <span class="pr">success</span>: <span class="kw">true</span>,
+  <span class="pr">task</span>: {
+    <span class="pr">id</span>: <span class="nm">Date</span>.<span class="fn">now</span>().<span class="fn">toString</span>(),
+    <span class="pr">title</span>: <span class="vr">body</span>.<span class="pr">title</span>,
+    <span class="pr">status</span>: <span class="st">'pending'</span>,
+    <span class="pr">createdAt</span>: <span class="kw">new</span> <span class="nm">Date</span>().<span class="fn">toISOString</span>()
+  }
+}}];</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S10 — LAB 9
+═══════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="sec-head">
+    <span class="sec-tag-b">LAB 09</span>
+    <div>
+      <h2 class="sec-title">Thao tác Database SQL</h2>
+      <p class="sec-sub">Kết nối PostgreSQL/MySQL, CRUD, Upsert, xử lý transactions</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Xây dựng backend đơn giản cho hệ thống đặt hàng: nhận đơn từ Webhook, lưu vào PostgreSQL, cập nhật tồn kho và query báo cáo doanh thu theo ngày.</p>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Các query SQL phổ biến trong n8n</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">PostgreSQL Node — Common Queries</span><span class="cb-tag">SQL</span></div>
+      <div class="cb-body"><pre><span class="cm">-- INSERT đơn hàng mới</span>
+<span class="kw">INSERT INTO</span> orders (customer_id, amount, status, created_at)
+<span class="kw">VALUES</span> (
+  {{ $json.customerId }},
+  {{ $json.amount }},
+  <span class="st">'pending'</span>,
+  <span class="nm">NOW</span>()
+) <span class="kw">RETURNING</span> id;
+
+<span class="cm">-- UPSERT sản phẩm (thêm mới hoặc update nếu đã tồn tại)</span>
+<span class="kw">INSERT INTO</span> products (sku, name, stock)
+<span class="kw">VALUES</span> ({{ $json.sku }}, {{ $json.name }}, {{ $json.stock }})
+<span class="kw">ON CONFLICT</span> (sku) <span class="kw">DO UPDATE SET</span>
+  stock = EXCLUDED.stock,
+  updated_at = <span class="nm">NOW</span>();
+
+<span class="cm">-- Query báo cáo doanh thu</span>
+<span class="kw">SELECT</span>
+  <span class="nm">DATE</span>(created_at) <span class="kw">as</span> date,
+  <span class="nm">COUNT</span>(*) <span class="kw">as</span> total_orders,
+  <span class="nm">SUM</span>(amount) <span class="kw">as</span> revenue
+<span class="kw">FROM</span> orders
+<span class="kw">WHERE</span> created_at >= <span class="nm">NOW</span>() - <span class="kw">INTERVAL</span> <span class="st">'7 days'</span>
+<span class="kw">GROUP BY DATE</span>(created_at)
+<span class="kw">ORDER BY</span> date <span class="kw">DESC</span>;</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S11 — LAB 10
+═══════════════════════════════════ -->
+<div class="section" id="s11">
+  <div class="sec-head">
+    <span class="sec-tag-b">LAB 10</span>
+    <div>
+      <h2 class="sec-title">Code Node — JavaScript nâng cao</h2>
+      <p class="sec-sub">Viết logic phức tạp, dùng thư viện, xử lý data transformation chuyên sâu</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Các kỹ thuật Code Node cần biết</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Patterns thực tế</span><span class="cb-tag">JavaScript</span></div>
+      <div class="cb-body"><pre><span class="cm">// 1. Làm việc với nhiều items</span>
+<span class="kw">const</span> <span class="vr">results</span> = <span class="fn">$input</span>.<span class="fn">all</span>().<span class="fn">map</span>(<span class="vr">item</span> => ({
+  <span class="pr">json</span>: {
+    <span class="pr">fullName</span>: `${<span class="vr">item</span>.<span class="pr">json</span>.<span class="pr">firstName</span>} ${<span class="vr">item</span>.<span class="pr">json</span>.<span class="pr">lastName</span>}`,
+    <span class="pr">email</span>: <span class="vr">item</span>.<span class="pr">json</span>.<span class="pr">email</span>.<span class="fn">toLowerCase</span>(),
+    <span class="pr">ageGroup</span>: <span class="vr">item</span>.<span class="pr">json</span>.<span class="pr">age</span> >= <span class="nm">18</span> ? <span class="st">'adult'</span> : <span class="st">'minor'</span>
+  }
+}));
+<span class="kw">return</span> <span class="vr">results</span>;
+
+<span class="cm">// 2. Aggregate — Tính thống kê</span>
+<span class="kw">const</span> <span class="vr">items</span> = <span class="fn">$input</span>.<span class="fn">all</span>();
+<span class="kw">const</span> <span class="vr">amounts</span> = <span class="vr">items</span>.<span class="fn">map</span>(<span class="vr">i</span> => <span class="vr">i</span>.<span class="pr">json</span>.<span class="pr">amount</span>);
+<span class="kw">const</span> <span class="vr">total</span> = <span class="vr">amounts</span>.<span class="fn">reduce</span>((<span class="vr">a</span>,<span class="vr">b</span>) => <span class="vr">a</span>+<span class="vr">b</span>, <span class="nm">0</span>);
+<span class="kw">const</span> <span class="vr">avg</span> = <span class="vr">total</span> / <span class="vr">amounts</span>.<span class="pr">length</span>;
+<span class="kw">return</span> [{ <span class="pr">json</span>: { <span class="pr">total</span>, <span class="pr">avg</span>, <span class="pr">count</span>: <span class="vr">items</span>.<span class="pr">length</span>, <span class="pr">max</span>: <span class="nm">Math</span>.<span class="fn">max</span>(...<span class="vr">amounts</span>) }}];
+
+<span class="cm">// 3. Gọi thư viện built-in của n8n</span>
+<span class="kw">const</span> <span class="vr">crypto</span> = <span class="fn">require</span>(<span class="st">'crypto'</span>);
+<span class="kw">const</span> <span class="vr">hash</span> = <span class="vr">crypto</span>.<span class="fn">createHash</span>(<span class="st">'sha256'</span>)
+  .<span class="fn">update</span>(<span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>.<span class="pr">email</span>)
+  .<span class="fn">digest</span>(<span class="st">'hex'</span>);
+<span class="kw">return</span> [{ <span class="pr">json</span>: { <span class="pr">hash</span> } }];</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════════════
+     LEVEL: NÂNG CAO
+══════════════════════════════════════ -->
+<div class="level-banner lb-adv">
+  <div class="lb-icon">🟣</div>
+  <div>
+    <div class="lb-title" style="color:var(--purple)">Cấp độ Nâng Cao — Advanced</div>
+    <div class="lb-desc">Lab 11 đến Lab 14 · AI Agent, RAG pipeline, tự động hóa báo cáo, Multi-Agent</div>
+  </div>
+  <div class="lb-count lb-count-p">4 Labs · ~10h</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     S12 — LAB 11
+═══════════════════════════════════ -->
+<div class="section" id="s12">
+  <div class="sec-head">
+    <span class="sec-tag-p">LAB 11</span>
+    <div>
+      <h2 class="sec-title">AI Chatbot với Memory</h2>
+      <p class="sec-sub">Xây chatbot thông minh tích hợp Telegram/Slack — AI Agent + Window Buffer Memory</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Tạo chatbot Telegram có thể <strong>nhớ lịch sử hội thoại</strong>, trả lời câu hỏi, giúp đặt lịch họp và tra cứu thông tin. Tích hợp GPT-4o-mini để tối ưu chi phí.</p>
+
+    <div class="wf-canvas">
+      <div class="wf-heading">Workflow Lab 11 — AI Chatbot với Memory</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">📱</div><div class="w-name">Telegram<br>Trigger</div></div>
+          <div class="wnode-lbl">Input</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-a">
+          <div class="wnode"><div class="w-ico">🤖</div><div class="w-name">AI Agent</div></div>
+          <div class="wnode-lbl">Brain</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-o">
+          <div class="wnode"><div class="w-ico">📱</div><div class="w-name">Telegram</div><div class="w-sub">Send reply</div></div>
+          <div class="wnode-lbl">Output</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình AI Agent Node</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">AI Agent — System Prompt + Memory Config</span><span class="cb-tag">AI</span></div>
+      <div class="cb-body"><pre><span class="cm">// AI Agent Node settings:</span>
+Agent Type:   Conversational Agent
+User Message: {{ $json.message.text }}
+
+<span class="cm">// System Prompt:</span>
+<span class="st">Bạn là trợ lý AI thông minh tên là "Nova".
+Nhiệm vụ: Hỗ trợ người dùng quản lý công việc hàng ngày.
+Trả lời ngắn gọn, rõ ràng bằng tiếng Việt.
+Khi không biết, hãy nói thật thay vì đoán mò.
+Ngày hôm nay: {{ $now.toFormat('EEEE, dd/MM/yyyy') }}</span>
+
+<span class="cm">// Window Buffer Memory Node:</span>
+Session ID:   {{ $json.message.chat.id }}
+Window Size:  10  <span class="cm">// Nhớ 10 tin nhắn gần nhất</span>
+
+<span class="cm">// LLM Model: OpenAI Chat Model</span>
+Model:        gpt-4o-mini
+Temperature:  0.5
+Max Tokens:   500</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S13 — LAB 12
+═══════════════════════════════════ -->
+<div class="section" id="s13">
+  <div class="sec-head">
+    <span class="sec-tag-p">LAB 12</span>
+    <div>
+      <h2 class="sec-title">RAG — Hỏi đáp tài liệu nội bộ</h2>
+      <p class="sec-sub">Vector Store, Embeddings, Retrieval — xây hệ thống Q&A cho tài liệu công ty</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Cho phép nhân viên <strong>hỏi bất kỳ câu hỏi nào về chính sách nội bộ</strong> bằng tiếng tự nhiên. Tài liệu được lưu vào Pinecone/Qdrant, AI tự động tìm và trả lời chính xác.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-icon">📥</div>
+        <div class="card-title">Ingestion Pipeline</div>
+        <div class="card-desc">Đọc file PDF/Notion → Split thành chunks → Tạo embeddings → Lưu vào Vector Store</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">Retrieval Pipeline</div>
+        <div class="card-desc">Nhận câu hỏi → Embed câu hỏi → Semantic search → LLM generate answer với context</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình Ingestion Workflow</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">RAG Ingestion — Split &amp; Embed Documents</span><span class="cb-tag">RAG</span></div>
+      <div class="cb-body"><pre><span class="cm">// Nodes theo thứ tự:</span>
+<span class="nm">1.</span> Manual Trigger (hoặc Schedule để re-index hàng tuần)
+<span class="nm">2.</span> Google Drive → Download File (PDF chính sách)
+<span class="nm">3.</span> Document Loader → Default Data Loader
+   → Binary Mode: <span class="st">"From Buffer"</span>
+<span class="nm">4.</span> Text Splitter (Recursive Character)
+   → Chunk Size: <span class="nm">500</span>
+   → Chunk Overlap: <span class="nm">50</span>
+<span class="nm">5.</span> Embeddings OpenAI
+   → Model: <span class="st">"text-embedding-3-small"</span>
+<span class="nm">6.</span> Pinecone Vector Store (Insert Documents)
+   → Index Name: <span class="st">"company-docs"</span>
+   → Namespace: <span class="st">"policies"</span></pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S14 — LAB 13
+═══════════════════════════════════ -->
+<div class="section" id="s14">
+  <div class="sec-head">
+    <span class="sec-tag-p">LAB 13</span>
+    <div>
+      <h2 class="sec-title">Báo cáo tự động hóa hàng ngày</h2>
+      <p class="sec-sub">Tổng hợp dữ liệu từ nhiều nguồn, tạo HTML report, gửi email đẹp</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Mỗi sáng 7:30, workflow tự động lấy số liệu từ <strong>Google Analytics + Google Sheets + PostgreSQL</strong>, tổng hợp thành báo cáo HTML đẹp và gửi email cho ban quản lý.</p>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Tạo HTML Report trong Code Node</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Generate HTML Report</span><span class="cb-tag">Report</span></div>
+      <div class="cb-body"><pre><span class="kw">const</span> <span class="vr">data</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>;
+<span class="kw">const</span> <span class="vr">date</span> = <span class="fn">$now</span>.<span class="fn">toFormat</span>(<span class="st">'dd/MM/yyyy'</span>);
+
+<span class="kw">const</span> <span class="vr">html</span> = <span class="st">`
+&lt;div style="font-family:sans-serif;max-width:600px;margin:auto"&gt;
+  &lt;h2 style="color:#ff6584"&gt;📊 Báo cáo ngày ${</span><span class="vr">date</span><span class="st">}&lt;/h2&gt;
+  &lt;table style="width:100%;border-collapse:collapse"&gt;
+    &lt;tr style="background:#f8f8ff"&gt;
+      &lt;td style="padding:12px;border:1px solid #ddd"&gt;Đơn hàng hôm nay&lt;/td&gt;
+      &lt;td style="padding:12px;border:1px solid #ddd;font-weight:bold;color:#40d88e"&gt;
+        ${</span><span class="vr">data</span><span class="pr">.totalOrders</span><span class="st">}
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style="padding:12px;border:1px solid #ddd"&gt;Doanh thu&lt;/td&gt;
+      &lt;td style="padding:12px;border:1px solid #ddd;font-weight:bold;color:#5ba8ff"&gt;
+        ${</span><span class="vr">data</span><span class="pr">.revenue</span>.<span class="fn">toLocaleString</span>(<span class="st">'vi-VN'</span>)<span class="st">} đ
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+`</span>;
+
+<span class="kw">return</span> [{ <span class="pr">json</span>: { <span class="pr">html</span>, <span class="pr">subject</span>: `Báo cáo ${<span class="vr">date</span>}` } }];</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S15 — LAB 14
+═══════════════════════════════════ -->
+<div class="section" id="s15">
+  <div class="sec-head">
+    <span class="sec-tag-p">LAB 14</span>
+    <div>
+      <h2 class="sec-title">Hệ thống Multi-Agent</h2>
+      <p class="sec-sub">Phối hợp nhiều AI Agent chuyên biệt — orchestrator, sub-agents, tool routing</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu bài lab</div>
+    <p>Xây dựng hệ thống <strong>3 AI Agent chuyên biệt</strong>: Agent Nghiên cứu (web search), Agent Viết nội dung (content writing), Agent Kiểm duyệt (fact-check). Một Orchestrator Agent phân công công việc cho từng agent.</p>
+
+    <div class="wf-canvas">
+      <div class="wf-heading">Workflow Lab 14 — Multi-Agent Orchestration</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">🪝</div><div class="w-name">Webhook</div><div class="w-sub">Nhận topic</div></div>
+          <div class="wnode-lbl">Input</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-a">
+          <div class="wnode"><div class="w-ico">🎯</div><div class="w-name">Orchestrator</div><div class="w-sub">AI Agent</div></div>
+          <div class="wnode-lbl">Router</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">🔍</div><div class="w-name">Research<br>Agent</div></div>
+          <div class="wnode-lbl">Sub-Agent</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">✍️</div><div class="w-name">Writer<br>Agent</div></div>
+          <div class="wnode-lbl">Sub-Agent</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">✅</div><div class="w-name">Review<br>Agent</div></div>
+          <div class="wnode-lbl">Sub-Agent</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info i-note">
+      <span class="info-ico">💡</span>
+      <div style="font-size:13px"><strong style="color:var(--text)">Sub-workflow pattern:</strong> Mỗi Agent chạy trong một n8n workflow riêng. Orchestrator gọi chúng qua <strong>Execute Sub-Workflow</strong> node. Cách này giúp dễ bảo trì và test từng agent độc lập.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ══════════════════════════════════════
+     LEVEL: EXPERT
+══════════════════════════════════════ -->
+<div class="level-banner lb-expert">
+  <div class="lb-icon">🔴</div>
+  <div>
+    <div class="lb-title" style="color:var(--n8n)">Cấp độ Expert</div>
+    <div class="lb-desc">Lab 15 · Triển khai production, bảo mật, monitoring, scaling n8n</div>
+  </div>
+  <div class="lb-count lb-count-r">1 Lab · ~2h</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     S16 — LAB 15
+═══════════════════════════════════ -->
+<div class="section" id="s16">
+  <div class="sec-head">
+    <span class="sec-tag">LAB 15</span>
+    <div>
+      <h2 class="sec-title">Triển khai n8n lên Production</h2>
+      <p class="sec-sub">Docker Compose đầy đủ, HTTPS, backup, monitoring và best practices bảo mật</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Docker Compose Production Setup</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">docker-compose.production.yml</span><span class="cb-tag">DevOps</span></div>
+      <div class="cb-body"><pre>version: <span class="st">'3.8'</span>
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    restart: always
+    ports:
+      - <span class="st">"5678:5678"</span>
+    environment:
+      - N8N_HOST=your-domain.com
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://your-domain.com
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=${DB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_PASSWORD}
+      - EXECUTIONS_DATA_MAX_AGE=168  <span class="cm"># 7 ngày</span>
+      - GENERIC_TIMEZONE=Asia/Ho_Chi_Minh
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: n8n
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [<span class="st">"CMD-SHELL"</span>, <span class="st">"pg_isready -U $$POSTGRES_USER"</span>]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  n8n_data:
+  pg_data:</pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Checklist bảo mật trước khi go-live</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <div class="card-title">Credentials & Secrets</div>
+        <div class="card-desc">Dùng biến môi trường cho tất cả API keys. Không hardcode trong workflow. Bật encryption key mạnh.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">HTTPS & Reverse Proxy</div>
+        <div class="card-desc">Dùng Nginx/Caddy làm reverse proxy với SSL/TLS. Tắt HTTP redirect hoàn toàn.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">👤</div>
+        <div class="card-title">User Management</div>
+        <div class="card-desc">Tạo tài khoản riêng cho từng thành viên. Không dùng chung 1 account admin.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">💾</div>
+        <div class="card-title">Backup tự động</div>
+        <div class="card-desc">Cron backup PostgreSQL hàng ngày. Export workflows định kỳ ra Git repository.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ═══════════════════════════════════
+     S17 — CHEAT SHEET
+═══════════════════════════════════ -->
+<div class="section" id="s17">
+  <div class="sec-head">
+    <span class="sec-tag">REF</span>
+    <div>
+      <h2 class="sec-title">Cheat Sheet — Tra cứu nhanh</h2>
+      <p class="sec-sub">Expressions, nodes hay dùng, patterns phổ biến nhất trong n8n</p>
+    </div>
+  </div>
+
+  <div class="cheat-grid">
+    <div class="cheat-card">
+      <h4>📋 Expressions thường dùng</h4>
+      <div class="cheat-row"><span class="ck">Item hiện tại</span><span class="cv">{{ $json.field }}</span></div>
+      <div class="cheat-row"><span class="ck">Node khác</span><span class="cv">{{ $('Node').first().json.x }}</span></div>
+      <div class="cheat-row"><span class="ck">Thời gian hiện tại</span><span class="cv">{{ $now.toISO() }}</span></div>
+      <div class="cheat-row"><span class="ck">Index item</span><span class="cv">{{ $itemIndex }}</span></div>
+      <div class="cheat-row"><span class="ck">Biến môi trường</span><span class="cv">{{ $env.MY_VAR }}</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>⏰ Cron Expression</h4>
+      <div class="cheat-row"><span class="ck">Mỗi giờ</span><span class="cv">0 * * * *</span></div>
+      <div class="cheat-row"><span class="ck">Hàng ngày 8h</span><span class="cv">0 8 * * *</span></div>
+      <div class="cheat-row"><span class="ck">T2–T6 lúc 9h</span><span class="cv">0 9 * * 1-5</span></div>
+      <div class="cheat-row"><span class="ck">Mỗi 15 phút</span><span class="cv">*/15 * * * *</span></div>
+      <div class="cheat-row"><span class="ck">Đầu tháng 7h</span><span class="cv">0 7 1 * *</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>🔧 Code Node Patterns</h4>
+      <div class="cheat-row"><span class="ck">Lấy tất cả items</span><span class="cv">$input.all()</span></div>
+      <div class="cheat-row"><span class="ck">Item đầu tiên</span><span class="cv">$input.first().json</span></div>
+      <div class="cheat-row"><span class="ck">Map items</span><span class="cv">.map(i => ({json: ...}))</span></div>
+      <div class="cheat-row"><span class="ck">Filter items</span><span class="cv">.filter(i => i.json.x)</span></div>
+      <div class="cheat-row"><span class="ck">Tổng số items</span><span class="cv">$input.all().length</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>🤖 AI Agent Config</h4>
+      <div class="cheat-row"><span class="ck">User message</span><span class="cv">{{ $json.message.text }}</span></div>
+      <div class="cheat-row"><span class="ck">Session Telegram</span><span class="cv">{{ $json.message.chat.id }}</span></div>
+      <div class="cheat-row"><span class="ck">Agent output</span><span class="cv">$json.output</span></div>
+      <div class="cheat-row"><span class="ck">Temperature chat</span><span class="cv">0.5 (balance)</span></div>
+      <div class="cheat-row"><span class="ck">Nhanh & rẻ</span><span class="cv">gpt-4o-mini</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>🗄️ Database Patterns</h4>
+      <div class="cheat-row"><span class="ck">Insert + trả ID</span><span class="cv">RETURNING id</span></div>
+      <div class="cheat-row"><span class="ck">Upsert</span><span class="cv">ON CONFLICT DO UPDATE</span></div>
+      <div class="cheat-row"><span class="ck">7 ngày gần đây</span><span class="cv">NOW() - INTERVAL '7d'</span></div>
+      <div class="cheat-row"><span class="ck">Format ngày VN</span><span class="cv">TO_CHAR(col,'DD/MM/YYYY')</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>🐞 Debug Tips</h4>
+      <div class="cheat-row"><span class="ck">Xem output node</span><span class="cv">Click node → Output tab</span></div>
+      <div class="cheat-row"><span class="ck">Pin data</span><span class="cv">Right-click → Pin data</span></div>
+      <div class="cheat-row"><span class="ck">Thử 1 node</span><span class="cv">Right-click → Execute node</span></div>
+      <div class="cheat-row"><span class="ck">Execution log</span><span class="cv">Executions → View details</span></div>
+    </div>
+  </div>
+
+  <div class="info i-ok" style="margin-top:24px">
+    <span class="info-ico">🔗</span>
+    <div style="font-size:13.5px">
+      <strong style="color:var(--text)">Tài nguyên học n8n:</strong><br>
+      <span style="color:var(--muted)">
+        <a href="https://docs.n8n.io" style="color:var(--n8n)">docs.n8n.io</a> — Tài liệu chính thức &nbsp;·&nbsp;
+        <a href="https://n8n.io/workflows" style="color:var(--n8n)">n8n.io/workflows</a> — Thư viện templates &nbsp;·&nbsp;
+        <a href="https://community.n8n.io" style="color:var(--n8n)">community.n8n.io</a> — Cộng đồng hỏi đáp &nbsp;·&nbsp;
+        <a href="https://docs.n8n.io/advanced-ai/" style="color:var(--n8n)">AI docs</a> — Tài liệu AI Agent
+      </span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<div class="footer">
+  <span>📚 n8n Labs · Hướng dẫn 15 bài thực hành · Bộ tài liệu n8n Series</span>
+  <span style="margin-left:auto;color:var(--faint)">Cơ Bản → Trung Cấp → Nâng Cao → Expert</span>
+</div>
+</div><!-- /main -->
+
+<script>
+// ── Progress bar khi scroll ──
+window.addEventListener('scroll', () => {
+  const el = document.documentElement;
+  const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+  document.getElementById('pbar').style.width = pct + '%';
+}, { passive: true });
+
+// ── Active nav link khi scroll ──
+const sections = document.querySelectorAll('.section[id], .level-banner');
+const navLinks  = document.querySelectorAll('.nav-link');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+
+document.querySelectorAll('.section[id]').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
