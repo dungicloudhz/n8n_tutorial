@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>n8n Labs — Lộ trình thực hành từ Cơ bản đến Nâng cao</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   VARIABLES
+══════════════════════════════════════ */
+:root {
+  --bg:         #080810;
+  --s1:         #0e0e1c;
+  --s2:         #131326;
+  --s3:         #18182e;
+  --s4:         #1e1e38;
+  --border:     #222240;
+  --border2:    #2c2c50;
+  --text:       #e6e6f2;
+  --muted:      #666698;
+  --faint:      #363660;
+
+  --n8n:        #ff6584;
+  --n8n-d:      #cc3355;
+  --n8n-dim:    rgba(255,101,132,.11);
+  --n8n-glow:   rgba(255,101,132,.20);
+
+  --green:      #40d88e;
+  --green-dim:  rgba(64,216,142,.10);
+  --blue:       #5ba8ff;
+  --blue-dim:   rgba(91,168,255,.10);
+  --purple:     #a07af4;
+  --purple-dim: rgba(160,122,244,.10);
+  --yellow:     #ffd060;
+  --yellow-dim: rgba(255,208,96,.10);
+  --teal:       #30d8c0;
+  --teal-dim:   rgba(48,216,192,.10);
+  --orange:     #ff8c50;
+  --orange-dim: rgba(255,140,80,.10);
+
+  --code-bg:    #05050e;
+}
+
+* { margin:0; padding:0; box-sizing:border-box }
+html { scroll-behavior:smooth }
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar { width:5px }
+::-webkit-scrollbar-track { background: transparent }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius:3px }
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+.sidebar {
+  position:fixed; left:0; top:0; width:258px; height:100vh;
+  background:var(--s1); border-right:1px solid var(--border);
+  overflow-y:auto; z-index:400;
+  display:flex; flex-direction:column;
+}
+.sb-logo {
+  padding:20px 18px 16px;
+  border-bottom:1px solid var(--border);
+}
+.sb-brand {
+  display:flex; align-items:center; gap:11px; margin-bottom:12px;
+}
+.logo-icon {
+  width:40px; height:40px; border-radius:10px; flex-shrink:0;
+  background:linear-gradient(135deg, var(--n8n), var(--n8n-d));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color:#fff;
+  box-shadow: 0 0 24px var(--n8n-glow);
+  letter-spacing:-1px;
+}
+.logo-text h2 { font-size:15px; font-weight:800; letter-spacing:-.4px }
+.logo-text p  { font-size:10.5px; color:var(--muted); margin-top:2px }
+
+.prog-wrap { height:3px; background:var(--border); border-radius:2px; overflow:hidden }
+.prog-bar  { height:100%; background:linear-gradient(90deg,var(--n8n),var(--purple)); width:0%; transition:width .4s; border-radius:2px }
+
+/* ══ PAGE NAV ══ */
+.page-nav-section {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.page-nav-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--faint);
+  padding: 0 6px;
+  margin-bottom: 6px;
+}
+
+.page-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all .18s;
+  margin-bottom: 3px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+.page-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.page-link.active {
+  background: rgba(255, 101, 132, 0.1);
+  color: var(--n8n);
+  font-weight: 700;
+}
+
+.page-link .pg-icon {
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.page-link .pg-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  opacity: .5;
+  margin-left: auto;
+}
+
+.nav-section { padding:10px 0 4px }
+.nav-sect-label {
+  padding:8px 18px 3px;
+  font-size:9.5px; font-weight:700;
+  letter-spacing:1.8px; text-transform:uppercase;
+  color:var(--faint);
+}
+.nav-link {
+  display:flex; align-items:center; gap:9px;
+  padding:7px 18px; color:var(--muted);
+  text-decoration:none; font-size:12.5px; font-weight:600;
+  border-left:2px solid transparent; transition:all .14s;
+}
+.nav-link:hover, .nav-link.active {
+  color:var(--text);
+  background:rgba(255,101,132,.07);
+  border-left-color:var(--n8n);
+}
+.nav-link .ico { font-size:13px; flex-shrink:0; width:16px; text-align:center }
+.nav-badge {
+  margin-left:auto; font-size:9px; font-weight:700;
+  padding:2px 7px; border-radius:100px;
+}
+.badge-g { background:var(--green-dim); color:var(--green) }
+.badge-y { background:var(--yellow-dim); color:var(--yellow) }
+.badge-r { background:var(--n8n-dim); color:var(--n8n) }
+.badge-p { background:var(--purple-dim); color:var(--purple) }
+.badge-b { background:var(--blue-dim); color:var(--blue) }
+
+.sb-footer {
+  margin-top:auto; padding:14px 18px;
+  border-top:1px solid var(--border);
+}
+.sb-footer p { font-size:10.5px; color:var(--faint); line-height:1.6 }
+
+/* ══════════════════════════════════════
+   MAIN
+══════════════════════════════════════ */
+.main { margin-left:258px; min-height:100vh }
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero {
+  padding:80px 64px 64px;
+  position:relative; overflow:hidden;
+  border-bottom:1px solid var(--border);
+  background:
+    radial-gradient(ellipse 70% 55% at 65% 35%, rgba(64,216,142,.07) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 65% at 15% 85%, rgba(255,101,132,.05) 0%, transparent 55%),
+    var(--bg);
+}
+.hero-dots {
+  position:absolute; inset:0; pointer-events:none;
+  background-image: radial-gradient(circle, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size:28px 28px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+}
+.hero-glow {
+  position:absolute; right:-100px; top:-100px; width:500px; height:500px;
+  background:radial-gradient(circle, rgba(64,216,142,.06) 0%, transparent 65%);
+  pointer-events:none;
+}
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--green-dim); border:1px solid rgba(64,216,142,.3);
+  color:var(--green); padding:5px 16px; border-radius:100px;
+  font-size:11.5px; font-weight:700; margin-bottom:26px; letter-spacing:.3px;
+}
+.hero-eyebrow .pulse {
+  width:6px; height:6px; border-radius:50%; background:var(--green);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+.hero h1 {
+  font-size:56px; font-weight:900;
+  letter-spacing:-2.5px; line-height:1.02; margin-bottom:18px;
+}
+.h-pink { color:var(--n8n) }
+.h-green { color:var(--green) }
+.h-grad {
+  background:linear-gradient(135deg,var(--green) 0%,var(--teal) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-desc {
+  font-size:16px; color:var(--muted); max-width:580px;
+  line-height:1.72; margin-bottom:30px;
+}
+.hero-chips { display:flex; gap:8px; flex-wrap:wrap }
+.chip {
+  padding:5px 14px; border-radius:7px; font-size:12px; font-weight:700;
+}
+.chip-r { background:var(--n8n-dim); color:var(--n8n) }
+.chip-g { background:var(--green-dim); color:var(--green) }
+.chip-p { background:var(--purple-dim); color:var(--purple) }
+.chip-b { background:var(--blue-dim); color:var(--blue) }
+.chip-y { background:var(--yellow-dim); color:var(--yellow) }
+.chip-t { background:var(--teal-dim); color:var(--teal) }
+
+/* ══════════════════════════════════════
+   CONTENT
+══════════════════════════════════════ */
+.content { padding:56px 64px; max-width:1000px }
+
+/* ══════════════════════════════════════
+   SECTION
+══════════════════════════════════════ */
+.section { margin-bottom:76px }
+.sec-head {
+  display:flex; align-items:flex-start; gap:14px;
+  margin-bottom:34px; padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+}
+.sec-tag {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+  color:var(--n8n); background:var(--n8n-dim); border:1px solid var(--n8n-glow);
+  padding:3px 10px; border-radius:5px; margin-top:5px; flex-shrink:0; letter-spacing:.5px;
+}
+.sec-tag-g { color:var(--green); background:var(--green-dim); border-color:rgba(64,216,142,.2) }
+.sec-tag-y { color:var(--yellow); background:var(--yellow-dim); border-color:rgba(255,208,96,.2) }
+.sec-tag-p { color:var(--purple); background:var(--purple-dim); border-color:rgba(160,122,244,.2) }
+.sec-tag-b { color:var(--blue); background:var(--blue-dim); border-color:rgba(91,168,255,.2) }
+.sec-title { font-size:24px; font-weight:800; letter-spacing:-.6px; margin-bottom:5px }
+.sec-sub   { font-size:13px; color:var(--muted) }
+
+/* ══════════════════════════════════════
+   SUBSECTION
+══════════════════════════════════════ */
+.sub { margin-bottom:42px }
+.sub-title {
+  font-size:14.5px; font-weight:700; margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.sub-title::before {
+  content:''; display:inline-block; width:14px; height:3px;
+  background:var(--n8n); border-radius:2px; flex-shrink:0;
+}
+.sub p, .sub ul, .sub ol {
+  color:var(--muted); font-size:13.5px; margin-bottom:12px; line-height:1.75;
+}
+.sub ul, .sub ol { padding-left:22px }
+.sub li { margin-bottom:5px }
+.sub strong { color:var(--text) }
+
+/* ══════════════════════════════════════
+   DIVIDER
+══════════════════════════════════════ */
+.dv { border:none; border-top:1px solid var(--border); margin:0 0 76px }
+
+/* ══════════════════════════════════════
+   GRID CARDS
+══════════════════════════════════════ */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0 }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0 }
+
+.card {
+  background:var(--s1); border:1px solid var(--border); border-radius:11px;
+  padding:16px; transition:all .2s; cursor:default;
+}
+.card:hover { border-color:var(--n8n); transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.35) }
+.card-icon { font-size:26px; margin-bottom:9px }
+.card-title { font-size:13px; font-weight:700; margin-bottom:4px }
+.card-desc  { font-size:12px; color:var(--muted); line-height:1.55 }
+
+/* ══════════════════════════════════════
+   LAB CARD
+══════════════════════════════════════ */
+.lab-list { display:flex; flex-direction:column; gap:14px; margin:16px 0 }
+.lab-card {
+  background:var(--s1); border:1px solid var(--border); border-radius:12px;
+  padding:20px 22px; transition:all .2s; cursor:default; position:relative; overflow:hidden;
+}
+.lab-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background: var(--lab-color, var(--green));
+}
+.lab-card:hover { border-color:var(--border2); transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,.4) }
+.lab-card-head { display:flex; align-items:center; gap:12px; margin-bottom:10px }
+.lab-num {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+  padding:3px 9px; border-radius:5px; flex-shrink:0;
+  background:var(--s3); color:var(--muted); border:1px solid var(--border2);
+}
+.lab-title { font-size:14.5px; font-weight:800; letter-spacing:-.3px; flex:1 }
+.lab-diff {
+  font-size:9px; font-weight:700; padding:3px 10px; border-radius:100px; flex-shrink:0;
+  text-transform:uppercase; letter-spacing:.8px;
+}
+.diff-easy { background:var(--green-dim); color:var(--green) }
+.diff-med  { background:var(--yellow-dim); color:var(--yellow) }
+.diff-hard { background:var(--n8n-dim); color:var(--n8n) }
+.diff-adv  { background:var(--purple-dim); color:var(--purple) }
+.lab-desc { font-size:13px; color:var(--muted); line-height:1.65; margin-bottom:12px }
+.lab-tags { display:flex; gap:6px; flex-wrap:wrap }
+.lab-tag {
+  font-size:10.5px; font-weight:700; padding:2px 9px; border-radius:5px;
+  background:var(--s3); color:var(--faint); border:1px solid var(--border);
+}
+.lab-time {
+  margin-left:auto; font-size:10px; color:var(--faint);
+  font-family:'JetBrains Mono',monospace; white-space:nowrap; flex-shrink:0;
+}
+
+/* ══════════════════════════════════════
+   WORKFLOW VISUAL
+══════════════════════════════════════ */
+.wf-canvas {
+  background:var(--s1); border:1px solid var(--border); border-radius:13px;
+  padding:24px 28px; margin:16px 0; overflow-x:auto;
+}
+.wf-heading {
+  font-size:10px; font-weight:700; color:var(--muted);
+  letter-spacing:1.2px; text-transform:uppercase; margin-bottom:20px;
+  display:flex; align-items:center; gap:8px;
+}
+.wf-heading::before {
+  content:''; width:20px; height:1px; background:var(--border2);
+}
+.wf-row { display:flex; align-items:center; gap:0; min-width:max-content }
+.wf-col { display:flex; flex-direction:column; gap:10px }
+
+.wnode-wrap { display:flex; flex-direction:column; align-items:center; gap:6px }
+.wnode {
+  background:var(--s2); border:1.5px solid var(--border2); border-radius:11px;
+  padding:12px 15px; min-width:98px; text-align:center;
+  transition:all .25s; cursor:default; position:relative;
+}
+.wnode:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,0,0,.45) }
+.wnode .w-ico  { font-size:20px; margin-bottom:5px }
+.wnode .w-name { font-size:11px; font-weight:700; line-height:1.3 }
+.wnode .w-sub  { font-size:9.5px; color:var(--muted); margin-top:2px }
+.wnode-lbl {
+  font-size:9.5px; font-weight:700; padding:2px 9px;
+  border-radius:100px; white-space:nowrap;
+}
+
+.wn-t .wnode { border-color:rgba(64,216,142,.45) }
+.wn-t .w-ico, .wn-t .w-name { color:var(--green) }
+.wn-t .wnode-lbl { background:var(--green-dim); color:var(--green) }
+
+.wn-p .wnode { border-color:rgba(91,168,255,.4) }
+.wn-p .w-ico, .wn-p .w-name { color:var(--blue) }
+.wn-p .wnode-lbl { background:var(--blue-dim); color:var(--blue) }
+
+.wn-l .wnode { border-color:rgba(160,122,244,.4) }
+.wn-l .w-ico, .wn-l .w-name { color:var(--purple) }
+.wn-l .wnode-lbl { background:var(--purple-dim); color:var(--purple) }
+
+.wn-c .wnode { border-color:rgba(255,208,96,.4) }
+.wn-c .w-ico, .wn-c .w-name { color:var(--yellow) }
+.wn-c .wnode-lbl { background:var(--yellow-dim); color:var(--yellow) }
+
+.wn-a .wnode { border-color:rgba(255,101,132,.4) }
+.wn-a .wnode:hover { box-shadow:0 12px 32px rgba(0,0,0,.45), 0 0 20px rgba(255,101,132,.12) }
+.wn-a .w-ico, .wn-a .w-name { color:var(--n8n) }
+.wn-a .wnode-lbl { background:var(--n8n-dim); color:var(--n8n) }
+
+.wn-d .wnode { border-color:rgba(48,216,192,.4) }
+.wn-d .w-ico, .wn-d .w-name { color:var(--teal) }
+.wn-d .wnode-lbl { background:var(--teal-dim); color:var(--teal) }
+
+.wn-o .wnode { border-color:rgba(255,140,80,.4) }
+.wn-o .w-ico, .wn-o .w-name { color:var(--orange) }
+.wn-o .wnode-lbl { background:var(--orange-dim); color:var(--orange) }
+
+.wf-arr {
+  display:flex; align-items:center; padding:0 3px; margin-top:-22px; flex-shrink:0;
+}
+.arr-line { width:28px; height:2px; background:var(--border2) }
+.arr-head {
+  width:0; height:0;
+  border-top:5px solid transparent;
+  border-bottom:5px solid transparent;
+  border-left:8px solid var(--border2);
+}
+
+/* ══════════════════════════════════════
+   CODE BLOCKS
+══════════════════════════════════════ */
+.cblock {
+  background:var(--code-bg); border:1px solid var(--border);
+  border-radius:11px; overflow:hidden; margin:14px 0;
+}
+.cb-head {
+  display:flex; align-items:center; gap:8px; padding:10px 16px;
+  background:#070710; border-bottom:1px solid var(--border);
+}
+.cb-dots { display:flex; gap:5px }
+.cbd { width:10px; height:10px; border-radius:50% }
+.r { background:#ff5f56 } .y { background:#febc2e } .g { background:#28c840 }
+.cb-name {
+  font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--muted); margin-left:4px;
+}
+.cb-tag {
+  margin-left:auto; font-size:9.5px; font-weight:700;
+  padding:2px 8px; border-radius:4px; background:var(--n8n-dim); color:var(--n8n);
+}
+.cb-tag-p { background:var(--purple-dim); color:var(--purple) }
+.cb-tag-g { background:var(--green-dim); color:var(--green) }
+.cb-tag-b { background:var(--blue-dim); color:var(--blue) }
+.cb-tag-y { background:var(--yellow-dim); color:var(--yellow) }
+.cb-tag-t { background:var(--teal-dim); color:var(--teal) }
+.cb-body { padding:18px 22px; overflow-x:auto }
+.cb-body pre {
+  font-family:'JetBrains Mono',monospace; font-size:12.5px;
+  line-height:1.8; color:#c8c8e8; tab-size:2; white-space:pre;
+}
+
+/* syntax */
+.kw{color:#ff7b7b} .fn{color:#ffc060} .st{color:#70e0a0}
+.nm{color:#b0a0f8} .cm{color:#303060;font-style:italic} .vr{color:#90c8ff}
+.pr{color:#80e8b0} .op{color:#c8c8e8} .ht{color:var(--n8n)} .se{color:var(--teal)}
+
+/* ══════════════════════════════════════
+   INFO BOXES
+══════════════════════════════════════ */
+.info {
+  border-radius:9px; padding:13px 16px; font-size:13.5px;
+  margin:14px 0; display:flex; gap:10px; line-height:1.65;
+}
+.info-ico { font-size:16px; flex-shrink:0; margin-top:1px }
+.i-n8n  { background:var(--n8n-dim);    border:1px solid var(--n8n-glow);              color:#d05070 }
+.i-ok   { background:var(--green-dim);  border:1px solid rgba(64,216,142,.2);          color:#28a860 }
+.i-warn { background:var(--yellow-dim); border:1px solid rgba(255,208,96,.2);          color:#c09000 }
+.i-note { background:var(--purple-dim); border:1px solid rgba(160,122,244,.2);         color:#8060d0 }
+.i-blue { background:var(--blue-dim);   border:1px solid rgba(91,168,255,.2);          color:#3878d0 }
+.i-teal { background:var(--teal-dim);   border:1px solid rgba(48,216,192,.2);          color:#20a090 }
+
+/* ══════════════════════════════════════
+   TABLE
+══════════════════════════════════════ */
+.tbl { width:100%; border-collapse:collapse; font-size:13px; margin:14px 0; border-radius:11px; overflow:hidden }
+.tbl th {
+  background:var(--s3); padding:10px 14px; text-align:left;
+  font-weight:700; font-size:9.5px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted);
+  border-bottom:1px solid var(--border2);
+}
+.tbl td {
+  padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.04);
+  color:var(--muted); vertical-align:top;
+}
+.tbl tr:hover td { background:rgba(255,255,255,.025) }
+.tbl code {
+  font-family:'JetBrains Mono',monospace; font-size:11.5px;
+  background:var(--code-bg); padding:2px 7px; border-radius:4px; color:var(--teal);
+}
+.c-g{color:var(--green)} .c-b{color:var(--blue)} .c-n{color:var(--n8n)}
+.c-p{color:var(--purple)} .c-y{color:var(--yellow)} .c-t{color:var(--teal)} .c-o{color:var(--orange)}
+
+/* ══════════════════════════════════════
+   STEP LIST
+══════════════════════════════════════ */
+.steps { display:flex; flex-direction:column; margin:16px 0 }
+.step  { display:flex; gap:16px }
+.step-L { display:flex; flex-direction:column; align-items:center; width:36px; flex-shrink:0 }
+.step-num {
+  width:36px; height:36px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:800;
+  color:var(--n8n); background:var(--n8n-dim); border:2px solid var(--n8n-glow);
+}
+.step-num-g { color:var(--green); background:var(--green-dim); border-color:rgba(64,216,142,.2) }
+.step-num-y { color:var(--yellow); background:var(--yellow-dim); border-color:rgba(255,208,96,.2) }
+.step-num-p { color:var(--purple); background:var(--purple-dim); border-color:rgba(160,122,244,.2) }
+.step-line { width:2px; flex:1; background:var(--border); margin:5px 0; min-height:16px }
+.step-B { padding:4px 0 28px }
+.step-B h4 { font-size:14px; font-weight:700; margin-bottom:6px }
+.step-B p  { font-size:13px; color:var(--muted); line-height:1.65 }
+
+/* ══════════════════════════════════════
+   CHEAT SHEET
+══════════════════════════════════════ */
+.cheat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0 }
+.cheat-card {
+  background:var(--s1); border:1px solid var(--border); border-radius:10px; padding:16px;
+}
+.cheat-card h4 {
+  font-size:11.5px; font-weight:700; color:var(--n8n);
+  text-transform:uppercase; letter-spacing:.8px; margin-bottom:12px;
+}
+.cheat-row {
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:5px 0; border-bottom:1px solid rgba(255,255,255,.04); font-size:12.5px;
+}
+.cheat-row:last-child { border-bottom:none }
+.ck { color:var(--muted) }
+.cv { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--teal) }
+
+/* ══════════════════════════════════════
+   ROADMAP TIMELINE
+══════════════════════════════════════ */
+.roadmap { position:relative; margin:24px 0; padding-left:32px }
+.roadmap::before {
+  content:''; position:absolute; left:10px; top:0; bottom:0; width:2px;
+  background:linear-gradient(to bottom, var(--green), var(--yellow), var(--n8n), var(--purple));
+  border-radius:2px;
+}
+.rm-item { position:relative; margin-bottom:32px }
+.rm-dot {
+  position:absolute; left:-26px; top:6px;
+  width:14px; height:14px; border-radius:50%; border:2px solid currentColor;
+  background:var(--bg);
+}
+.rm-phase {
+  font-size:9.5px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+  margin-bottom:4px;
+}
+.rm-title { font-size:15px; font-weight:800; margin-bottom:5px }
+.rm-desc { font-size:13px; color:var(--muted); line-height:1.65 }
+.rm-labs { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px }
+.rm-lab {
+  font-size:10.5px; padding:2px 10px; border-radius:5px; font-weight:700;
+  background:var(--s2); border:1px solid var(--border); color:var(--muted);
+}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+.footer {
+  border-top:1px solid var(--border); padding:18px 64px;
+  display:flex; align-items:center; gap:12px;
+  font-size:11.5px; color:var(--faint);
+}
+
+/* ══════════════════════════════════════
+   OBJECTIVE BOX
+══════════════════════════════════════ */
+.obj-box {
+  background:var(--s2); border:1px solid var(--border2); border-radius:10px;
+  padding:18px 20px; margin:14px 0;
+}
+.obj-box h4 {
+  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px;
+  color:var(--muted); margin-bottom:12px;
+}
+.obj-list { list-style:none; padding:0 }
+.obj-list li {
+  font-size:13px; color:var(--muted); padding:4px 0 4px 20px; position:relative; line-height:1.6;
+}
+.obj-list li::before {
+  content:'▸'; position:absolute; left:0; color:var(--green); font-size:11px;
+}
+
+/* ══════════════════════════════════════
+   LEVEL BANNER
+══════════════════════════════════════ */
+.level-banner {
+  border-radius:10px; padding:16px 20px; margin-bottom:28px;
+  display:flex; align-items:center; gap:14px;
+}
+.lb-beginner { background:linear-gradient(135deg, rgba(64,216,142,.08), rgba(48,216,192,.05)); border:1px solid rgba(64,216,142,.2) }
+.lb-inter    { background:linear-gradient(135deg, rgba(255,208,96,.08), rgba(255,140,80,.05)); border:1px solid rgba(255,208,96,.2) }
+.lb-advanced { background:linear-gradient(135deg, rgba(255,101,132,.08), rgba(255,140,80,.05)); border:1px solid rgba(255,101,132,.2) }
+.lb-expert   { background:linear-gradient(135deg, rgba(160,122,244,.08), rgba(91,168,255,.05)); border:1px solid rgba(160,122,244,.2) }
+.lb-icon { font-size:28px; flex-shrink:0 }
+.lb-info h3 { font-size:14px; font-weight:800; margin-bottom:3px }
+.lb-info p  { font-size:12.5px; color:var(--muted) }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════
+     SIDEBAR
+══════════════════════ -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-brand">
+      <div class="logo-icon">n8</div>
+      <div class="logo-text">
+        <h2>n8n Labs</h2>
+        <p>Lộ trình thực hành toàn tập</p>
+      </div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-bar" id="pbar"></div>
+    </div>
+  </div>
+
+  <!-- ── PAGE NAVIGATION ── -->
+  <div class="page-nav-section">
+    <div class="page-nav-label">Bộ tài liệu</div>
+    <a href="html_css_introduction.html" class="page-link">
+      <span class="pg-icon">🏗️</span> HTML &amp; CSS
+      <span class="pg-num">01</span>
+    </a>
+    <a href="javascript_introduction.html" class="page-link">
+      <span class="pg-icon">⚡</span> JavaScript
+      <span class="pg-num">02</span>
+    </a>
+    <a href="n8n_js_guide.html" class="page-link">
+      <span class="pg-icon">🔴</span> JS → n8n
+      <span class="pg-num">03</span>
+    </a>
+    <a href="n8n_guide.html" class="page-link">
+      <span class="pg-icon">🚀</span> n8n Toàn Tập
+      <span class="pg-num">04</span>
+    </a>
+    <a href="ai_agent_n8n.html" class="page-link">
+      <span class="pg-icon">🤖</span> AI Agent
+      <span class="pg-num">05</span>
+    </a>
+    <a href="n8n-labs-guide.html" class="page-link">
+      <span class="pg-icon">🧪</span> n8n Labs
+      <span class="pg-num">06</span>
+    </a>
+    <a href="lab-n8n-v2.html" class="page-link active">
+      <span class="pg-icon">🌟</span> n8n Labs V2
+      <span class="pg-num">07</span>
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">Tổng quan</div>
+    <a class="nav-link active" href="#s0"><span class="ico">🗺️</span>Lộ trình học</a>
+    <a class="nav-link" href="#s1"><span class="ico">⚙️</span>Cài đặt môi trường</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">🟢 Beginner</div>
+    <a class="nav-link" href="#s2"><span class="ico">🔰</span>Lab 01 — Hello Workflow<span class="nav-badge badge-g">Dễ</span></a>
+    <a class="nav-link" href="#s3"><span class="ico">📡</span>Lab 02 — HTTP Request<span class="nav-badge badge-g">Dễ</span></a>
+    <a class="nav-link" href="#s4"><span class="ico">🔀</span>Lab 03 — If / Switch<span class="nav-badge badge-g">Dễ</span></a>
+    <a class="nav-link" href="#s5"><span class="ico">⏰</span>Lab 04 — Cron & Schedule<span class="nav-badge badge-g">Dễ</span></a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">🟡 Intermediate</div>
+    <a class="nav-link" href="#s6"><span class="ico">🗄️</span>Lab 05 — PostgreSQL CRUD<span class="nav-badge badge-y">TB</span></a>
+    <a class="nav-link" href="#s7"><span class="ico">📊</span>Lab 06 — Google Sheets<span class="nav-badge badge-y">TB</span></a>
+    <a class="nav-link" href="#s8"><span class="ico">📩</span>Lab 07 — Email + Telegram<span class="nav-badge badge-y">TB</span></a>
+    <a class="nav-link" href="#s9"><span class="ico">🔗</span>Lab 08 — Webhook API<span class="nav-badge badge-y">TB</span></a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">🔴 Advanced</div>
+    <a class="nav-link" href="#s10"><span class="ico">🤖</span>Lab 09 — AI Agent cơ bản<span class="nav-badge badge-r">Khó</span></a>
+    <a class="nav-link" href="#s11"><span class="ico">🧠</span>Lab 10 — RAG + Vector DB<span class="nav-badge badge-r">Khó</span></a>
+    <a class="nav-link" href="#s12"><span class="ico">🔄</span>Lab 11 — Sub-Workflow<span class="nav-badge badge-r">Khó</span></a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-sect-label">🟣 Expert</div>
+    <a class="nav-link" href="#s13"><span class="ico">🏗️</span>Lab 12 — Production Deploy<span class="nav-badge badge-p">Expert</span></a>
+    <a class="nav-link" href="#s14"><span class="ico">🎓</span>Cheat Sheet & Tips<span class="nav-badge badge-b">Ref</span></a>
+  </div>
+
+  <div class="sb-footer">
+    <p>14 Labs · Beginner → Expert<br>Thực hành có hướng dẫn từng bước</p>
+  </div>
+</aside>
+
+<!-- ══════════════════════
+     MAIN
+══════════════════════ -->
+<div class="main">
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-eyebrow">
+    <div class="pulse"></div>
+    n8n Lab Series · 2024 Edition
+  </div>
+
+  <h1>
+    Thực hành <span class="h-pink">n8n</span><br>
+    <span class="h-grad">từ Cơ bản</span><br>
+    đến Nâng cao
+  </h1>
+
+  <p class="hero-desc">
+    Bộ bài lab được thiết kế theo lộ trình <strong style="color:var(--text)">Beginner → Expert</strong>,
+    mỗi lab là một workflow hoàn chỉnh có thể deploy ngay.
+    Học qua thực hành, không qua lý thuyết suông.
+  </p>
+
+  <div class="hero-chips">
+    <span class="chip chip-g">14 Labs</span>
+    <span class="chip chip-r">Webhook · HTTP · AI</span>
+    <span class="chip chip-b">PostgreSQL · Google Sheets</span>
+    <span class="chip chip-p">AI Agent · RAG</span>
+    <span class="chip chip-y">Production Ready</span>
+    <span class="chip chip-t">Self-hosted &amp; Cloud</span>
+  </div>
+</div>
+
+<!-- ── CONTENT ── -->
+<div class="content">
+
+<!-- ════════════════════════════════════
+     S0 — LỘ TRÌNH
+════════════════════════════════════ -->
+<div class="section" id="s0">
+  <div class="sec-head">
+    <span class="sec-tag">00</span>
+    <div>
+      <h2 class="sec-title">Lộ trình học n8n</h2>
+      <p class="sec-sub">Từ zero đến production — 4 giai đoạn, 14 labs, ~30–40 giờ thực hành</p>
+    </div>
+  </div>
+
+  <div class="roadmap">
+    <div class="rm-item">
+      <div class="rm-dot" style="color:var(--green)"></div>
+      <div class="rm-phase" style="color:var(--green)">Giai đoạn 1 · Beginner</div>
+      <div class="rm-title">Làm quen nền tảng</div>
+      <div class="rm-desc">Hiểu UI, tạo workflow đầu tiên, làm việc với HTTP, điều kiện rẽ nhánh, lập lịch tự động.</div>
+      <div class="rm-labs">
+        <span class="rm-lab">Lab 01 · Hello Workflow</span>
+        <span class="rm-lab">Lab 02 · HTTP Request</span>
+        <span class="rm-lab">Lab 03 · If/Switch</span>
+        <span class="rm-lab">Lab 04 · Cron</span>
+      </div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-dot" style="color:var(--yellow)"></div>
+      <div class="rm-phase" style="color:var(--yellow)">Giai đoạn 2 · Intermediate</div>
+      <div class="rm-title">Tích hợp dịch vụ thực tế</div>
+      <div class="rm-desc">Database, Spreadsheet, Email/Telegram, Webhook API — các tích hợp dùng hàng ngày.</div>
+      <div class="rm-labs">
+        <span class="rm-lab">Lab 05 · PostgreSQL</span>
+        <span class="rm-lab">Lab 06 · Google Sheets</span>
+        <span class="rm-lab">Lab 07 · Email+Telegram</span>
+        <span class="rm-lab">Lab 08 · Webhook</span>
+      </div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-dot" style="color:var(--n8n)"></div>
+      <div class="rm-phase" style="color:var(--n8n)">Giai đoạn 3 · Advanced</div>
+      <div class="rm-title">AI &amp; Workflow phức tạp</div>
+      <div class="rm-desc">Xây dựng AI Agent, RAG pipeline với vector database, sub-workflow và xử lý lỗi nâng cao.</div>
+      <div class="rm-labs">
+        <span class="rm-lab">Lab 09 · AI Agent</span>
+        <span class="rm-lab">Lab 10 · RAG+Vector</span>
+        <span class="rm-lab">Lab 11 · Sub-Workflow</span>
+      </div>
+    </div>
+    <div class="rm-item" style="margin-bottom:0">
+      <div class="rm-dot" style="color:var(--purple)"></div>
+      <div class="rm-phase" style="color:var(--purple)">Giai đoạn 4 · Expert</div>
+      <div class="rm-title">Production &amp; Best Practices</div>
+      <div class="rm-desc">Deploy lên server, cấu hình bảo mật, monitoring, scaling và các patterns production-grade.</div>
+      <div class="rm-labs">
+        <span class="rm-lab">Lab 12 · Production Deploy</span>
+        <span class="rm-lab">Cheat Sheet</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info i-ok" style="margin-top:24px">
+    <span class="info-ico">💡</span>
+    <div><strong style="color:var(--text)">Cách học hiệu quả nhất:</strong> Mỗi lab nên hoàn thành toàn bộ rồi mới chuyển lab tiếp theo. Đừng copy-paste — hãy gõ tay từng node để build muscle memory với n8n UI.</div>
+  </div>
+
+  <div class="sub" style="margin-top:28px">
+    <div class="sub-title">Danh sách tất cả Labs</div>
+    <div class="lab-list">
+
+      <div class="lab-card" style="--lab-color:var(--green)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-01</span>
+          <span class="lab-title">Hello Workflow — Trigger → Transform → Output</span>
+          <span class="lab-diff diff-easy">Dễ</span>
+          <span class="lab-time">⏱ 30 phút</span>
+        </div>
+        <div class="lab-desc">Tạo workflow đầu tiên: nhận trigger thủ công, xử lý data với Set node, output ra JSON đẹp.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">Manual Trigger</span><span class="lab-tag">Set Node</span><span class="lab-tag">JSON</span>
+        </div>
+      </div>
+
+      <div class="lab-card" style="--lab-color:var(--green)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-02</span>
+          <span class="lab-title">HTTP Request — Gọi API bên ngoài</span>
+          <span class="lab-diff diff-easy">Dễ</span>
+          <span class="lab-time">⏱ 45 phút</span>
+        </div>
+        <div class="lab-desc">Gọi REST API (JSONPlaceholder / OpenWeather), xử lý response, filter và transform data.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">HTTP Request</span><span class="lab-tag">REST API</span><span class="lab-tag">Expressions</span>
+        </div>
+      </div>
+
+      <div class="lab-card" style="--lab-color:var(--green)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-03</span>
+          <span class="lab-title">If / Switch — Logic rẽ nhánh</span>
+          <span class="lab-diff diff-easy">Dễ</span>
+          <span class="lab-time">⏱ 45 phút</span>
+        </div>
+        <div class="lab-desc">Phân luồng xử lý theo điều kiện: If node cho 2 nhánh, Switch node cho nhiều trường hợp.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">If Node</span><span class="lab-tag">Switch Node</span><span class="lab-tag">Conditions</span>
+        </div>
+      </div>
+
+      <div class="lab-card" style="--lab-color:var(--green)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-04</span>
+          <span class="lab-title">Schedule — Tự động hóa theo lịch</span>
+          <span class="lab-diff diff-easy">Dễ</span>
+          <span class="lab-time">⏱ 30 phút</span>
+        </div>
+        <div class="lab-desc">Cron trigger, lên lịch báo cáo hàng ngày, xử lý timezone Việt Nam, test lịch chạy.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">Schedule Trigger</span><span class="lab-tag">Cron</span><span class="lab-tag">Timezone</span>
+        </div>
+      </div>
+
+      <div class="lab-card" style="--lab-color:var(--yellow)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-05</span>
+          <span class="lab-title">PostgreSQL — CRUD hoàn chỉnh</span>
+          <span class="lab-diff diff-med">Trung bình</span>
+          <span class="lab-time">⏱ 90 phút</span>
+        </div>
+        <div class="lab-desc">Kết nối PostgreSQL, thực hiện SELECT/INSERT/UPDATE/DELETE, xử lý lỗi, transaction cơ bản.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">PostgreSQL</span><span class="lab-tag">CRUD</span><span class="lab-tag">SQL</span><span class="lab-tag">Error Handling</span>
+        </div>
+      </div>
+
+      <div class="lab-card" style="--lab-color:var(--yellow)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-06</span>
+          <span class="lab-title">Google Sheets — Sync &amp; Report tự động</span>
+          <span class="lab-diff diff-med">Trung bình</span>
+          <span class="lab-time">⏱ 60 phút</span>
+        </div>
+        <div class="lab-desc">OAuth với Google, đọc/ghi Sheets, tạo báo cáo tự động từ API data, format cell.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">Google Sheets</span><span class="lab-tag">OAuth</span><span class="lab-tag">Report</span>
+        </div>
+      </div>
+
+      <div class="lab-card" style="--lab-color:var(--yellow)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-07</span>
+          <span class="lab-title">Email + Telegram — Notification Bot</span>
+          <span class="lab-diff diff-med">Trung bình</span>
+          <span class="lab-time">⏱ 75 phút</span>
+        </div>
+        <div class="lab-desc">Bot Telegram nhận lệnh, gửi email alert, tạo notification system đa kênh với template.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">Telegram</span><span class="lab-tag">Email</span><span class="lab-tag">Bot</span><span class="lab-tag">Notification</span>
+        </div>
+      </div>
+
+      <div class="lab-card" style="--lab-color:var(--yellow)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-08</span>
+          <span class="lab-title">Webhook — Tự xây dựng API endpoint</span>
+          <span class="lab-diff diff-med">Trung bình</span>
+          <span class="lab-time">⏱ 90 phút</span>
+        </div>
+        <div class="lab-desc">Tạo REST API với Webhook node, xử lý auth header, respond JSON, tích hợp ngược với app ngoài.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">Webhook</span><span class="lab-tag">REST API</span><span class="lab-tag">Auth</span><span class="lab-tag">Respond</span>
+        </div>
+      </div>
+
+      <div class="lab-card" style="--lab-color:var(--n8n)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-09</span>
+          <span class="lab-title">AI Agent cơ bản — Chatbot với Tools</span>
+          <span class="lab-diff diff-hard">Khó</span>
+          <span class="lab-time">⏱ 120 phút</span>
+        </div>
+        <div class="lab-desc">Xây AI Agent với GPT-4o, kết nối 2-3 tools (search, calculator, DB), test multi-turn conversation.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">AI Agent</span><span class="lab-tag">GPT-4o</span><span class="lab-tag">Tools</span><span class="lab-tag">Memory</span>
+        </div>
+      </div>
+
+      <div class="lab-card" style="--lab-color:var(--n8n)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-10</span>
+          <span class="lab-title">RAG Pipeline — Hỏi đáp tài liệu nội bộ</span>
+          <span class="lab-diff diff-hard">Khó</span>
+          <span class="lab-time">⏱ 150 phút</span>
+        </div>
+        <div class="lab-desc">Ingest PDF → chunk → embed → lưu Pinecone/Supabase, xây chatbot Q&amp;A với ngữ cảnh tài liệu.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">RAG</span><span class="lab-tag">Vector DB</span><span class="lab-tag">Embeddings</span><span class="lab-tag">PDF</span>
+        </div>
+      </div>
+
+      <div class="lab-card" style="--lab-color:var(--n8n)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-11</span>
+          <span class="lab-title">Sub-Workflow — Kiến trúc module hóa</span>
+          <span class="lab-diff diff-hard">Khó</span>
+          <span class="lab-time">⏱ 90 phút</span>
+        </div>
+        <div class="lab-desc">Tách logic vào sub-workflow tái sử dụng, truyền params, xử lý lỗi phân tầng, error workflow.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">Sub-Workflow</span><span class="lab-tag">Execute Workflow</span><span class="lab-tag">Error Handling</span>
+        </div>
+      </div>
+
+      <div class="lab-card" style="--lab-color:var(--purple)">
+        <div class="lab-card-head">
+          <span class="lab-num">LAB-12</span>
+          <span class="lab-title">Production — Docker + Nginx + Monitoring</span>
+          <span class="lab-diff diff-adv">Expert</span>
+          <span class="lab-time">⏱ 180 phút</span>
+        </div>
+        <div class="lab-desc">Deploy self-hosted với Docker Compose, cấu hình Nginx reverse proxy, SSL, backup, monitoring cơ bản.</div>
+        <div class="lab-tags">
+          <span class="lab-tag">Docker</span><span class="lab-tag">Nginx</span><span class="lab-tag">SSL</span><span class="lab-tag">Backup</span><span class="lab-tag">Production</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S1 — CÀI ĐẶT
+════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="sec-head">
+    <span class="sec-tag">SETUP</span>
+    <div>
+      <h2 class="sec-title">Cài đặt môi trường thực hành</h2>
+      <p class="sec-sub">Chạy n8n local với Docker — nhanh nhất, không cần cài Node.js</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Option 1 — Docker (Khuyến nghị)</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Terminal — Khởi động n8n</span><span class="cb-tag cb-tag-g">Docker</span></div>
+      <div class="cb-body"><pre><span class="cm"># Tạo volume để giữ data</span>
+<span class="fn">docker</span> volume create n8n_data
+
+<span class="cm"># Chạy n8n (truy cập http://localhost:5678)</span>
+<span class="fn">docker</span> run -d \
+  --name n8n \
+  -p 5678:5678 \
+  -v n8n_data:/home/node/.n8n \
+  -e GENERIC_TIMEZONE=<span class="st">"Asia/Ho_Chi_Minh"</span> \
+  -e TZ=<span class="st">"Asia/Ho_Chi_Minh"</span> \
+  docker.n8n.io/n8nio/n8n
+
+<span class="cm"># Xem logs</span>
+<span class="fn">docker</span> logs -f n8n</pre></div>
+    </div>
+
+    <div class="cblock" style="margin-top:10px">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">docker-compose.yml — Full stack với PostgreSQL</span><span class="cb-tag cb-tag-b">Compose</span></div>
+      <div class="cb-body"><pre><span class="kw">version</span>: <span class="st">'3.8'</span>
+<span class="kw">services</span>:
+  <span class="pr">postgres</span>:
+    <span class="kw">image</span>: postgres:16
+    <span class="kw">environment</span>:
+      <span class="vr">POSTGRES_DB</span>: n8n
+      <span class="vr">POSTGRES_USER</span>: n8n
+      <span class="vr">POSTGRES_PASSWORD</span>: n8npass
+    <span class="kw">volumes</span>:
+      - pgdata:/var/lib/postgresql/data
+
+  <span class="pr">n8n</span>:
+    <span class="kw">image</span>: docker.n8n.io/n8nio/n8n
+    <span class="kw">ports</span>: [<span class="st">"5678:5678"</span>]
+    <span class="kw">environment</span>:
+      <span class="vr">DB_TYPE</span>: postgresdb
+      <span class="vr">DB_POSTGRESDB_HOST</span>: postgres
+      <span class="vr">DB_POSTGRESDB_DATABASE</span>: n8n
+      <span class="vr">DB_POSTGRESDB_USER</span>: n8n
+      <span class="vr">DB_POSTGRESDB_PASSWORD</span>: n8npass
+      <span class="vr">GENERIC_TIMEZONE</span>: Asia/Ho_Chi_Minh
+      <span class="vr">N8N_BASIC_AUTH_ACTIVE</span>: <span class="st">"true"</span>
+      <span class="vr">N8N_BASIC_AUTH_USER</span>: admin
+      <span class="vr">N8N_BASIC_AUTH_PASSWORD</span>: <span class="st">"changeme"</span>
+    <span class="kw">depends_on</span>: [postgres]
+    <span class="kw">volumes</span>:
+      - n8n_data:/home/node/.n8n
+
+<span class="kw">volumes</span>: { pgdata: {}, n8n_data: {} }</pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Option 2 — npx (không cần Docker)</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Terminal — npx n8n</span><span class="cb-tag cb-tag-y">npx</span></div>
+      <div class="cb-body"><pre><span class="cm"># Yêu cầu Node.js 18+</span>
+<span class="fn">npx</span> n8n
+
+<span class="cm"># Hoặc cài global</span>
+<span class="fn">npm</span> install -g n8n
+<span class="fn">n8n</span> start</pre></div>
+    </div>
+  </div>
+
+  <div class="info i-ok">
+    <span class="info-ico">✅</span>
+    <div><strong style="color:var(--text)">Kiểm tra:</strong> Mở <code style="font-family:'JetBrains Mono',monospace;color:var(--teal)">http://localhost:5678</code> — thấy giao diện n8n là đã thành công. Tạo tài khoản admin lần đầu đăng nhập.</div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S2 — LAB 01
+════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-g">LAB 01</span>
+    <div>
+      <h2 class="sec-title">Hello Workflow</h2>
+      <p class="sec-sub">Trigger → Code → Set → Output · Ước tính: 30 phút</p>
+    </div>
+  </div>
+
+  <div class="level-banner lb-beginner">
+    <div class="lb-icon">🔰</div>
+    <div class="lb-info">
+      <h3 style="color:var(--green)">Beginner · Lab 01</h3>
+      <p>Làm quen với UI n8n, tạo workflow đầu tiên, hiểu flow data giữa các node.</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Mục tiêu</div>
+    <div class="obj-box">
+      <h4>Sau lab này bạn sẽ biết</h4>
+      <ul class="obj-list">
+        <li>Tạo workflow mới và hiểu interface chính của n8n</li>
+        <li>Dùng Manual Trigger để test workflow</li>
+        <li>Dùng Set node để tạo và chỉnh sửa data</li>
+        <li>Dùng Code node để xử lý JavaScript cơ bản</li>
+        <li>Đọc output JSON trong execution panel</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Sơ đồ Workflow</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">FLOW · LAB 01 — HELLO WORKFLOW</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">▶️</div><div class="w-name">Manual<br>Trigger</div><div class="w-sub">Click để chạy</div></div>
+          <div class="wnode-lbl">Trigger</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">⚙️</div><div class="w-name">Set Node</div><div class="w-sub">Tạo fields</div></div>
+          <div class="wnode-lbl">Transform</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">💻</div><div class="w-name">Code Node</div><div class="w-sub">JavaScript</div></div>
+          <div class="wnode-lbl">Process</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">📋</div><div class="w-name">No Op</div><div class="w-sub">Output</div></div>
+          <div class="wnode-lbl">Done</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Hướng dẫn từng bước</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-L"><div class="step-num step-num-g">1</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Tạo Workflow mới</h4>
+          <p>Vào n8n → Click <strong>+ New Workflow</strong> → Đặt tên <strong>"Lab01 - Hello Workflow"</strong>. Bạn sẽ thấy canvas trống với nút <strong>Add first step</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num step-num-g">2</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Thêm Manual Trigger</h4>
+          <p>Click <strong>Add first step</strong> → Tìm <strong>"Manual Trigger"</strong> → Click vào. Node này là điểm xuất phát của workflow khi test thủ công.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num step-num-g">3</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Thêm Set Node</h4>
+          <p>Click dấu <strong>+</strong> bên phải Manual Trigger → Tìm <strong>"Edit Fields (Set)"</strong>. Thêm 3 fields: <code>name</code> = "n8n", <code>level</code> = "beginner", <code>timestamp</code> = <code>{{ $now.toISO() }}</code>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num step-num-g">4</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Thêm Code Node</h4>
+          <p>Thêm <strong>Code</strong> node sau Set. Nhập code JavaScript bên dưới để tính toán thêm và format message.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num step-num-g">5</div></div>
+        <div class="step-B">
+          <h4>Test và xem kết quả</h4>
+          <p>Click <strong>Test workflow</strong> (nút ▶️ ở trên). Click vào từng node để xem Input/Output. Execution panel bên phải sẽ show kết quả.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Code Node — JavaScript</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Hello Workflow</span><span class="cb-tag cb-tag-g">JavaScript</span></div>
+      <div class="cb-body"><pre><span class="cm">// Lấy data từ node trước (Set node)</span>
+<span class="kw">const</span> <span class="vr">input</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>;
+
+<span class="cm">// Xử lý và thêm fields mới</span>
+<span class="kw">const</span> <span class="vr">output</span> = {
+  ...input,
+  <span class="pr">message</span>: <span class="st">`Xin chào từ n8n! Level: ${input.level}`</span>,
+  <span class="pr">processedAt</span>: <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toLocaleString</span>(<span class="st">'vi-VN'</span>, {
+    <span class="pr">timeZone</span>: <span class="st">'Asia/Ho_Chi_Minh'</span>
+  }),
+  <span class="pr">labNumber</span>: <span class="nm">1</span>,
+  <span class="pr">completed</span>: <span class="nm">true</span>
+};
+
+<span class="cm">// Trả về array of items (n8n format)</span>
+<span class="kw">return</span> [{ <span class="pr">json</span>: <span class="vr">output</span> }];</pre></div>
+    </div>
+  </div>
+
+  <div class="info i-note">
+    <span class="info-ico">📌</span>
+    <div><strong style="color:var(--text)">Lưu ý quan trọng:</strong> Trong n8n, Code node luôn return array: <code style="font-family:'JetBrains Mono',monospace;color:var(--teal)">return [{ json: {...} }]</code>. Nếu muốn trả về nhiều items, thêm nhiều object vào array.</div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S3 — LAB 02
+════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-g">LAB 02</span>
+    <div>
+      <h2 class="sec-title">HTTP Request — Gọi API bên ngoài</h2>
+      <p class="sec-sub">Kết nối với REST API thực tế, xử lý response, filter data · Ước tính: 45 phút</p>
+    </div>
+  </div>
+
+  <div class="level-banner lb-beginner">
+    <div class="lb-icon">📡</div>
+    <div class="lb-info">
+      <h3 style="color:var(--green)">Beginner · Lab 02</h3>
+      <p>Gọi API JSONPlaceholder và OpenWeatherMap, xử lý JSON response, lọc và transform data.</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Workflow — Lấy thời tiết Hà Nội</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">FLOW · LAB 02 — HTTP REQUEST + TRANSFORM</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">▶️</div><div class="w-name">Manual<br>Trigger</div></div>
+          <div class="wnode-lbl">Start</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">🌐</div><div class="w-name">HTTP<br>Request</div><div class="w-sub">OpenWeather API</div></div>
+          <div class="wnode-lbl">GET</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">💻</div><div class="w-name">Code Node</div><div class="w-sub">Transform</div></div>
+          <div class="wnode-lbl">Process</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">📨</div><div class="w-name">Telegram</div><div class="w-sub">Gửi kết quả</div></div>
+          <div class="wnode-lbl">Output</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình HTTP Request Node</div>
+    <table class="tbl">
+      <tr><th>Field</th><th>Giá trị</th><th>Ghi chú</th></tr>
+      <tr><td>Method</td><td><span class="c-g">GET</span></td><td>Lấy data</td></tr>
+      <tr><td>URL</td><td><code>https://api.openweathermap.org/data/2.5/weather</code></td><td>Endpoint</td></tr>
+      <tr><td>Query Params</td><td><code>q=Hanoi&appid=YOUR_KEY&units=metric&lang=vi</code></td><td>API key từ openweathermap.org</td></tr>
+      <tr><td>Authentication</td><td>None</td><td>Dùng appid trong query</td></tr>
+    </table>
+
+    <div class="info i-blue">
+      <span class="info-ico">🔑</span>
+      <div><strong style="color:var(--text)">API Key miễn phí:</strong> Đăng ký tại <span style="color:var(--blue)">openweathermap.org</span> → My API Keys. Free tier cho 60 calls/phút là đủ cho lab.</div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Code Node — Transform response</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Format Weather Data</span><span class="cb-tag cb-tag-g">JS</span></div>
+      <div class="cb-body"><pre><span class="kw">const</span> <span class="vr">weather</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>;
+
+<span class="kw">const</span> <span class="vr">emoji</span> = {
+  <span class="st">'Clear'</span>: <span class="st">'☀️'</span>, <span class="st">'Clouds'</span>: <span class="st">'☁️'</span>, <span class="st">'Rain'</span>: <span class="st">'🌧️'</span>,
+  <span class="st">'Thunderstorm'</span>: <span class="st">'⛈️'</span>, <span class="st">'Drizzle'</span>: <span class="st">'🌦️'</span>, <span class="st">'Mist'</span>: <span class="st">'🌫️'</span>
+};
+
+<span class="kw">const</span> <span class="vr">main</span> = <span class="vr">weather</span>.<span class="pr">weather</span>[<span class="nm">0</span>].<span class="pr">main</span>;
+<span class="kw">const</span> <span class="vr">icon</span>  = <span class="vr">emoji</span>[<span class="vr">main</span>] || <span class="st">'🌡️'</span>;
+
+<span class="kw">return</span> [{
+  <span class="pr">json</span>: {
+    <span class="pr">message</span>: <span class="st">`${icon} Thời tiết Hà Nội\n</span>
+<span class="st">🌡️ Nhiệt độ: ${weather.main.temp}°C (cảm giác ${weather.main.feels_like}°C)\n</span>
+<span class="st">💧 Độ ẩm: ${weather.main.humidity}%\n</span>
+<span class="st">🌬️ Gió: ${(weather.wind.speed * 3.6).toFixed(1)} km/h\n</span>
+<span class="st">📍 ${weather.name} · ${new Date().toLocaleTimeString('vi-VN')}`</span>,
+    <span class="pr">raw</span>: <span class="vr">weather</span>
+  }
+}];</pre></div>
+    </div>
+  </div>
+
+  <div class="info i-warn">
+    <span class="info-ico">⚠️</span>
+    <div><strong style="color:var(--text)">Test mà không có API key?</strong> Dùng JSONPlaceholder — không cần key: <code style="font-family:'JetBrains Mono',monospace;color:var(--teal)">https://jsonplaceholder.typicode.com/posts/1</code></div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S4 — LAB 03
+════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-g">LAB 03</span>
+    <div>
+      <h2 class="sec-title">If / Switch — Logic rẽ nhánh</h2>
+      <p class="sec-sub">Phân luồng xử lý theo điều kiện, xây hệ thống routing data · Ước tính: 45 phút</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Bài toán thực tế</div>
+    <p class="sub" style="font-size:13.5px;color:var(--muted)">
+      Nhận điểm thi của học sinh (0-100), phân loại và gửi thông báo phù hợp theo nhóm:
+      <strong style="color:var(--text)"> ≥90 → Xuất sắc, ≥70 → Giỏi, ≥50 → Khá, &lt;50 → Cần cố gắng</strong>.
+    </p>
+
+    <div class="wf-canvas">
+      <div class="wf-heading">FLOW · LAB 03 — SWITCH + MULTI-BRANCH</div>
+      <div class="wf-row" style="align-items:flex-start;gap:0">
+        <div class="wnode-wrap wn-t" style="margin-top:60px">
+          <div class="wnode"><div class="w-ico">▶️</div><div class="w-name">Manual Trigger</div></div>
+          <div class="wnode-lbl">Input</div>
+        </div>
+        <div class="wf-arr" style="margin-top:38px"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-c" style="margin-top:60px">
+          <div class="wnode"><div class="w-ico">⚙️</div><div class="w-name">Set Score</div><div class="w-sub">score: 85</div></div>
+          <div class="wnode-lbl">Data</div>
+        </div>
+        <div class="wf-arr" style="margin-top:38px"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-a" style="margin-top:60px">
+          <div class="wnode"><div class="w-ico">🔀</div><div class="w-name">Switch Node</div><div class="w-sub">4 nhánh</div></div>
+          <div class="wnode-lbl">Route</div>
+        </div>
+        <div class="wf-arr" style="margin-top:38px"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wf-col" style="margin-top:0">
+          <div class="wnode-wrap wn-t">
+            <div class="wnode" style="min-width:80px"><div class="w-ico">🏆</div><div class="w-name" style="font-size:10px">Xuất sắc</div></div>
+          </div>
+          <div class="wnode-wrap wn-p">
+            <div class="wnode" style="min-width:80px"><div class="w-ico">⭐</div><div class="w-name" style="font-size:10px">Giỏi</div></div>
+          </div>
+          <div class="wnode-wrap wn-c">
+            <div class="wnode" style="min-width:80px"><div class="w-ico">👍</div><div class="w-name" style="font-size:10px">Khá</div></div>
+          </div>
+          <div class="wnode-wrap wn-a">
+            <div class="wnode" style="min-width:80px"><div class="w-ico">💪</div><div class="w-name" style="font-size:10px">Cần gắng</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình Switch Node</div>
+    <table class="tbl">
+      <tr><th>Output</th><th>Condition</th><th>Value</th></tr>
+      <tr><td><span class="c-g">Output 1</span></td><td>score ≥ 90</td><td>Xuất sắc 🏆</td></tr>
+      <tr><td><span class="c-b">Output 2</span></td><td>score ≥ 70</td><td>Giỏi ⭐</td></tr>
+      <tr><td><span class="c-y">Output 3</span></td><td>score ≥ 50</td><td>Khá 👍</td></tr>
+      <tr><td><span class="c-n">Output 4 (fallback)</span></td><td>— else —</td><td>Cần cố gắng 💪</td></tr>
+    </table>
+
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Mỗi nhánh output message</span><span class="cb-tag cb-tag-g">JS</span></div>
+      <div class="cb-body"><pre><span class="cm">// Đặt trong mỗi branch — thay đổi classification</span>
+<span class="kw">const</span> <span class="vr">item</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>;
+<span class="kw">const</span> <span class="vr">classifications</span> = {
+  <span class="st">'excellent'</span>: { <span class="pr">label</span>: <span class="st">'Xuất sắc'</span>, <span class="pr">emoji</span>: <span class="st">'🏆'</span>, <span class="pr">msg</span>: <span class="st">'Kết quả tuyệt vời!'</span> },
+  <span class="st">'good'</span>:      { <span class="pr">label</span>: <span class="st">'Giỏi'</span>,    <span class="pr">emoji</span>: <span class="st">'⭐'</span>, <span class="pr">msg</span>: <span class="st">'Rất tốt, tiếp tục!'</span> },
+  <span class="st">'average'</span>:   { <span class="pr">label</span>: <span class="st">'Khá'</span>,     <span class="pr">emoji</span>: <span class="st">'👍'</span>, <span class="pr">msg</span>: <span class="st">'Ổn, còn dư địa cải thiện.'</span> },
+  <span class="st">'poor'</span>:      { <span class="pr">label</span>: <span class="st">'Yếu'</span>,     <span class="pr">emoji</span>: <span class="st">'💪'</span>, <span class="pr">msg</span>: <span class="st">'Hãy cố gắng thêm nhé!'</span> }
+};
+
+<span class="kw">const</span> <span class="vr">c</span> = <span class="vr">classifications</span>.<span class="vr">excellent</span>; <span class="cm">// Thay theo nhánh</span>
+
+<span class="kw">return</span> [{
+  <span class="pr">json</span>: {
+    ...item,
+    <span class="pr">notification</span>: <span class="st">`${c.emoji} Điểm ${item.score}/100 — ${c.label}\n${c.msg}`</span>
+  }
+}];</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S5 — LAB 04
+════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-g">LAB 04</span>
+    <div>
+      <h2 class="sec-title">Schedule — Tự động hóa theo lịch</h2>
+      <p class="sec-sub">Cron trigger, báo cáo hàng ngày, timezone Việt Nam · Ước tính: 30 phút</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình Schedule Trigger</div>
+    <table class="tbl">
+      <tr><th>Lịch chạy</th><th>Cron expression</th><th>Ý nghĩa</th></tr>
+      <tr><td>Mỗi ngày 8:00 SA</td><td><code>0 8 * * *</code></td><td>Báo cáo sáng</td></tr>
+      <tr><td>Mỗi giờ</td><td><code>0 * * * *</code></td><td>Sync dữ liệu</td></tr>
+      <tr><td>Thứ 2 đầu tuần 9:00</td><td><code>0 9 * * 1</code></td><td>Weekly report</td></tr>
+      <tr><td>Mỗi 15 phút</td><td><code>*/15 * * * *</code></td><td>Health check</td></tr>
+      <tr><td>Ngày 1 mỗi tháng</td><td><code>0 0 1 * *</code></td><td>Monthly billing</td></tr>
+    </table>
+
+    <div class="info i-warn">
+      <span class="info-ico">🕐</span>
+      <div><strong style="color:var(--text)">Timezone quan trọng:</strong> Đặt <code style="font-family:'JetBrains Mono',monospace;color:var(--teal)">GENERIC_TIMEZONE=Asia/Ho_Chi_Minh</code> trong env Docker. Nếu không, cron sẽ chạy theo UTC (chậm hơn 7 tiếng).</div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Workflow — Báo cáo thời tiết hàng ngày</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Daily Report Generator</span><span class="cb-tag cb-tag-y">Schedule</span></div>
+      <div class="cb-body"><pre><span class="cm">// Chạy mỗi ngày 8:00 SA</span>
+<span class="kw">const</span> <span class="vr">now</span> = <span class="kw">new</span> <span class="fn">Date</span>().<span class="fn">toLocaleString</span>(<span class="st">'vi-VN'</span>, {
+  <span class="pr">timeZone</span>: <span class="st">'Asia/Ho_Chi_Minh'</span>,
+  <span class="pr">dateStyle</span>: <span class="st">'full'</span>,
+  <span class="pr">timeStyle</span>: <span class="st">'short'</span>
+});
+
+<span class="kw">return</span> [{
+  <span class="pr">json</span>: {
+    <span class="pr">reportTitle</span>: <span class="st">`📅 Báo cáo ngày ${now}`</span>,
+    <span class="pr">generatedAt</span>: <span class="fn">$now</span>.<span class="fn">toISO</span>(),
+    <span class="pr">dayOfWeek</span>: <span class="fn">$now</span>.<span class="fn">weekdayLong</span>,
+    <span class="pr">isWeekend</span>: [<span class="nm">6</span>, <span class="nm">7</span>].<span class="fn">includes</span>(<span class="fn">$now</span>.<span class="pr">weekday</span>)
+  }
+}];</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S6 — LAB 05
+════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-y">LAB 05</span>
+    <div>
+      <h2 class="sec-title">PostgreSQL — CRUD hoàn chỉnh</h2>
+      <p class="sec-sub">Kết nối DB, SELECT/INSERT/UPDATE/DELETE, error handling · Ước tính: 90 phút</p>
+    </div>
+  </div>
+
+  <div class="level-banner lb-inter">
+    <div class="lb-icon">🗄️</div>
+    <div class="lb-info">
+      <h3 style="color:var(--yellow)">Intermediate · Lab 05</h3>
+      <p>Quản lý dữ liệu thực tế với PostgreSQL — bước nền tảng cho mọi workflow nghiêm túc.</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Setup Database</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">PostgreSQL — Tạo bảng lab</span><span class="cb-tag cb-tag-b">SQL</span></div>
+      <div class="cb-body"><pre><span class="cm">-- Tạo bảng tasks để thực hành CRUD</span>
+<span class="kw">CREATE TABLE</span> tasks (
+  <span class="vr">id</span>          SERIAL PRIMARY KEY,
+  <span class="vr">title</span>       VARCHAR(<span class="nm">200</span>) NOT NULL,
+  <span class="vr">description</span> TEXT,
+  <span class="vr">status</span>      VARCHAR(<span class="nm">20</span>) DEFAULT <span class="st">'pending'</span>
+                <span class="kw">CHECK</span> (status <span class="kw">IN</span> (<span class="st">'pending'</span>, <span class="st">'in_progress'</span>, <span class="st">'done'</span>)),
+  <span class="vr">priority</span>    INTEGER DEFAULT <span class="nm">5</span> <span class="kw">CHECK</span> (priority BETWEEN <span class="nm">1</span> AND <span class="nm">10</span>),
+  <span class="vr">created_at</span>  TIMESTAMPTZ DEFAULT NOW(),
+  <span class="vr">updated_at</span>  TIMESTAMPTZ DEFAULT NOW()
+);
+
+<span class="cm">-- Seed data test</span>
+<span class="kw">INSERT INTO</span> tasks (title, status, priority) <span class="kw">VALUES</span>
+  (<span class="st">'Setup n8n workflows'</span>, <span class="st">'done'</span>, <span class="nm">9</span>),
+  (<span class="st">'Integrate Telegram bot'</span>, <span class="st">'in_progress'</span>, <span class="nm">7</span>),
+  (<span class="st">'Write documentation'</span>, <span class="st">'pending'</span>, <span class="nm">5</span>);</pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">4 Workflow CRUD cơ bản</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-icon">📥</div>
+        <div class="card-title" style="color:var(--green)">SELECT — Lấy danh sách</div>
+        <div class="card-desc">Webhook GET → PostgreSQL Execute → Respond to Webhook với JSON array tasks.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📤</div>
+        <div class="card-title" style="color:var(--blue)">INSERT — Tạo mới</div>
+        <div class="card-desc">Webhook POST → Validate data → PostgreSQL Insert → Return created item với id.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">✏️</div>
+        <div class="card-title" style="color:var(--yellow)">UPDATE — Cập nhật</div>
+        <div class="card-desc">Webhook PUT → Check tồn tại → PostgreSQL Update → Return updated item.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🗑️</div>
+        <div class="card-title" style="color:var(--n8n)">DELETE — Xóa</div>
+        <div class="card-desc">Webhook DELETE → Soft delete (update status) → Return success message.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Query mẫu cho PostgreSQL node</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">PostgreSQL Node — Parameterized Queries</span><span class="cb-tag cb-tag-b">SQL</span></div>
+      <div class="cb-body"><pre><span class="cm">-- SELECT với filter động (dùng Expression mode)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> tasks
+<span class="kw">WHERE</span> status = <span class="nm">$1</span>
+<span class="kw">ORDER BY</span> priority <span class="kw">DESC</span>, created_at <span class="kw">DESC</span>;
+<span class="cm">-- Query Params: {{ $json.status }}</span>
+
+<span class="cm">-- INSERT với return id</span>
+<span class="kw">INSERT INTO</span> tasks (title, description, priority)
+<span class="kw">VALUES</span> (<span class="nm">$1</span>, <span class="nm">$2</span>, <span class="nm">$3</span>)
+<span class="kw">RETURNING</span> *;
+<span class="cm">-- Query Params: $json.title, $json.description, $json.priority</span>
+
+<span class="cm">-- UPDATE</span>
+<span class="kw">UPDATE</span> tasks
+<span class="kw">SET</span> status = <span class="nm">$1</span>, updated_at = NOW()
+<span class="kw">WHERE</span> id = <span class="nm">$2</span>
+<span class="kw">RETURNING</span> *;
+<span class="cm">-- Query Params: $json.status, $json.id</span></pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S7 — LAB 06
+════════════════════════════════════ -->
+<div class="section" id="s7">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-y">LAB 06</span>
+    <div>
+      <h2 class="sec-title">Google Sheets — Sync &amp; Report tự động</h2>
+      <p class="sec-sub">OAuth Google, đọc/ghi Sheets, tạo báo cáo từ API data · Ước tính: 60 phút</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Workflow — Sync sales data vào Sheets hàng ngày</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">FLOW · LAB 06 — API → SHEETS SYNC</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">⏰</div><div class="w-name">Schedule<br>8:00 AM</div></div>
+          <div class="wnode-lbl">Daily</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">🌐</div><div class="w-name">HTTP<br>Request</div><div class="w-sub">Sales API</div></div>
+          <div class="wnode-lbl">Fetch</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">💻</div><div class="w-name">Code</div><div class="w-sub">Transform</div></div>
+          <div class="wnode-lbl">Map</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">📊</div><div class="w-name">Google<br>Sheets</div><div class="w-sub">Append rows</div></div>
+          <div class="wnode-lbl">Write</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-d">
+          <div class="wnode"><div class="w-ico">📨</div><div class="w-name">Telegram</div><div class="w-sub">Done notify</div></div>
+          <div class="wnode-lbl">Alert</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình Google Sheets node</div>
+    <table class="tbl">
+      <tr><th>Operation</th><th>Khi nào dùng</th></tr>
+      <tr><td><span class="c-g">Append Row</span></td><td>Thêm dữ liệu mới vào cuối sheet</td></tr>
+      <tr><td><span class="c-b">Read Rows</span></td><td>Đọc toàn bộ data từ sheet</td></tr>
+      <tr><td><span class="c-y">Update Row</span></td><td>Cập nhật hàng theo row number hoặc lookup</td></tr>
+      <tr><td><span class="c-n">Delete Row</span></td><td>Xóa hàng theo index</td></tr>
+      <tr><td><span class="c-p">Clear</span></td><td>Xóa sạch data (giữ header)</td></tr>
+    </table>
+
+    <div class="info i-note">
+      <span class="info-ico">🔐</span>
+      <div><strong style="color:var(--text)">Tạo OAuth credential:</strong> n8n Settings → Credentials → New → Google Sheets OAuth2. Làm theo wizard — cần Google Cloud Console project với Sheets API enabled.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S8 — LAB 07
+════════════════════════════════════ -->
+<div class="section" id="s8">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-y">LAB 07</span>
+    <div>
+      <h2 class="sec-title">Email + Telegram — Notification System</h2>
+      <p class="sec-sub">Bot Telegram nhận lệnh, alert qua email, đa kênh · Ước tính: 75 phút</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Tạo Telegram Bot</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-L"><div class="step-num step-num-g">1</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Tạo bot với BotFather</h4>
+          <p>Mở Telegram → tìm <strong>@BotFather</strong> → /newbot → đặt tên → nhận <strong>Bot Token</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num step-num-g">2</div><div class="step-line"></div></div>
+        <div class="step-B">
+          <h4>Lấy Chat ID</h4>
+          <p>Gửi tin nhắn cho bot → truy cập <code style="font-family:'JetBrains Mono',monospace;color:var(--teal)">https://api.telegram.org/bot{TOKEN}/getUpdates</code> → lấy <strong>chat.id</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-L"><div class="step-num step-num-g">3</div></div>
+        <div class="step-B">
+          <h4>Thêm Telegram Trigger vào n8n</h4>
+          <p>Thêm <strong>Telegram Trigger</strong> node → nhập Bot Token → chọn <strong>Message</strong> event → activate workflow.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Code — Bot nhận lệnh &amp; respond</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Telegram Command Router</span><span class="cb-tag">Telegram</span></div>
+      <div class="cb-body"><pre><span class="kw">const</span> <span class="vr">msg</span>     = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>.<span class="pr">message</span>;
+<span class="kw">const</span> <span class="vr">text</span>    = <span class="vr">msg</span>.<span class="pr">text</span>.<span class="fn">trim</span>().<span class="fn">toLowerCase</span>();
+<span class="kw">const</span> <span class="vr">chatId</span>  = <span class="vr">msg</span>.<span class="pr">chat</span>.<span class="pr">id</span>;
+
+<span class="kw">const</span> <span class="vr">commands</span> = {
+  <span class="st">'/start'</span>:  <span class="st">'👋 Xin chào! Bot đang hoạt động.\nCác lệnh: /status /report /help'</span>,
+  <span class="st">'/status'</span>: <span class="st">'✅ Tất cả workflow đang chạy bình thường.'</span>,
+  <span class="st">'/report'</span>: <span class="st">'📊 Đang tạo báo cáo, chờ 5 giây...'</span>,
+  <span class="st">'/help'</span>:   <span class="st">'📖 Danh sách lệnh:\n/status - Kiểm tra hệ thống\n/report - Tạo báo cáo'</span>
+};
+
+<span class="kw">const</span> <span class="vr">reply</span> = <span class="vr">commands</span>[<span class="vr">text</span>] || <span class="st">`❓ Lệnh không hợp lệ: "${text}"`</span>;
+
+<span class="kw">return</span> [{
+  <span class="pr">json</span>: { <span class="pr">chatId</span>: <span class="vr">chatId</span>, <span class="pr">text</span>: <span class="vr">reply</span>, <span class="pr">command</span>: <span class="vr">text</span> }
+}];</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S9 — LAB 08
+════════════════════════════════════ -->
+<div class="section" id="s9">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-y">LAB 08</span>
+    <div>
+      <h2 class="sec-title">Webhook — Tự xây dựng REST API</h2>
+      <p class="sec-sub">n8n làm API server, xác thực request, respond JSON · Ước tính: 90 phút</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Webhook node — Các loại response</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Respond to Webhook Node — JSON Response</span><span class="cb-tag cb-tag-b">Webhook</span></div>
+      <div class="cb-body"><pre><span class="cm">// Trong "Respond to Webhook" node</span>
+<span class="cm">// Response Code: 200</span>
+<span class="cm">// Response Body (expression mode):</span>
+
+{
+  <span class="st">"success"</span>: <span class="nm">true</span>,
+  <span class="st">"data"</span>: <span class="st">"{{ $json.result }}"</span>,
+  <span class="st">"timestamp"</span>: <span class="st">"{{ $now.toISO() }}"</span>,
+  <span class="st">"requestId"</span>: <span class="st">"{{ $execution.id }}"</span>
+}
+
+<span class="cm">// Với xác thực API Key trong header</span>
+<span class="cm">// Header Check: x-api-key === process.env.API_KEY</span></pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Auth middleware bằng Code node</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Node — Validate API Key</span><span class="cb-tag cb-tag-g">Auth</span></div>
+      <div class="cb-body"><pre><span class="kw">const</span> <span class="vr">apiKey</span>     = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>.<span class="pr">headers</span>[<span class="st">'x-api-key'</span>];
+<span class="kw">const</span> <span class="vr">validKey</span>   = <span class="st">'my-secret-key-2024'</span>; <span class="cm">// Nên dùng n8n Credentials</span>
+
+<span class="kw">if</span> (!<span class="vr">apiKey</span> || <span class="vr">apiKey</span> !== <span class="vr">validKey</span>) {
+  <span class="cm">// Kết nối output với "Respond to Webhook" 401</span>
+  <span class="kw">throw new Error</span>(<span class="st">'Unauthorized: Invalid API key'</span>);
+}
+
+<span class="cm">// Tiếp tục xử lý nếu auth pass</span>
+<span class="kw">return</span> <span class="fn">$input</span>.<span class="pr">all</span>();</pre></div>
+    </div>
+  </div>
+
+  <div class="info i-teal">
+    <span class="info-ico">🔗</span>
+    <div><strong style="color:var(--text)">URL Webhook:</strong> Khi tạo Webhook node trong n8n, bạn sẽ thấy URL dạng <code style="font-family:'JetBrains Mono',monospace;color:var(--teal)">https://your-n8n.com/webhook/abc123</code>. Dùng URL này để gọi từ app ngoài.</div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S10 — LAB 09
+════════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-g" style="color:var(--n8n);background:var(--n8n-dim);border-color:var(--n8n-glow)">LAB 09</span>
+    <div>
+      <h2 class="sec-title">AI Agent cơ bản — Chatbot với Tools</h2>
+      <p class="sec-sub">GPT-4o + Memory + Custom Tools + Telegram · Ước tính: 120 phút</p>
+    </div>
+  </div>
+
+  <div class="level-banner lb-advanced">
+    <div class="lb-icon">🤖</div>
+    <div class="lb-info">
+      <h3 style="color:var(--n8n)">Advanced · Lab 09</h3>
+      <p>Xây dựng AI Agent thực tế — agent có bộ nhớ và có thể gọi tools để tìm kiếm, tính toán, query DB.</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Kiến trúc AI Agent</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">ARCHITECTURE · LAB 09 — AI AGENT + TOOLS</div>
+      <div class="wf-row" style="align-items:flex-start;gap:0">
+        <div class="wnode-wrap wn-t" style="margin-top:55px">
+          <div class="wnode"><div class="w-ico">📨</div><div class="w-name">Telegram<br>Trigger</div></div>
+          <div class="wnode-lbl">Input</div>
+        </div>
+        <div class="wf-arr" style="margin-top:33px"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-a" style="margin-top:55px">
+          <div class="wnode"><div class="w-ico">🤖</div><div class="w-name">AI Agent</div><div class="w-sub">GPT-4o</div></div>
+          <div class="wnode-lbl">Brain</div>
+        </div>
+        <div class="wf-arr" style="margin-top:33px"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wf-col">
+          <div class="wnode-wrap wn-p">
+            <div class="wnode" style="min-width:90px"><div class="w-ico">🌐</div><div class="w-name" style="font-size:10px">Web Search</div></div>
+            <div class="wnode-lbl">Tool 1</div>
+          </div>
+          <div class="wnode-wrap wn-d">
+            <div class="wnode" style="min-width:90px"><div class="w-ico">🗄️</div><div class="w-name" style="font-size:10px">DB Query</div></div>
+            <div class="wnode-lbl">Tool 2</div>
+          </div>
+          <div class="wnode-wrap wn-c">
+            <div class="wnode" style="min-width:90px"><div class="w-ico">🧮</div><div class="w-name" style="font-size:10px">Calculator</div></div>
+            <div class="wnode-lbl">Tool 3</div>
+          </div>
+        </div>
+        <div class="wf-arr" style="margin-top:33px"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l" style="margin-top:55px">
+          <div class="wnode"><div class="w-ico">💾</div><div class="w-name">Window<br>Memory</div></div>
+          <div class="wnode-lbl">Memory</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">System Prompt hiệu quả</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">AI Agent — System Prompt</span><span class="cb-tag">Prompt</span></div>
+      <div class="cb-body"><pre><span class="cm">Bạn là trợ lý thông minh được tích hợp vào hệ thống n8n.</span>
+<span class="cm">Ngày giờ hiện tại: {{ $now.toFormat('dd/MM/yyyy HH:mm') }} (GMT+7)</span>
+
+<span class="cm">## Khả năng của bạn:</span>
+<span class="cm">- Tìm kiếm thông tin mới nhất qua web_search</span>
+<span class="cm">- Tra cứu dữ liệu nội bộ qua query_database</span>
+<span class="cm">- Tính toán qua calculator</span>
+
+<span class="cm">## Quy tắc:</span>
+<span class="cm">- Trả lời ngắn gọn, dùng emoji phù hợp</span>
+<span class="cm">- Luôn nêu nguồn khi tìm kiếm web</span>
+<span class="cm">- Nếu không biết → nói thật, đừng bịa</span>
+<span class="cm">- Dùng tiếng Việt trừ khi user dùng tiếng khác</span></pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Tool Definition — Calculator</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Code Tool — Calculator</span><span class="cb-tag cb-tag-y">Tool</span></div>
+      <div class="cb-body"><pre><span class="cm">// Tool Name: calculator</span>
+<span class="cm">// Description: "Use to evaluate mathematical expressions. Input: math expression string"</span>
+
+<span class="kw">const</span> <span class="vr">expression</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>.<span class="pr">query</span>;
+
+<span class="kw">try</span> {
+  <span class="cm">// Dùng Function để eval an toàn</span>
+  <span class="kw">const</span> <span class="vr">allowed</span> = <span class="nm">/^[\d\s\+\-\*\/\(\)\.\,\%\^]+$/</span>;
+  <span class="kw">if</span> (!<span class="vr">allowed</span>.<span class="fn">test</span>(<span class="vr">expression</span>)) <span class="kw">throw new Error</span>(<span class="st">'Invalid expression'</span>);
+
+  <span class="kw">const</span> <span class="vr">result</span> = <span class="kw">new</span> <span class="fn">Function</span>(<span class="st">`"use strict"; return (${expression})`</span>)();
+  <span class="kw">return</span> [{ <span class="pr">json</span>: { <span class="pr">result</span>: <span class="vr">result</span>, <span class="pr">expression</span>: <span class="vr">expression</span> } }];
+} <span class="kw">catch</span>(<span class="vr">e</span>) {
+  <span class="kw">return</span> [{ <span class="pr">json</span>: { <span class="pr">error</span>: <span class="st">`Cannot evaluate: ${expression}`</span> } }];
+}</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S11 — LAB 10
+════════════════════════════════════ -->
+<div class="section" id="s11">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-g" style="color:var(--n8n);background:var(--n8n-dim);border-color:var(--n8n-glow)">LAB 10</span>
+    <div>
+      <h2 class="sec-title">RAG Pipeline — Hỏi đáp tài liệu nội bộ</h2>
+      <p class="sec-sub">PDF → Chunk → Embed → Vector DB → Q&amp;A Chatbot · Ước tính: 150 phút</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Pipeline RAG 2 giai đoạn</div>
+    <div class="grid-2">
+      <div class="card" style="border-color:rgba(91,168,255,.3)">
+        <div class="card-icon">📥</div>
+        <div class="card-title" style="color:var(--blue)">Giai đoạn 1 — Ingest</div>
+        <div class="card-desc">Upload PDF → Extract text → Chunk (500 tokens) → Embed (OpenAI) → Lưu Supabase/Pinecone. Chạy 1 lần khi có tài liệu mới.</div>
+      </div>
+      <div class="card" style="border-color:rgba(64,216,142,.3)">
+        <div class="card-icon">💬</div>
+        <div class="card-title" style="color:var(--green)">Giai đoạn 2 — Query</div>
+        <div class="card-desc">User hỏi → Embed câu hỏi → Similarity search → Lấy top-K chunks → Inject context vào LLM → Trả lời.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Workflow Ingest tài liệu</div>
+    <div class="wf-canvas">
+      <div class="wf-heading">FLOW · PHASE 1 — DOCUMENT INGESTION</div>
+      <div class="wf-row">
+        <div class="wnode-wrap wn-p">
+          <div class="wnode"><div class="w-ico">📂</div><div class="w-name">Read<br>PDF File</div></div>
+          <div class="wnode-lbl">Input</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-l">
+          <div class="wnode"><div class="w-ico">✂️</div><div class="w-name">Text<br>Splitter</div><div class="w-sub">500 tokens</div></div>
+          <div class="wnode-lbl">Chunk</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-c">
+          <div class="wnode"><div class="w-ico">🧠</div><div class="w-name">Embeddings</div><div class="w-sub">text-embedding-3</div></div>
+          <div class="wnode-lbl">Embed</div>
+        </div>
+        <div class="wf-arr"><div class="arr-line"></div><div class="arr-head"></div></div>
+        <div class="wnode-wrap wn-t">
+          <div class="wnode"><div class="w-ico">🗃️</div><div class="w-name">Supabase<br>Vector</div><div class="w-sub">Upsert</div></div>
+          <div class="wnode-lbl">Store</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Cấu hình các node chính</div>
+    <table class="tbl">
+      <tr><th>Node</th><th>Model / Config</th><th>Settings</th></tr>
+      <tr><td>Text Splitter</td><td>Recursive Character</td><td>Chunk size: 500, Overlap: 50</td></tr>
+      <tr><td>Embeddings</td><td><code>text-embedding-3-small</code></td><td>OpenAI credential</td></tr>
+      <tr><td>Vector Store</td><td>Supabase Vector / Pinecone</td><td>Collection: "documents"</td></tr>
+      <tr><td>LLM (Query)</td><td><code>gpt-4o-mini</code></td><td>Temperature: 0.1</td></tr>
+      <tr><td>K results</td><td>4–6 chunks</td><td>Top-K similarity search</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S12 — LAB 11
+════════════════════════════════════ -->
+<div class="section" id="s12">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-g" style="color:var(--n8n);background:var(--n8n-dim);border-color:var(--n8n-glow)">LAB 11</span>
+    <div>
+      <h2 class="sec-title">Sub-Workflow — Kiến trúc module hóa</h2>
+      <p class="sec-sub">Tách logic vào sub-workflow tái sử dụng, error handling phân tầng · Ước tính: 90 phút</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Pattern — Parent gọi nhiều Sub-Workflows</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Execute Workflow Node — Gọi Sub-Workflow</span><span class="cb-tag cb-tag-p">Sub-WF</span></div>
+      <div class="cb-body"><pre><span class="cm">// Trong "Execute Workflow" node:</span>
+<span class="cm">// Source: Database (chọn workflow con theo ID)</span>
+<span class="cm">// Wait For Sub-Workflow: TRUE (sync)</span>
+
+<span class="cm">// Truyền data sang sub-workflow:</span>
+<span class="cm">// Fields to Send — thêm từng field cần truyền</span>
+
+<span class="cm">// Nhận kết quả từ sub-workflow:</span>
+<span class="cm">// $json.result, $json.error, v.v.</span>
+
+<span class="cm">// Sub-workflow kết thúc bằng "Execute Workflow Trigger"</span>
+<span class="cm">// (để nhận params) và output thông thường.</span>
+
+<span class="cm">// Pattern hay dùng:</span>
+<span class="cm">// Parent → Execute Sub "validate-data" → Execute Sub "process" → Execute Sub "notify"</span></pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Error Workflow — Alert khi sub-workflow fail</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">Error Workflow Template</span><span class="cb-tag">Error</span></div>
+      <div class="cb-body"><pre><span class="cm">// Code Node trong Error Workflow</span>
+<span class="cm">// Settings → Error Workflow → chọn workflow này</span>
+
+<span class="kw">const</span> <span class="vr">err</span> = <span class="fn">$input</span>.<span class="pr">first</span>().<span class="pr">json</span>;
+
+<span class="kw">return</span> [{
+  <span class="pr">json</span>: {
+    <span class="pr">alert</span>: <span class="st">`🚨 Workflow Failed!\n</span>
+<span class="st">📌 Name: ${err.workflow.name}\n</span>
+<span class="st">❌ Error: ${err.execution.error.message}\n</span>
+<span class="st">🕐 Time: ${$now.toFormat('dd/MM/yyyy HH:mm')}\n</span>
+<span class="st">🔗 ID: ${err.execution.id}`</span>
+  }
+}];</pre></div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S13 — LAB 12
+════════════════════════════════════ -->
+<div class="section" id="s13">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-p">LAB 12</span>
+    <div>
+      <h2 class="sec-title">Production — Docker + Nginx + Monitoring</h2>
+      <p class="sec-sub">Deploy self-hosted, SSL, backup tự động, monitoring · Ước tính: 180 phút</p>
+    </div>
+  </div>
+
+  <div class="level-banner lb-expert">
+    <div class="lb-icon">🏗️</div>
+    <div class="lb-info">
+      <h3 style="color:var(--purple)">Expert · Lab 12</h3>
+      <p>Triển khai n8n production-grade: bảo mật, hiệu năng, khả năng khôi phục, giám sát.</p>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Nginx Reverse Proxy config</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">/etc/nginx/sites-available/n8n</span><span class="cb-tag cb-tag-p">Nginx</span></div>
+      <div class="cb-body"><pre><span class="kw">server</span> {
+    <span class="pr">listen</span> <span class="nm">443</span> ssl http2;
+    <span class="pr">server_name</span> n8n.yourdomain.com;
+
+    <span class="pr">ssl_certificate</span>     /etc/letsencrypt/live/n8n.yourdomain.com/fullchain.pem;
+    <span class="pr">ssl_certificate_key</span> /etc/letsencrypt/live/n8n.yourdomain.com/privkey.pem;
+
+    <span class="pr">location</span> / {
+        <span class="pr">proxy_pass</span>         http://localhost:5678;
+        <span class="pr">proxy_http_version</span> 1.1;
+        <span class="pr">proxy_set_header</span>   Upgrade $http_upgrade;
+        <span class="pr">proxy_set_header</span>   Connection <span class="st">'upgrade'</span>;
+        <span class="pr">proxy_set_header</span>   Host $host;
+        <span class="pr">proxy_set_header</span>   X-Real-IP $remote_addr;
+        <span class="pr">proxy_cache_bypass</span> $http_upgrade;
+
+        <span class="cm"># Tăng timeout cho long-running workflows</span>
+        <span class="pr">proxy_read_timeout</span>  <span class="nm">300s</span>;
+        <span class="pr">proxy_send_timeout</span>  <span class="nm">300s</span>;
+    }
+}</pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Backup tự động hàng ngày</div>
+    <div class="cblock">
+      <div class="cb-head"><div class="cb-dots"><div class="cbd r"></div><div class="cbd y"></div><div class="cbd g"></div></div><span class="cb-name">backup-n8n.sh — Chạy bằng cron 2:00 AM</span><span class="cb-tag cb-tag-g">Bash</span></div>
+      <div class="cb-body"><pre><span class="ht">#!/bin/bash</span>
+<span class="vr">DATE</span>=<span class="fn">$(date +%Y%m%d_%H%M%S)</span>
+<span class="vr">BACKUP_DIR</span>=<span class="st">"/backups/n8n"</span>
+<span class="vr">KEEP_DAYS</span>=<span class="nm">30</span>
+
+<span class="fn">mkdir</span> -p <span class="st">"$BACKUP_DIR"</span>
+
+<span class="cm"># Backup PostgreSQL</span>
+<span class="fn">docker</span> exec n8n-postgres pg_dump -U n8n n8n \
+  | gzip > <span class="st">"$BACKUP_DIR/db_$DATE.sql.gz"</span>
+
+<span class="cm"># Backup n8n data volume</span>
+<span class="fn">docker</span> run --rm \
+  -v n8n_data:/data \
+  -v <span class="st">"$BACKUP_DIR"</span>:/backup \
+  alpine tar czf /backup/n8n_data_<span class="st">"$DATE"</span>.tar.gz /data
+
+<span class="cm"># Xóa backup cũ hơn 30 ngày</span>
+<span class="fn">find</span> <span class="st">"$BACKUP_DIR"</span> -name <span class="st">"*.gz"</span> -mtime +<span class="st">"$KEEP_DAYS"</span> -delete
+
+<span class="fn">echo</span> <span class="st">"✅ Backup completed: $DATE"</span></pre></div>
+    </div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Checklist Production</div>
+    <div class="grid-2">
+      <div class="card" style="border-color:rgba(64,216,142,.25)">
+        <div class="card-icon">🔒</div>
+        <div class="card-title" style="color:var(--green)">Security</div>
+        <div class="card-desc">✅ Basic Auth bật<br>✅ SSL/TLS (Let's Encrypt)<br>✅ Firewall chỉ mở 80, 443, 22<br>✅ DB không expose ra ngoài</div>
+      </div>
+      <div class="card" style="border-color:rgba(91,168,255,.25)">
+        <div class="card-icon">⚡</div>
+        <div class="card-title" style="color:var(--blue)">Performance</div>
+        <div class="card-desc">✅ Worker mode (queue)<br>✅ Redis cho queue<br>✅ DB trên SSD<br>✅ Executon log giới hạn</div>
+      </div>
+      <div class="card" style="border-color:rgba(255,208,96,.25)">
+        <div class="card-icon">💾</div>
+        <div class="card-title" style="color:var(--yellow)">Reliability</div>
+        <div class="card-desc">✅ Backup hàng ngày<br>✅ Error Workflow cho mọi WF<br>✅ Retry mechanism<br>✅ Health check URL</div>
+      </div>
+      <div class="card" style="border-color:rgba(160,122,244,.25)">
+        <div class="card-icon">📈</div>
+        <div class="card-title" style="color:var(--purple)">Monitoring</div>
+        <div class="card-desc">✅ Uptime Kuma<br>✅ Alert Telegram khi down<br>✅ Log execution history<br>✅ Disk usage alert</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="dv">
+
+<!-- ════════════════════════════════════
+     S14 — CHEAT SHEET
+════════════════════════════════════ -->
+<div class="section" id="s14">
+  <div class="sec-head">
+    <span class="sec-tag sec-tag-b">REF</span>
+    <div>
+      <h2 class="sec-title">Cheat Sheet &amp; Tips thực chiến</h2>
+      <p class="sec-sub">Expressions, patterns, và tips hay dùng nhất khi làm lab</p>
+    </div>
+  </div>
+
+  <div class="cheat-grid">
+    <div class="cheat-card">
+      <h4>📌 Expressions cơ bản</h4>
+      <div class="cheat-row"><span class="ck">Data từ node trước</span><span class="cv">{{ $json.fieldName }}</span></div>
+      <div class="cheat-row"><span class="ck">Từ node cụ thể</span><span class="cv">{{ $('NodeName').first().json.f }}</span></div>
+      <div class="cheat-row"><span class="ck">Thời gian hiện tại</span><span class="cv">{{ $now.toISO() }}</span></div>
+      <div class="cheat-row"><span class="ck">Giờ VN format</span><span class="cv">{{ $now.toFormat('dd/MM HH:mm') }}</span></div>
+      <div class="cheat-row"><span class="ck">Execution ID</span><span class="cv">{{ $execution.id }}</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>💻 Code Node Tips</h4>
+      <div class="cheat-row"><span class="ck">Lấy tất cả items</span><span class="cv">$input.all()</span></div>
+      <div class="cheat-row"><span class="ck">Item đầu tiên</span><span class="cv">$input.first().json</span></div>
+      <div class="cheat-row"><span class="ck">Return 1 item</span><span class="cv">[{ json: {...} }]</span></div>
+      <div class="cheat-row"><span class="ck">Return nhiều items</span><span class="cv">[{json:a},{json:b}]</span></div>
+      <div class="cheat-row"><span class="ck">Pass through</span><span class="cv">return $input.all()</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>🔗 HTTP Request Tips</h4>
+      <div class="cheat-row"><span class="ck">Auth Bearer</span><span class="cv">Header: Authorization</span></div>
+      <div class="cheat-row"><span class="ck">JSON body</span><span class="cv">Body: JSON (raw)</span></div>
+      <div class="cheat-row"><span class="ck">Dynamic URL</span><span class="cv">= "https://api.x/{{$json.id}}"</span></div>
+      <div class="cheat-row"><span class="ck">Ignore SSL error</span><span class="cv">Options → SSL</span></div>
+      <div class="cheat-row"><span class="ck">Pagination</span><span class="cv">Options → Paginate</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>🗄️ PostgreSQL Tips</h4>
+      <div class="cheat-row"><span class="ck">Parameterized</span><span class="cv">WHERE id = $1</span></div>
+      <div class="cheat-row"><span class="ck">Return inserted</span><span class="cv">RETURNING *</span></div>
+      <div class="cheat-row"><span class="ck">Upsert</span><span class="cv">ON CONFLICT DO UPDATE</span></div>
+      <div class="cheat-row"><span class="ck">Timestamp VN</span><span class="cv">TIMESTAMPTZ DEFAULT NOW()</span></div>
+      <div class="cheat-row"><span class="ck">Query mode</span><span class="cv">Execute Query (custom SQL)</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>🔧 Debug Tips</h4>
+      <div class="cheat-row"><span class="ck">Xem input node</span><span class="cv">Click node → Input tab</span></div>
+      <div class="cheat-row"><span class="ck">console.log</span><span class="cv">Xem Executions log</span></div>
+      <div class="cheat-row"><span class="ck">Test partial</span><span class="cv">Pin data từ node trước</span></div>
+      <div class="cheat-row"><span class="ck">Error detail</span><span class="cv">Executions → Failed → Details</span></div>
+      <div class="cheat-row"><span class="ck">Manual test</span><span class="cv">Execute node (single)</span></div>
+    </div>
+    <div class="cheat-card">
+      <h4>⚡ Performance Tips</h4>
+      <div class="cheat-row"><span class="ck">Loop items</span><span class="cv">SplitInBatches node</span></div>
+      <div class="cheat-row"><span class="ck">Batch size</span><span class="cv">10–50 items/batch</span></div>
+      <div class="cheat-row"><span class="ck">Merge results</span><span class="cv">Merge node (after loop)</span></div>
+      <div class="cheat-row"><span class="ck">Avoid loop</span><span class="cv">Dùng bulk SQL thay forEach</span></div>
+      <div class="cheat-row"><span class="ck">Timeout</span><span class="cv">Execution timeout: 3600s</span></div>
+    </div>
+  </div>
+
+  <div class="sub" style="margin-top:28px">
+    <div class="sub-title">Lỗi thường gặp &amp; cách sửa</div>
+    <table class="tbl">
+      <tr><th>Lỗi</th><th>Nguyên nhân</th><th>Cách sửa</th></tr>
+      <tr><td><span class="c-n">Cannot read property of undefined</span></td><td>$json.field không tồn tại</td><td>Dùng <code>$json.field ?? 'default'</code></td></tr>
+      <tr><td><span class="c-n">Workflow timeout</span></td><td>Workflow chạy quá lâu</td><td>Tăng Execution Timeout hoặc tách sub-WF</td></tr>
+      <tr><td><span class="c-n">No items returned</span></td><td>Node filter quá chặt</td><td>Kiểm tra IF/Switch condition</td></tr>
+      <tr><td><span class="c-n">Credential error</span></td><td>Token hết hạn</td><td>Reconnect OAuth hoặc refresh token</td></tr>
+      <tr><td><span class="c-n">Webhook 404</span></td><td>Workflow chưa activate</td><td>Click Activate toggle (góc trên phải)</td></tr>
+      <tr><td><span class="c-n">DB connection refused</span></td><td>Sai host/port trong Docker</td><td>Dùng service name, không phải localhost</td></tr>
+    </table>
+  </div>
+
+  <div class="info i-ok" style="margin-top:22px">
+    <span class="info-ico">🎓</span>
+    <div style="font-size:13.5px">
+      <strong style="color:var(--text)">Tài nguyên tiếp theo:</strong><br>
+      <span style="color:var(--muted)">
+        <a href="https://docs.n8n.io" style="color:var(--n8n)">docs.n8n.io</a> — Tài liệu chính thức &nbsp;·&nbsp;
+        <a href="https://n8n.io/workflows" style="color:var(--n8n)">n8n.io/workflows</a> — 1000+ templates &nbsp;·&nbsp;
+        <a href="https://community.n8n.io" style="color:var(--n8n)">community.n8n.io</a> — Hỏi đáp cộng đồng &nbsp;·&nbsp;
+        <a href="https://www.youtube.com/@n8n-io" style="color:var(--n8n)">YouTube n8n</a> — Video tutorials
+      </span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<div class="footer">
+  <span>🧪 n8n Labs · Lộ trình thực hành từ Cơ bản đến Nâng cao</span>
+  <span style="margin-left:auto;color:var(--faint)">14 Labs · Beginner → Expert · ~35 giờ thực hành</span>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ── Progress bar khi scroll ──
+window.addEventListener('scroll', () => {
+  const el = document.documentElement;
+  const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+  document.getElementById('pbar').style.width = pct + '%';
+}, { passive: true });
+
+// ── Active nav link khi scroll ──
+const sections = document.querySelectorAll('.section[id]');
+const navLinks  = document.querySelectorAll('.nav-link');
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
