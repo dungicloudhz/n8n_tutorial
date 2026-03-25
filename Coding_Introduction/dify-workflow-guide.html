@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dify AI — Hướng dẫn Workflow toàn tập cho Developer</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #08090d;
+            --bg2: #0e1018;
+            --surface: #131520;
+            --surface2: #1a1d2e;
+            --surface3: #21253a;
+            --border: #252840;
+            --border2: #2f3350;
+            --accent: #7c6af8;
+            --accent-lt: #a99dfa;
+            --amber: #f5a623;
+            --green: #3ecf8e;
+            --red: #f06b6b;
+            --sky: #38bdf8;
+            --text: #dde1f5;
+            --muted: #6b7094;
+            --muted2: #8b90b8;
+            --nav-w: 276px;
+            --radius: 10px;
+            --font-body: 'Instrument Sans', sans-serif;
+            --font-head: 'Syne', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+        html { scroll-behavior: smooth; font-size: 15px }
+        body { font-family: var(--font-body); background: var(--bg); color: var(--text); display: flex; min-height: 100vh; line-height: 1.75 }
+        ::-webkit-scrollbar { width: 5px; height: 5px }
+        ::-webkit-scrollbar-track { background: transparent }
+        ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px }
+
+        /* ══ SIDEBAR ══ */
+        #sidebar {
+            width: var(--nav-w); min-height: 100vh; background: var(--bg2);
+            border-right: 1px solid var(--border); position: fixed; top: 0; left: 0;
+            bottom: 0; overflow-y: auto; z-index: 200; display: flex;
+            flex-direction: column; transition: transform .3s ease;
+        }
+        .sb-header {
+            padding: 24px 20px 18px; border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(124,106,248,.06) 0%, transparent 100%);
+        }
+        .sb-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 10px }
+        .sb-orb {
+            width: 34px; height: 34px; border-radius: 9px;
+            background: linear-gradient(135deg, var(--accent) 0%, #a55af4 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; font-weight: 800; color: #fff;
+            font-family: var(--font-mono); letter-spacing: -.05em;
+            box-shadow: 0 4px 18px rgba(124,106,248,.35);
+        }
+        .sb-title { font-family: var(--font-head); font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: -.02em }
+        .sb-ver {
+            display: inline-flex; align-items: center; gap: 5px; font-size: 11px;
+            color: var(--muted); font-family: var(--font-mono); background: var(--surface2);
+            padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border)
+        }
+        .sb-ver .dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite }
+        @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.4 } }
+
+        .sb-progress { padding: 14px 20px 10px; border-bottom: 1px solid var(--border) }
+        .sb-progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 6px }
+        .sb-progress-bar { height: 3px; background: var(--border); border-radius: 99px; overflow: hidden }
+        .sb-progress-fill {
+            height: 100%; background: linear-gradient(90deg, var(--accent), #a55af4);
+            border-radius: 99px; width: 0%; transition: width .4s ease
+        }
+
+        .sb-section { padding: 18px 14px 6px }
+        .sb-section-label {
+            font-size: 10px; color: var(--muted); letter-spacing: .1em;
+            text-transform: uppercase; font-weight: 600; padding: 0 6px; margin-bottom: 5px
+        }
+        .sb-link {
+            display: flex; align-items: center; gap: 9px; padding: 7px 10px;
+            border-radius: 8px; text-decoration: none; color: var(--muted2);
+            font-size: 13px; transition: all .18s; cursor: pointer; margin-bottom: 1px; position: relative;
+        }
+        .sb-link:hover { background: var(--surface); color: var(--text) }
+        .sb-link.active { background: rgba(124,106,248,.12); color: var(--accent-lt) }
+        .sb-link.active::before {
+            content: ''; position: absolute; left: 0; top: 20%; bottom: 20%;
+            width: 2px; background: var(--accent); border-radius: 1px
+        }
+        .sb-icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0 }
+        .sb-badge {
+            margin-left: auto; font-size: 10px; background: rgba(124,106,248,.18);
+            color: var(--accent-lt); padding: 1px 7px; border-radius: 99px; font-family: var(--font-mono)
+        }
+        .sb-badge.green { background: rgba(62,207,142,.15); color: var(--green) }
+        .sb-badge.amber { background: rgba(245,166,35,.15); color: var(--amber) }
+        .sb-footer { margin-top: auto; padding: 14px 20px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); font-family: var(--font-mono) }
+
+        /* ══ MAIN ══ */
+        main { margin-left: var(--nav-w); flex: 1; padding: 0; max-width: 900px }
+        .section {
+            padding: 60px 64px; border-bottom: 1px solid var(--border);
+            scroll-margin-top: 20px; animation: fadeUp .5s ease both
+        }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
+
+        .section-tag {
+            display: inline-flex; align-items: center; gap: 7px; font-size: 11px;
+            letter-spacing: .1em; text-transform: uppercase; color: var(--accent-lt);
+            font-weight: 600; font-family: var(--font-mono); margin-bottom: 14px
+        }
+        .section-tag::before { content: ''; width: 22px; height: 1px; background: currentColor }
+
+        h1 { font-family: var(--font-head); font-size: 48px; font-weight: 800; line-height: 1.1; letter-spacing: -.03em; margin-bottom: 20px }
+        h1 .grad { background: linear-gradient(135deg, #fff 0%, var(--accent-lt) 60%, #a55af4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent }
+        h2 { font-family: var(--font-head); font-size: 30px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 14px; display: flex; align-items: center; gap: 12px; color: var(--text) }
+        h3 { font-size: 15px; font-weight: 600; color: var(--text); margin: 28px 0 10px; display: flex; align-items: center; gap: 8px }
+        p { color: #9fa3c4; margin-bottom: 14px }
+
+        /* ══ CALLOUTS ══ */
+        .callout { border-left: 3px solid var(--accent); padding: 14px 18px; background: rgba(124,106,248,.07); border-radius: 0 8px 8px 0; margin: 18px 0; font-size: 13.5px; color: #bfc3e0 }
+        .callout-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-lt); margin-bottom: 5px; display: flex; align-items: center; gap: 5px; font-family: var(--font-mono) }
+        .callout.warn { border-color: var(--amber); background: rgba(245,166,35,.07) }
+        .callout.warn .callout-label { color: var(--amber) }
+        .callout.good { border-color: var(--green); background: rgba(62,207,142,.07) }
+        .callout.good .callout-label { color: var(--green) }
+        .callout.err { border-color: var(--red); background: rgba(240,107,107,.07) }
+        .callout.err .callout-label { color: var(--red) }
+        .callout.sky { border-color: var(--sky); background: rgba(56,189,248,.07) }
+        .callout.sky .callout-label { color: var(--sky) }
+
+        /* ══ CARDS ══ */
+        .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0 }
+        .cards.col3 { grid-template-columns: 1fr 1fr 1fr }
+        .card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 20px; transition: border-color .2s, transform .2s, box-shadow .2s; cursor: default
+        }
+        .card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(124,106,248,.12) }
+        .card-ico { font-size: 22px; margin-bottom: 10px }
+        .card-title { font-weight: 600; font-size: 14px; margin-bottom: 5px; color: var(--text) }
+        .card-desc { font-size: 13px; color: var(--muted2); line-height: 1.55 }
+
+        /* ══ TABLE ══ */
+        .tbl-wrap { overflow-x: auto; margin: 16px 0; border-radius: var(--radius); border: 1px solid var(--border) }
+        table { width: 100%; border-collapse: collapse; font-size: 13.5px }
+        th { text-align: left; padding: 11px 16px; background: var(--surface2); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; font-weight: 600; border-bottom: 1px solid var(--border) }
+        td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: #bbbdd6; vertical-align: top }
+        tr:last-child td { border-bottom: none }
+        tr:hover td { background: rgba(255,255,255,.02) }
+        td strong { color: var(--text) }
+        .tag-new { background: rgba(62,207,142,.15); color: var(--green); padding: 2px 8px; border-radius: 99px; font-size: 11px; font-family: var(--font-mono) }
+        .tag-core { background: rgba(124,106,248,.15); color: var(--accent-lt); padding: 2px 8px; border-radius: 99px; font-size: 11px; font-family: var(--font-mono) }
+        .tag-pro { background: rgba(245,166,35,.15); color: var(--amber); padding: 2px 8px; border-radius: 99px; font-size: 11px; font-family: var(--font-mono) }
+
+        /* ══ STEPS ══ */
+        .steps { margin: 20px 0 }
+        .step { display: flex; gap: 18px; margin-bottom: 24px; align-items: flex-start }
+        .step-num {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #a55af4);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; flex-shrink: 0; color: #fff;
+            font-family: var(--font-mono); box-shadow: 0 4px 14px rgba(124,106,248,.3)
+        }
+        .step-title { font-weight: 600; color: var(--text); margin-bottom: 5px }
+        .step-desc { font-size: 13.5px; color: var(--muted2) }
+
+        /* ══ FEAT LIST ══ */
+        .feat-list { list-style: none; margin: 10px 0 }
+        .feat-list li { padding: 9px 0 9px 22px; position: relative; font-size: 14px; color: #9fa3c4; border-bottom: 1px solid rgba(37,40,64,.6) }
+        .feat-list li:last-child { border: none }
+        .feat-list li::before { content: '▸'; position: absolute; left: 0; color: var(--accent) }
+        .feat-list li strong { color: var(--text) }
+
+        /* ══ CODE BLOCK ══ */
+        .code-wrap { background: #07080d; border: 1px solid var(--border); border-radius: var(--radius); margin: 16px 0; overflow: hidden }
+        .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--border) }
+        .code-dots { display: flex; gap: 6px }
+        .code-dot { width: 10px; height: 10px; border-radius: 50% }
+        .code-dot:nth-child(1) { background: #ff5f57 }
+        .code-dot:nth-child(2) { background: #febc2e }
+        .code-dot:nth-child(3) { background: #28c840 }
+        .code-lang { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .05em }
+        .copy-btn { font-family: var(--font-mono); font-size: 11px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 3px 10px; border-radius: 5px; cursor: pointer; transition: all .18s }
+        .copy-btn:hover { color: var(--text); border-color: var(--accent) }
+        .copy-btn.copied { color: var(--green); border-color: var(--green) }
+        pre { padding: 20px 22px; font-family: var(--font-mono); font-size: 13px; line-height: 1.75; overflow-x: auto; color: #9fa3c4 }
+        .kw { color: var(--accent-lt) } .str { color: var(--green) } .cmt { color: var(--muted); font-style: italic }
+        .num { color: var(--amber) } .fn { color: #7dd3fc } .cls { color: #f0abfc } .prop { color: #93c5fd }
+
+        /* ══ CONCEPT CARDS ══ */
+        .concept-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 18px 0 }
+        .concept { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; position: relative; overflow: hidden; transition: all .2s }
+        .concept::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--c, var(--accent)) }
+        .concept:hover { border-color: var(--border2); transform: translateY(-1px) }
+        .concept-icon { font-size: 24px; margin-bottom: 8px; display: block }
+        .concept-name { font-family: var(--font-head); font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 3px }
+        .concept-type { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .07em; margin-bottom: 8px }
+        .concept-desc { font-size: 12.5px; color: var(--muted2); line-height: 1.55 }
+
+        /* ══ FLOW NODES ══ */
+        .flow { display: flex; align-items: center; margin: 20px 0; overflow-x: auto; padding: 4px 0; flex-wrap: wrap; gap: 8px }
+        .flow-node { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 12px; font-family: var(--font-mono); color: var(--text); white-space: nowrap; flex-shrink: 0; text-align: center; transition: border-color .2s }
+        .flow-node:hover { border-color: var(--accent) }
+        .flow-node.hl { background: rgba(124,106,248,.12); border-color: rgba(124,106,248,.4); color: var(--accent-lt) }
+        .flow-node.gn { background: rgba(62,207,142,.1); border-color: rgba(62,207,142,.35); color: var(--green) }
+        .flow-node.am { background: rgba(245,166,35,.1); border-color: rgba(245,166,35,.3); color: var(--amber) }
+        .flow-node.sk { background: rgba(56,189,248,.1); border-color: rgba(56,189,248,.3); color: var(--sky) }
+        .flow-node.rd { background: rgba(240,107,107,.1); border-color: rgba(240,107,107,.3); color: var(--red) }
+        .flow-sub { font-size: 10px; color: var(--muted); margin-top: 3px; font-family: var(--font-body) }
+        .flow-arr { color: var(--border2); font-size: 18px; flex-shrink: 0; padding: 0 2px }
+
+        /* ══ NODE PALETTE ══ */
+        .node-palette { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 18px 0 }
+        .node-item {
+            background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 14px 16px; transition: all .2s; cursor: default
+        }
+        .node-item:hover { border-color: var(--accent); transform: translateY(-1px) }
+        .node-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px }
+        .node-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--accent)); flex-shrink: 0 }
+        .node-name { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--text) }
+        .node-cat { font-size: 10px; color: var(--muted); font-family: var(--font-mono); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 5px }
+        .node-desc { font-size: 12px; color: var(--muted2); line-height: 1.5 }
+
+        /* ══ TABS ══ */
+        .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px }
+        .tab { padding: 8px 16px; font-size: 13px; color: var(--muted2); cursor: pointer; border-bottom: 2px solid transparent; transition: all .18s; border-radius: 4px 4px 0 0; font-family: var(--font-mono) }
+        .tab:hover { color: var(--text) }
+        .tab.active { color: var(--accent-lt); border-bottom-color: var(--accent) }
+        .tab-content { display: none }
+        .tab-content.active { display: block }
+
+        /* ══ COMPARE ══ */
+        .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0 }
+        .cmp-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px }
+        .cmp-box.good { border-color: rgba(62,207,142,.3); background: rgba(62,207,142,.04) }
+        .cmp-box.bad { border-color: rgba(240,107,107,.3); background: rgba(240,107,107,.04) }
+        .cmp-title { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; font-family: var(--font-mono) }
+        .cmp-box.good .cmp-title { color: var(--green) }
+        .cmp-box.bad .cmp-title { color: var(--red) }
+
+        /* ══ INLINE CODE ══ */
+        code { font-family: var(--font-mono); font-size: 12.5px; background: var(--surface2); color: var(--accent-lt); padding: 2px 7px; border-radius: 5px; border: 1px solid var(--border) }
+
+        /* ══ HERO STATS ══ */
+        .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 28px 0 }
+        .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center }
+        .stat-num { font-family: var(--font-head); font-size: 32px; font-weight: 800; color: var(--accent-lt); line-height: 1 }
+        .stat-label { font-size: 12px; color: var(--muted); margin-top: 6px }
+
+        /* ══ ENV GRID ══ */
+        .env-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0 }
+        .env-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px }
+        .env-title { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 8px; display: flex; align-items: center; gap: 7px }
+
+        /* ══ INTERACTIVE DEMO ══ */
+        .demo-area { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin: 18px 0 }
+        .demo-toolbar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--surface2); border-bottom: 1px solid var(--border) }
+        .demo-toolbar-title { font-family: var(--font-mono); font-size: 12px; color: var(--muted); flex: 1 }
+        .prompt-chip {
+            display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
+            border-radius: 99px; font-size: 12px; font-family: var(--font-mono);
+            border: 1px solid var(--border); color: var(--muted2); cursor: pointer; transition: all .18s; background: var(--surface2)
+        }
+        .prompt-chip:hover { border-color: var(--accent); color: var(--accent-lt) }
+        .prompt-chip.selected { background: rgba(124,106,248,.15); border-color: rgba(124,106,248,.5); color: var(--accent-lt) }
+        .demo-body { padding: 20px }
+        .demo-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 16px }
+        .demo-out { background: #07080d; border: 1px solid var(--border); border-radius: 8px; padding: 18px; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.8; color: #9fa3c4; min-height: 120px }
+
+        /* ══ MOBILE ══ */
+        .hamburger { display: none; position: fixed; top: 16px; left: 16px; z-index: 300; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; width: 38px; height: 38px; align-items: center; justify-content: center; cursor: pointer; font-size: 16px }
+        @media (max-width: 900px) {
+            .hamburger { display: flex }
+            #sidebar { transform: translateX(-100%) }
+            #sidebar.open { transform: translateX(0) }
+            main { margin-left: 0 }
+            .section { padding: 40px 24px }
+            h1 { font-size: 34px }
+            .concept-grid, .cards.col3, .node-palette { grid-template-columns: 1fr 1fr }
+            .hero-stats { grid-template-columns: 1fr 1fr }
+        }
+        @media (max-width: 520px) {
+            .concept-grid, .cards, .cards.col3, .node-palette, .compare, .env-grid, .hero-stats { grid-template-columns: 1fr }
+        }
+
+        /* ══ PAGE NAV ══ */
+        .page-nav-section {
+            padding: 15px 20px 5px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 5px;
+        }
+        .page-nav-label {
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            font-weight: 600;
+            padding: 0 6px;
+            margin-bottom: 8px;
+        }
+        .page-link {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            color: var(--muted2);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all .14s;
+            margin-bottom: 2px;
+        }
+        .page-link:hover {
+            background: var(--surface);
+            color: var(--text);
+        }
+        .page-link.active {
+            background: rgba(124,106,248,.12);
+            color: var(--accent-lt);
+            font-weight: 600;
+        }
+        .page-link .pg-icon {
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .page-link .pg-num {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 600;
+            opacity: 0.5;
+            margin-left: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+<button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+<!-- ══ SIDEBAR ══ -->
+<nav id="sidebar">
+    <div class="sb-header">
+        <div class="sb-brand">
+            <div class="sb-orb">DF</div>
+            <span class="sb-title">Dify Workflow</span>
+        </div>
+        <div class="sb-ver">
+            <span class="dot"></span>
+            v0.15 · 2025
+        </div>
+    </div>
+
+    <div class="sb-progress">
+        <div class="sb-progress-label">
+            <span>Reading progress</span>
+            <span id="prog-pct">0%</span>
+        </div>
+        <div class="sb-progress-bar">
+            <div class="sb-progress-fill" id="prog-fill"></div>
+        </div>
+    </div>
+
+    <!-- ── PAGE NAVIGATION ── -->
+    <div class="page-nav-section">
+        <div class="page-nav-label">Bộ tài liệu</div>
+        <a href="html_css_introduction.html" class="page-link">
+            <span class="pg-icon">🏗️</span> HTML &amp; CSS
+            <span class="pg-num">01</span>
+        </a>
+        <a href="javascript_introduction.html" class="page-link">
+            <span class="pg-icon">⚡</span> JavaScript
+            <span class="pg-num">02</span>
+        </a>
+        <a href="n8n_js_guide.html" class="page-link">
+            <span class="pg-icon">🔴</span> JS → n8n
+            <span class="pg-num">03</span>
+        </a>
+        <a href="n8n_guide.html" class="page-link">
+            <span class="pg-icon">🚀</span> n8n Toàn Tập
+            <span class="pg-num">04</span>
+        </a>
+        <a href="ai_agent_n8n.html" class="page-link">
+            <span class="pg-icon">🤖</span> AI Agent
+            <span class="pg-num">05</span>
+        </a>
+        <a href="n8n-labs-guide.html" class="page-link">
+            <span class="pg-icon">🧪</span> n8n Labs
+            <span class="pg-num">06</span>
+        </a>
+        <a href="lab-n8n-v2.html" class="page-link">
+            <span class="pg-icon">🌟</span> n8n Labs V2
+            <span class="pg-num">07</span>
+        </a>
+        <a href="dify-workflow-guide.html" class="page-link active">
+            <span class="pg-icon">🔀</span> Dify Workflow
+            <span class="pg-num">08</span>
+        </a>
+    </div>
+
+    <div class="sb-section">
+        <div class="sb-section-label">Getting Started</div>
+        <a class="sb-link active" href="#intro" onclick="setActive(this)">
+            <span class="sb-icon">🚀</span> Dify là gì?
+            <span class="sb-badge green">Mới</span>
+        </a>
+        <a class="sb-link" href="#install" onclick="setActive(this)">
+            <span class="sb-icon">⚙️</span> Cài đặt & Setup
+        </a>
+        <a class="sb-link" href="#concepts" onclick="setActive(this)">
+            <span class="sb-icon">🧠</span> Khái niệm cốt lõi
+        </a>
+    </div>
+
+    <div class="sb-section">
+        <div class="sb-section-label">Workflow</div>
+        <a class="sb-link" href="#workflow-basics" onclick="setActive(this)">
+            <span class="sb-icon">🔀</span> Workflow cơ bản
+        </a>
+        <a class="sb-link" href="#nodes" onclick="setActive(this)">
+            <span class="sb-icon">🧩</span> Các loại Node
+        </a>
+        <a class="sb-link" href="#variables" onclick="setActive(this)">
+            <span class="sb-icon">📦</span> Variables & Context
+        </a>
+        <a class="sb-link" href="#branching" onclick="setActive(this)">
+            <span class="sb-icon">🌿</span> Branching & Conditions
+        </a>
+        <a class="sb-link" href="#iteration" onclick="setActive(this)">
+            <span class="sb-icon">🔁</span> Iteration & Loop
+            <span class="sb-badge amber">Advanced</span>
+        </a>
+    </div>
+
+    <div class="sb-section">
+        <div class="sb-section-label">AI & LLM</div>
+        <a class="sb-link" href="#llm-node" onclick="setActive(this)">
+            <span class="sb-icon">🤖</span> LLM Node
+        </a>
+        <a class="sb-link" href="#knowledge" onclick="setActive(this)">
+            <span class="sb-icon">📚</span> Knowledge Base (RAG)
+        </a>
+        <a class="sb-link" href="#agent" onclick="setActive(this)">
+            <span class="sb-icon">🕵️</span> Agent Node
+        </a>
+    </div>
+
+    <div class="sb-section">
+        <div class="sb-section-label">Integration</div>
+        <a class="sb-link" href="#tools" onclick="setActive(this)">
+            <span class="sb-icon">🔧</span> Tools & HTTP Request
+        </a>
+        <a class="sb-link" href="#code-node" onclick="setActive(this)">
+            <span class="sb-icon">💻</span> Code Node
+        </a>
+        <a class="sb-link" href="#api" onclick="setActive(this)">
+            <span class="sb-icon">📡</span> Publish & API
+        </a>
+    </div>
+
+    <div class="sb-section">
+        <div class="sb-section-label">Production</div>
+        <a class="sb-link" href="#debug" onclick="setActive(this)">
+            <span class="sb-icon">🐛</span> Debug & Tracing
+        </a>
+        <a class="sb-link" href="#patterns" onclick="setActive(this)">
+            <span class="sb-icon">📐</span> Best Practices
+        </a>
+    </div>
+
+    <div class="sb-footer">
+        dify-workflow-guide.html · vi · 2026
+    </div>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<main>
+
+    <!-- ══ INTRO ══ -->
+    <section class="section" id="intro">
+        <div class="section-tag">01 · Introduction</div>
+        <h1><span class="grad">Dify AI Workflow</span><br>Toàn tập cho Developer</h1>
+        <p>Dify là nền tảng open-source để xây dựng ứng dụng LLM (Large Language Model) production-ready. Với Workflow Engine, bạn có thể thiết kế pipeline AI phức tạp thông qua giao diện drag-and-drop — từ chatbot đơn giản đến hệ thống multi-agent phức tạp.</p>
+
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-num">40+</div>
+                <div class="stat-label">Node types</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">50+</div>
+                <div class="stat-label">LLM providers</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">100+</div>
+                <div class="stat-label">Built-in tools</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">OSS</div>
+                <div class="stat-label">MIT License</div>
+            </div>
+        </div>
+
+        <div class="cards col3">
+            <div class="card">
+                <div class="card-ico">🔀</div>
+                <div class="card-title">Visual Workflow</div>
+                <div class="card-desc">Xây dựng pipeline AI bằng drag-and-drop. Debug từng node với trace chi tiết.</div>
+            </div>
+            <div class="card">
+                <div class="card-ico">🤖</div>
+                <div class="card-title">Multi-LLM</div>
+                <div class="card-desc">GPT-4o, Claude, Gemini, Llama, Mistral — switch provider không cần đổi code.</div>
+            </div>
+            <div class="card">
+                <div class="card-ico">📚</div>
+                <div class="card-title">RAG tích hợp</div>
+                <div class="card-desc">Knowledge Base với vector search, hybrid retrieval, re-ranking built-in.</div>
+            </div>
+            <div class="card">
+                <div class="card-ico">🔧</div>
+                <div class="card-title">Tools & Plugins</div>
+                <div class="card-desc">Google Search, Slack, Notion, GitHub… hoặc tự viết custom tool qua HTTP/Python.</div>
+            </div>
+            <div class="card">
+                <div class="card-ico">📡</div>
+                <div class="card-title">API First</div>
+                <div class="card-desc">Publish workflow thành REST API ngay lập tức. Tích hợp vào app backend dễ dàng.</div>
+            </div>
+            <div class="card">
+                <div class="card-ico">🏠</div>
+                <div class="card-title">Self-hosted</div>
+                <div class="card-desc">Deploy trên Docker/K8s. Data ở lại infrastructure của bạn, full control.</div>
+            </div>
+        </div>
+
+        <div class="callout sky">
+            <div class="callout-label">💡 Dify vs LangChain vs n8n</div>
+            Dify tập trung vào <strong>LLM application layer</strong>: visual workflow + RAG + multi-model. LangChain là Python framework (code-first). n8n là general workflow automation (không LLM-native). Dify là điểm giữa — visual như n8n nhưng LLM-first như LangChain.
+        </div>
+    </section>
+
+    <!-- ══ INSTALL ══ -->
+    <section class="section" id="install">
+        <div class="section-tag">02 · Setup</div>
+        <h2>⚙️ Cài đặt Dify</h2>
+        <p>Dify hỗ trợ Docker Compose (self-hosted) và cloud. Đối với developer, self-hosted là lựa chọn tốt nhất để có full control.</p>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(this,'t-docker')">🐳 Docker (khuyến nghị)</div>
+            <div class="tab" onclick="switchTab(this,'t-cloud')">☁️ Dify Cloud</div>
+            <div class="tab" onclick="switchTab(this,'t-k8s')">⚓ Kubernetes</div>
+        </div>
+
+        <div class="tab-content active" id="t-docker">
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div>
+                        <div class="step-title">Clone repo và copy env</div>
+                        <div class="code-wrap">
+                            <div class="code-header">
+                                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                                <span class="code-lang">bash</span>
+                                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                            </div>
+                            <pre><span class="cmt"># Clone Dify</span>
+git clone https://github.com/langgenius/dify.git
+<span class="kw">cd</span> dify/docker
+
+<span class="cmt"># Copy env template</span>
+cp .env.example .env</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div>
+                        <div class="step-title">Cấu hình .env — key settings</div>
+                        <div class="code-wrap">
+                            <div class="code-header">
+                                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                                <span class="code-lang">.env</span>
+                                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                            </div>
+                            <pre><span class="cmt"># Bắt buộc: secret key (32+ chars random)</span>
+<span class="prop">SECRET_KEY</span>=<span class="str">your-very-secure-secret-key-here</span>
+
+<span class="cmt"># Database (mặc định dùng PostgreSQL internal)</span>
+<span class="prop">DB_USERNAME</span>=<span class="str">postgres</span>
+<span class="prop">DB_PASSWORD</span>=<span class="str">difyai123456</span>
+
+<span class="cmt"># Storage: local | s3 | azure-blob | google-storage</span>
+<span class="prop">STORAGE_TYPE</span>=<span class="str">local</span>
+
+<span class="cmt"># Vector DB: weaviate | qdrant | milvus | pgvector</span>
+<span class="prop">VECTOR_STORE</span>=<span class="str">weaviate</span></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div>
+                        <div class="step-title">Start services</div>
+                        <div class="code-wrap">
+                            <div class="code-header">
+                                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                                <span class="code-lang">bash</span>
+                                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                            </div>
+                            <pre>docker compose up -d
+
+<span class="cmt"># Kiểm tra status</span>
+docker compose ps
+
+<span class="cmt"># Logs nếu có lỗi</span>
+docker compose logs -f api</pre>
+                        </div>
+                        <div class="step-desc" style="margin-top:8px">Mở <code>http://localhost</code> → tạo admin account → done! Workflow editor tại <code>/apps</code>.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="callout warn">
+                <div class="callout-label">⚠️ Production checklist</div>
+                Đổi <code>SECRET_KEY</code> thành giá trị random mạnh. Không dùng mật khẩu DB mặc định. Setup reverse proxy (nginx/Caddy) với SSL. Backup volume <code>dify_volumes</code> thường xuyên.
+            </div>
+        </div>
+
+        <div class="tab-content" id="t-cloud">
+            <div class="callout good">
+                <div class="callout-label">✅ Dify Cloud</div>
+                Truy cập <strong>cloud.dify.ai</strong> → đăng ký miễn phí → 200 messages/ngày. Sandbox plan phù hợp để học và prototype. Không cần setup, không cần server.
+            </div>
+        </div>
+
+        <div class="tab-content" id="t-k8s">
+            <div class="callout sky">
+                <div class="callout-label">⚓ Helm Chart</div>
+                Dify có official Helm chart tại <code>langgenius/dify-helm</code> trên GitHub. Phù hợp cho production K8s deployment với horizontal scaling.
+            </div>
+            <div class="code-wrap">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                    <span class="code-lang">bash</span>
+                    <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                </div>
+                <pre>helm repo add dify https://langgenius.github.io/dify-helm
+helm repo update
+helm install dify dify/dify \
+  --set global.storageType=s3 \
+  --set global.vectorStore=pgvector</pre>
+            </div>
+        </div>
+
+        <h3>🔑 Thêm LLM Provider</h3>
+        <p>Sau khi login: <strong>Settings → Model Provider → chọn provider → nhập API key</strong>.</p>
+        <div class="tbl-wrap">
+            <table>
+                <thead><tr><th>Provider</th><th>Models phổ biến</th><th>Ghi chú</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>OpenAI</strong></td><td>gpt-4o, gpt-4o-mini, o1</td><td><span class="tag-core">Phổ biến nhất</span></td></tr>
+                    <tr><td><strong>Anthropic</strong></td><td>claude-3.5-sonnet, claude-3-opus</td><td><span class="tag-pro">Reasoning tốt</span></td></tr>
+                    <tr><td><strong>Google</strong></td><td>gemini-1.5-pro, gemini-flash</td><td><span class="tag-new">Multimodal</span></td></tr>
+                    <tr><td><strong>Ollama</strong></td><td>llama3, mistral, phi3</td><td>Local, free, privacy</td></tr>
+                    <tr><td><strong>Groq</strong></td><td>llama-3.1-70b, mixtral</td><td>Inference nhanh</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ══ CONCEPTS ══ -->
+    <section class="section" id="concepts">
+        <div class="section-tag">03 · Core Concepts</div>
+        <h2>🧠 Khái niệm cốt lõi</h2>
+        <p>Dify có 4 loại ứng dụng chính. Mỗi loại phù hợp với use case khác nhau.</p>
+
+        <div class="concept-grid">
+            <div class="concept" style="--c: var(--accent)">
+                <span class="concept-icon">💬</span>
+                <div class="concept-name">Chatbot</div>
+                <div class="concept-type">CONVERSATION TYPE</div>
+                <div class="concept-desc">Chat single-turn hoặc multi-turn. Có memory (conversation history). Phù hợp với customer support, Q&A bot.</div>
+            </div>
+            <div class="concept" style="--c: var(--green)">
+                <span class="concept-icon">🔀</span>
+                <div class="concept-name">Workflow</div>
+                <div class="concept-type">PIPELINE TYPE</div>
+                <div class="concept-desc">Automation pipeline với nhiều bước xử lý. Không có conversation history. Tốt cho data processing, content generation.</div>
+            </div>
+            <div class="concept" style="--c: var(--sky)">
+                <span class="concept-icon">🤖</span>
+                <div class="concept-name">Chat Flow</div>
+                <div class="concept-type">HYBRID TYPE</div>
+                <div class="concept-desc">Kết hợp workflow + conversation. Pipeline có context của cả cuộc hội thoại. Use case: AI assistant phức tạp.</div>
+            </div>
+            <div class="concept" style="--c: var(--amber)">
+                <span class="concept-icon">🕵️</span>
+                <div class="concept-name">Agent</div>
+                <div class="concept-type">AUTONOMOUS TYPE</div>
+                <div class="concept-desc">LLM tự quyết định dùng tool nào, bao nhiêu bước. ReAct / Function Calling pattern. Tốt cho research, complex tasks.</div>
+            </div>
+            <div class="concept" style="--c: var(--red)">
+                <span class="concept-icon">📚</span>
+                <div class="concept-name">Knowledge Base</div>
+                <div class="concept-type">DATA LAYER</div>
+                <div class="concept-desc">Upload document → chunk → embed → lưu vector DB. Dùng trong workflow qua Knowledge Retrieval node.</div>
+            </div>
+            <div class="concept" style="--c: var(--muted2)">
+                <span class="concept-icon">🔧</span>
+                <div class="concept-name">Tools</div>
+                <div class="concept-type">INTEGRATION LAYER</div>
+                <div class="concept-desc">Built-in (Google Search, DALL-E, Jina) hoặc custom (HTTP API, Python function). Dùng trong Agent hoặc Tool node.</div>
+            </div>
+        </div>
+
+        <div class="callout">
+            <div class="callout-label">💡 Khi nào dùng loại nào?</div>
+            <strong>Workflow</strong>: batch processing, scheduled jobs, deterministic pipeline (input → output cố định). <br>
+            <strong>Chatbot/Chat Flow</strong>: conversation với users, cần nhớ lịch sử. <br>
+            <strong>Agent</strong>: task phức tạp, không biết trước cần bao nhiêu bước, cần tự quyết định dùng tool.
+        </div>
+    </section>
+
+    <!-- ══ WORKFLOW BASICS ══ -->
+    <section class="section" id="workflow-basics">
+        <div class="section-tag">04 · Workflow</div>
+        <h2>🔀 Workflow cơ bản</h2>
+        <p>Workflow là graph có hướng (DAG) gồm các node được kết nối với nhau. Data chảy từ <strong>Start node</strong> qua các bước xử lý đến <strong>End node</strong>.</p>
+
+        <h3>Anatomy của một Workflow</h3>
+        <div class="flow">
+            <div class="flow-node gn">
+                <div>▶ Start</div>
+                <div class="flow-sub">Input variables</div>
+            </div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node hl">
+                <div>🤖 LLM</div>
+                <div class="flow-sub">Process</div>
+            </div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node am">
+                <div>🔀 IF/ELSE</div>
+                <div class="flow-sub">Branch</div>
+            </div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node sk">
+                <div>🔧 Tool</div>
+                <div class="flow-sub">External call</div>
+            </div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node rd">
+                <div>⏹ End</div>
+                <div class="flow-sub">Output</div>
+            </div>
+        </div>
+
+        <h3>Tạo Workflow đầu tiên — Hello World</h3>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div>
+                    <div class="step-title">Tạo App mới</div>
+                    <div class="step-desc">Dashboard → <strong>Create App</strong> → chọn <strong>Workflow</strong> → đặt tên → Confirm.</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div>
+                    <div class="step-title">Cấu hình Start Node</div>
+                    <div class="step-desc">Click Start node → thêm input variable: <code>topic</code> (type: String). Đây là dữ liệu đầu vào của workflow.</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div>
+                    <div class="step-title">Thêm LLM Node</div>
+                    <div class="step-desc">Click <strong>+</strong> → chọn <strong>LLM</strong>. Chọn model (ví dụ: gpt-4o-mini). Viết System Prompt:</div>
+                    <div class="code-wrap" style="margin-top:10px">
+                        <div class="code-header">
+                            <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                            <span class="code-lang">prompt</span>
+                            <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                        </div>
+                        <pre>Bạn là chuyên gia viết nội dung. Hãy viết một bài giới thiệu 
+ngắn (3-4 câu) về chủ đề: <span class="kw">{{#sys.query#}}</span>
+
+<span class="cmt"># Tham chiếu biến từ Start node:</span>
+Chủ đề: <span class="str">{{#start.topic#}}</span></pre>
+                        </div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <div>
+                    <div class="step-title">Kết nối End Node</div>
+                    <div class="step-desc">Click <strong>+</strong> sau LLM → <strong>End</strong>. Output variable: chọn <code>llm.text</code> (output của LLM node). Kéo arrow kết nối LLM → End.</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">5</div>
+                <div>
+                    <div class="step-title">Run & Debug</div>
+                    <div class="step-desc">Click <strong>▶ Run</strong> (góc phải trên). Nhập topic = <em>"Spring Boot microservices"</em>. Xem output từng node trong trace panel bên phải.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="callout good">
+            <div class="callout-label">✅ Kết quả mong đợi</div>
+            Workflow chạy: Start → nhận input <code>topic</code> → LLM xử lý → trả về text → End output. Bạn thấy từng node highlight và output realtime trong debug panel.
+        </div>
+    </section>
+
+    <!-- ══ NODES ══ -->
+    <section class="section" id="nodes">
+        <div class="section-tag">05 · Nodes</div>
+        <h2>🧩 Các loại Node</h2>
+        <p>Dify cung cấp nhiều loại node sẵn có. Hiểu rõ từng loại là chìa khóa để thiết kế workflow hiệu quả.</p>
+
+        <div class="node-palette">
+            <div class="node-item">
+                <div class="node-header">
+                    <div class="node-dot" style="--c: var(--green)"></div>
+                    <div class="node-name">Start</div>
+                </div>
+                <div class="node-cat">Entry Point</div>
+                <div class="node-desc">Điểm bắt đầu workflow. Định nghĩa input variables (String, Number, File, Select…). Mỗi workflow có đúng 1 Start node.</div>
+            </div>
+            <div class="node-item">
+                <div class="node-header">
+                    <div class="node-dot" style="--c: var(--red)"></div>
+                    <div class="node-name">End</div>
+                </div>
+                <div class="node-cat">Exit Point</div>
+                <div class="node-desc">Kết thúc workflow và trả về output. Có thể có nhiều End node (trong các branch khác nhau).</div>
+            </div>
+            <div class="node-item">
+                <div class="node-header">
+                    <div class="node-dot" style="--c: var(--accent)"></div>
+                    <div class="node-name">LLM</div>
+                </div>
+                <div class="node-cat">AI Processing</div>
+                <div class="node-desc">Gọi LLM với system/user prompt. Hỗ trợ vision (ảnh), context injection, memory. Output: text, usage tokens.</div>
+            </div>
+            <div class="node-item">
+                <div class="node-header">
+                    <div class="node-dot" style="--c: var(--amber)"></div>
+                    <div class="node-name">IF/ELSE</div>
+                </div>
+                <div class="node-cat">Branching</div>
+                <div class="node-desc">Điều kiện rẽ nhánh. So sánh string, number, contains, is empty. Hỗ trợ AND/OR conditions.</div>
+            </div>
+            <div class="node-item">
+                <div class="node-header">
+                    <div class="node-dot" style="--c: var(--sky)"></div>
+                    <div class="node-name">Knowledge Retrieval</div>
+                </div>
+                <div class="node-cat">RAG</div>
+                <div class="node-desc">Truy vấn Knowledge Base. Trả về top-K chunks liên quan nhất theo query. Cấu hình similarity threshold, reranking.</div>
+            </div>
+            <div class="node-item">
+                <div class="node-header">
+                    <div class="node-dot" style="--c: var(--green)"></div>
+                    <div class="node-name">Code</div>
+                </div>
+                <div class="node-cat">Custom Logic</div>
+                <div class="node-desc">Viết Python hoặc JavaScript tùy ý. Transform data, tính toán, gọi library. Sandbox isolated.</div>
+            </div>
+            <div class="node-item">
+                <div class="node-header">
+                    <div class="node-dot" style="--c: var(--muted2)"></div>
+                    <div class="node-name">HTTP Request</div>
+                </div>
+                <div class="node-cat">Integration</div>
+                <div class="node-desc">Gọi bất kỳ REST API nào. GET/POST/PUT/DELETE. Headers, auth, body, timeout. Parse JSON response.</div>
+            </div>
+            <div class="node-item">
+                <div class="node-header">
+                    <div class="node-dot" style="--c: var(--accent)"></div>
+                    <div class="node-name">Template Transform</div>
+                </div>
+                <div class="node-cat">Data Transform</div>
+                <div class="node-desc">Jinja2 template engine. Kết hợp nhiều variables thành string. Dùng để format prompt, build JSON payload.</div>
+            </div>
+            <div class="node-item">
+                <div class="node-header">
+                    <div class="node-dot" style="--c: var(--amber)"></div>
+                    <div class="node-name">Iteration</div>
+                </div>
+                <div class="node-cat">Loop</div>
+                <div class="node-desc">Lặp qua array, xử lý từng item song song hoặc tuần tự. Sub-workflow bên trong. Tương tự forEach/map.</div>
+            </div>
+        </div>
+
+        <div class="tbl-wrap">
+            <table>
+                <thead><tr><th>Node</th><th>Input</th><th>Output</th><th>Use case</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>LLM</strong></td><td>Prompt + context</td><td><code>text</code>, <code>usage</code></td><td>Text generation, classification, extraction</td></tr>
+                    <tr><td><strong>Knowledge Retrieval</strong></td><td>query string</td><td><code>result</code> array</td><td>RAG — trả lời dựa trên document</td></tr>
+                    <tr><td><strong>HTTP Request</strong></td><td>URL, headers, body</td><td><code>body</code>, <code>status_code</code></td><td>Gọi CRM, DB API, webhook</td></tr>
+                    <tr><td><strong>Code</strong></td><td>Variables tùy chọn</td><td>Variables tùy định nghĩa</td><td>Transform, parse, calculate</td></tr>
+                    <tr><td><strong>Template</strong></td><td>Variables</td><td><code>output</code> string</td><td>Format prompt, build payload</td></tr>
+                    <tr><td><strong>Iteration</strong></td><td>Array variable</td><td>Array of outputs</td><td>Xử lý danh sách: nhiều URL, nhiều sản phẩm…</td></tr>
+                    <tr><td><strong>Variable Agg.</strong></td><td>Multiple branches</td><td>Single variable</td><td>Merge kết quả từ IF/ELSE branches</td></tr>
+                    <tr><td><strong>Doc Extractor</strong></td><td>File (PDF, DOCX…)</td><td><code>text</code></td><td>Extract text từ file upload</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ══ VARIABLES ══ -->
+    <section class="section" id="variables">
+        <div class="section-tag">06 · Variables</div>
+        <h2>📦 Variables & Context</h2>
+        <p>Trong Dify Workflow, dữ liệu truyền giữa các node thông qua <strong>Variable System</strong>. Hiểu cú pháp tham chiếu biến là bắt buộc.</p>
+
+        <h3>Cú pháp tham chiếu biến</h3>
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">Jinja2 / Prompt syntax</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="cmt"># Format: {{#node_id.variable_name#}}</span>
+
+<span class="cmt"># Lấy input từ Start node</span>
+{{<span class="kw">#start.user_query#</span>}}
+{{<span class="kw">#start.uploaded_file#</span>}}
+
+<span class="cmt"># Lấy output từ LLM node (id: llm1)</span>
+{{<span class="kw">#llm1.text#</span>}}
+
+<span class="cmt"># Lấy output từ Code node (id: code1)</span>
+{{<span class="kw">#code1.result#</span>}}
+
+<span class="cmt"># System variables (luôn available)</span>
+{{<span class="kw">#sys.query#</span>}}          <span class="cmt"># User message (Chatbot/ChatFlow)</span>
+{{<span class="kw">#sys.files#</span>}}          <span class="cmt"># Uploaded files</span>
+{{<span class="kw">#sys.conversation_id#</span>}} <span class="cmt"># Conversation ID</span>
+{{<span class="kw">#sys.user_id#</span>}}         <span class="cmt"># User ID</span>
+
+<span class="cmt"># Conversation variables (ChatFlow)</span>
+{{<span class="kw">#conversation.topic#</span>}}  <span class="cmt"># Persisted across turns</span></pre>
+        </div>
+
+        <h3>Loại Variables</h3>
+        <div class="tbl-wrap">
+            <table>
+                <thead><tr><th>Loại</th><th>Mô tả</th><th>Example</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>String</strong></td><td>Text thông thường</td><td><code>"Xin chào"</code></td></tr>
+                    <tr><td><strong>Number</strong></td><td>Integer hoặc Float</td><td><code>42</code>, <code>3.14</code></td></tr>
+                    <tr><td><strong>Array[String]</strong></td><td>Danh sách chuỗi</td><td><code>["a","b","c"]</code></td></tr>
+                    <tr><td><strong>Array[Number]</strong></td><td>Danh sách số</td><td><code>[1,2,3]</code></td></tr>
+                    <tr><td><strong>Array[Object]</strong></td><td>Danh sách JSON objects</td><td>RAG results, API responses</td></tr>
+                    <tr><td><strong>File</strong></td><td>Upload file (PDF, image…)</td><td>Doc Extractor, Vision</td></tr>
+                    <tr><td><strong>Object</strong></td><td>JSON object</td><td>HTTP response body</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Conversation Variables (ChatFlow)</h3>
+        <p>Chỉ available trong <strong>Chat Flow</strong> type. Tồn tại suốt cả cuộc hội thoại (persisted). Dùng để nhớ state giữa các lượt chat.</p>
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">Code Node — Python</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="cmt"># Code node: lưu language preference vào conversation variable</span>
+<span class="kw">def</span> <span class="fn">main</span>(user_message: <span class="cls">str</span>) -> <span class="cls">dict</span>:
+    <span class="cmt"># Detect language từ message</span>
+    lang = <span class="str">"vi"</span> <span class="kw">if</span> <span class="fn">any</span>(c > <span class="str">'\u0100'</span> <span class="kw">for</span> c <span class="kw">in</span> user_message) <span class="kw">else</span> <span class="str">"en"</span>
+    <span class="kw">return</span> {
+        <span class="str">"language"</span>: lang
+    }
+
+<span class="cmt"># Sau đó trong Variable Assigner node:</span>
+<span class="cmt"># conversation.user_language = code1.language</span></pre>
+        </div>
+
+        <div class="callout">
+            <div class="callout-label">💡 Variable Aggregator</div>
+            Khi workflow có IF/ELSE branch, mỗi nhánh có output riêng. Dùng <strong>Variable Aggregator node</strong> để merge output từ nhiều branch thành một variable duy nhất trước khi tiếp tục pipeline.
+        </div>
+    </section>
+
+    <!-- ══ BRANCHING ══ -->
+    <section class="section" id="branching">
+        <div class="section-tag">07 · Branching</div>
+        <h2>🌿 Branching & Conditions</h2>
+        <p>IF/ELSE node cho phép workflow rẽ nhánh dựa trên điều kiện. Đây là building block quan trọng để xây dựng logic phức tạp.</p>
+
+        <h3>Cấu hình IF/ELSE Node</h3>
+        <div class="cards">
+            <div class="card">
+                <div class="card-ico">🟰</div>
+                <div class="card-title">Toán tử so sánh</div>
+                <div class="card-desc">
+                    <code>contains</code> · <code>not contains</code><br>
+                    <code>starts with</code> · <code>ends with</code><br>
+                    <code>is</code> · <code>is not</code><br>
+                    <code>is empty</code> · <code>is not empty</code><br>
+                    <code>= > < >= <=</code> (number)
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-ico">🔗</div>
+                <div class="card-title">Logic operators</div>
+                <div class="card-desc">
+                    Kết hợp nhiều điều kiện:<br>
+                    <code>AND</code> — tất cả đúng<br>
+                    <code>OR</code> — ít nhất một đúng<br><br>
+                    Tạo nhiều <strong>ELIF</strong> branches cho multi-case.
+                </div>
+            </div>
+        </div>
+
+        <h3>Ví dụ: Route theo intent</h3>
+        <div class="flow">
+            <div class="flow-node gn">
+                <div>▶ Start</div>
+                <div class="flow-sub">user_query</div>
+            </div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node hl">
+                <div>🤖 LLM Classifier</div>
+                <div class="flow-sub">intent detection</div>
+            </div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node am">
+                <div>🔀 IF/ELSE</div>
+                <div class="flow-sub">intent check</div>
+            </div>
+        </div>
+
+        <div class="compare">
+            <div class="cmp-box good">
+                <div class="cmp-title">✅ TECHNICAL branch</div>
+                <div style="font-size:13px;color:var(--muted2)">
+                    Điều kiện: <code>llm1.text contains "technical"</code><br><br>
+                    → Tiếp theo: <strong>Knowledge Retrieval</strong> (tech docs) → LLM trả lời kỹ thuật
+                </div>
+            </div>
+            <div class="cmp-box bad">
+                <div class="cmp-title">📋 ELSE branch</div>
+                <div style="font-size:13px;color:var(--muted2)">
+                    Fallback mặc định khi không match condition<br><br>
+                    → Tiếp theo: <strong>LLM</strong> general response → End
+                </div>
+            </div>
+        </div>
+
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">LLM Classifier — System Prompt</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre>Phân loại câu hỏi sau vào một trong các nhóm:
+- "technical": câu hỏi kỹ thuật, lập trình, API, lỗi
+- "billing": câu hỏi thanh toán, giá, hoá đơn
+- "general": câu hỏi chung, không thuộc nhóm trên
+
+Chỉ trả về đúng một từ: technical | billing | general
+
+Câu hỏi: <span class="kw">{{#start.user_query#}}</span></pre>
+        </div>
+
+        <div class="callout warn">
+            <div class="callout-label">⚠️ Lưu ý về Variable Aggregator</div>
+            Sau IF/ELSE, mỗi branch tạo ra variable khác nhau (ví dụ: <code>llm_tech.text</code> vs <code>llm_general.text</code>). Phải dùng <strong>Variable Aggregator</strong> node để merge thành một biến <code>final_answer</code> trước End node. Nếu không, workflow sẽ lỗi.
+        </div>
+    </section>
+
+    <!-- ══ ITERATION ══ -->
+    <section class="section" id="iteration">
+        <div class="section-tag">08 · Iteration</div>
+        <h2>🔁 Iteration (Loop)</h2>
+        <p>Iteration node cho phép xử lý một mảng (array) dữ liệu bằng cách lặp qua từng phần tử, áp dụng sub-workflow bên trong.</p>
+
+        <h3>Cách hoạt động</h3>
+        <div class="flow">
+            <div class="flow-node gn">
+                <div>Array input</div>
+                <div class="flow-sub">["url1","url2","url3"]</div>
+            </div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node hl">
+                <div>🔁 Iteration</div>
+                <div class="flow-sub">lặp từng item</div>
+            </div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node am">
+                <div>[HTTP Request]</div>
+                <div class="flow-sub">trong sub-flow</div>
+            </div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node rd">
+                <div>Array output</div>
+                <div class="flow-sub">[result1, result2, ...]</div>
+            </div>
+        </div>
+
+        <div class="tbl-wrap">
+            <table>
+                <thead><tr><th>Thuộc tính</th><th>Mô tả</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Input Variable</strong></td><td>Biến array đầu vào (Array[String], Array[Object]…)</td></tr>
+                    <tr><td><strong>item</strong></td><td>Phần tử hiện tại trong vòng lặp — tham chiếu: <code>{{#iteration.item#}}</code></td></tr>
+                    <tr><td><strong>index</strong></td><td>Index hiện tại (0-based) — tham chiếu: <code>{{#iteration.index#}}</code></td></tr>
+                    <tr><td><strong>Parallelism</strong></td><td>Số lượng item xử lý song song (1 = tuần tự, max 10)</td></tr>
+                    <tr><td><strong>Output</strong></td><td>Array chứa output của từng iteration. Truy cập: <code>{{#iteration_node.output#}}</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Ví dụ: Tóm tắt nhiều URLs</h3>
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">Thiết kế workflow</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="cmt">Start node:</span>
+  - urls: Array[String]   <span class="cmt"># ["https://...", "https://..."]</span>
+
+<span class="cmt">Iteration node (input: start.urls):</span>
+  <span class="cmt">Sub-workflow bên trong:</span>
+  1. HTTP Request node:
+     URL = <span class="kw">{{#iteration.item#}}</span>
+     Method = GET
+     
+  2. Code node (Python):
+     <span class="kw">def</span> <span class="fn">main</span>(html: <span class="cls">str</span>) -> <span class="cls">dict</span>:
+         <span class="cmt"># Strip HTML tags, take first 2000 chars</span>
+         <span class="kw">import</span> re
+         text = re.<span class="fn">sub</span>(<span class="str">r'<[^>]+>'</span>, <span class="str">''</span>, html)[:<span class="num">2000</span>]
+         <span class="kw">return</span> {<span class="str">"clean_text"</span>: text}
+     
+  3. LLM node:
+     Prompt: Tóm tắt ngắn gọn (2 câu): <span class="kw">{{#code1.clean_text#}}</span>
+
+<span class="cmt">Sau Iteration:</span>
+  Template node: format array thành markdown list
+  End node: trả về tổng hợp</pre>
+        </div>
+
+        <div class="callout sky">
+            <div class="callout-label">💡 Parallel vs Sequential</div>
+            Tăng <strong>Parallelism</strong> lên 5-10 để tăng tốc độ khi xử lý nhiều items. Giữ = 1 nếu cần duy trì thứ tự output hoặc có rate limit từ API bên ngoài.
+        </div>
+    </section>
+
+    <!-- ══ LLM NODE ══ -->
+    <section class="section" id="llm-node">
+        <div class="section-tag">09 · LLM Node</div>
+        <h2>🤖 LLM Node — Chi tiết</h2>
+        <p>LLM Node là trung tâm của mọi workflow. Hiểu sâu về cấu hình sẽ giúp bạn tạo ra output chính xác hơn.</p>
+
+        <div class="cards">
+            <div class="card">
+                <div class="card-ico">🎛️</div>
+                <div class="card-title">Model Settings</div>
+                <div class="card-desc">
+                    <strong>Temperature</strong>: 0.0 (deterministic) → 2.0 (creative). Dùng 0.0-0.3 cho extraction/classification, 0.7-1.0 cho content generation.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-ico">🔤</div>
+                <div class="card-title">Context Window</div>
+                <div class="card-desc">
+                    <strong>Max tokens</strong>: giới hạn output length. <strong>Context</strong>: inject conversation history hoặc knowledge chunks vào prompt.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-ico">👁️</div>
+                <div class="card-title">Vision</div>
+                <div class="card-desc">
+                    Với model hỗ trợ vision (GPT-4o, Claude 3), truyền <code>sys.files</code> vào LLM node để phân tích ảnh, PDF.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-ico">📤</div>
+                <div class="card-title">Structured Output</div>
+                <div class="card-desc">
+                    Khai báo <strong>JSON Schema</strong> để LLM trả về JSON cấu trúc. Đảm bảo output parseable cho các node tiếp theo.
+                </div>
+            </div>
+        </div>
+
+        <h3>Prompt Engineering trong LLM Node</h3>
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">System Prompt — Best practice</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="cmt">## Role</span>
+Bạn là AI assistant chuyên tư vấn sản phẩm cho {{<span class="kw">#start.company_name#</span>}}.
+
+<span class="cmt">## Context từ Knowledge Base</span>
+{{<span class="kw">#knowledge1.result[0].content#</span>}}
+{{<span class="kw">#knowledge1.result[1].content#</span>}}
+
+<span class="cmt">## Rules</span>
+- Chỉ trả lời dựa trên context được cung cấp
+- Nếu không biết, nói "Tôi không có thông tin về điều này"
+- Trả lời bằng ngôn ngữ của user
+- Tối đa 3 câu mỗi response
+
+<span class="cmt">## Output format</span>
+Trả về JSON:
+{
+  "answer": "câu trả lời",
+  "confidence": "high|medium|low",
+  "sources": ["source1", "source2"]
+}</pre>
+        </div>
+
+        <h3>Memory (Chat Flow)</h3>
+        <p>Trong Chat Flow, enable <strong>Memory</strong> trong LLM node để inject conversation history vào context. Cấu hình window size (số lượt chat nhớ) và token limit.</p>
+
+        <div class="callout warn">
+            <div class="callout-label">⚠️ Context length gotcha</div>
+            Knowledge chunks + conversation history + system prompt có thể nhanh chóng vượt quá context window của model. Theo dõi <code>usage.total_tokens</code> output của LLM node và cân nhắc dùng model context dài hơn hoặc giảm chunk size.
+        </div>
+    </section>
+
+    <!-- ══ KNOWLEDGE ══ -->
+    <section class="section" id="knowledge">
+        <div class="section-tag">10 · Knowledge Base</div>
+        <h2>📚 Knowledge Base — RAG</h2>
+        <p>Knowledge Base là hệ thống RAG (Retrieval-Augmented Generation) tích hợp trong Dify. Upload document → tự động chunk → embed → lưu vector DB.</p>
+
+        <h3>Tạo Knowledge Base</h3>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div>
+                    <div class="step-title">Tạo Knowledge</div>
+                    <div class="step-desc">Menu trái → <strong>Knowledge</strong> → <strong>Create Knowledge</strong> → đặt tên.</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div>
+                    <div class="step-title">Upload Document</div>
+                    <div class="step-desc">Hỗ trợ PDF, TXT, MD, DOCX, HTML, CSV, JSON. Hoặc connect Notion, Website crawl, S3.</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div>
+                    <div class="step-title">Cấu hình Chunking</div>
+                    <div class="step-desc">Chọn strategy: <strong>Automatic</strong> (recommended cho bắt đầu) hoặc <strong>Custom</strong> (điều chỉnh chunk size, overlap).</div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <div>
+                    <div class="step-title">Chọn Embedding Model</div>
+                    <div class="step-desc"><code>text-embedding-3-small</code> (OpenAI, rẻ, nhanh) hoặc <code>text-embedding-3-large</code> (chính xác hơn). Dùng Ollama cho local embedding.</div>
+                </div>
+            </div>
+        </div>
+
+        <h3>Retrieval Strategies</h3>
+        <div class="tbl-wrap">
+            <table>
+                <thead><tr><th>Strategy</th><th>Mô tả</th><th>Khi nào dùng</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Vector Search</strong></td><td>Tìm theo semantic similarity (cosine distance)</td><td>Default, tốt nhất cho most cases</td></tr>
+                    <tr><td><strong>Full-text Search</strong></td><td>Keyword matching (BM25)</td><td>Tên riêng, số liệu, code snippets</td></tr>
+                    <tr><td><strong>Hybrid Search</strong></td><td>Kết hợp vector + keyword, reranking</td><td>Production — accuracy cao nhất</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout good">
+            <div class="callout-label">✅ Hybrid Search + Reranking</div>
+            Dùng <strong>Hybrid Search</strong> + bật <strong>Reranker</strong> (Cohere Rerank hoặc BGE Reranker) để có độ chính xác cao nhất. Reranker sắp xếp lại top-K chunks theo relevance thực sự, không chỉ theo vector distance.
+        </div>
+
+        <h3>Dùng trong Workflow</h3>
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">Knowledge Retrieval Node → LLM Node</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="cmt"># Knowledge Retrieval node config:</span>
+Query: {{<span class="kw">#start.user_question#</span>}}
+Top K: <span class="num">3</span>
+Score threshold: <span class="num">0.5</span>
+Knowledge Base: [my-product-docs]
+
+<span class="cmt"># LLM node — inject retrieved context vào prompt:</span>
+System:
+  Dựa trên thông tin sau để trả lời:
+  ---
+  {{<span class="kw">#knowledge_retrieval.result[0].content#</span>}}
+  {{<span class="kw">#knowledge_retrieval.result[1].content#</span>}}
+  {{<span class="kw">#knowledge_retrieval.result[2].content#</span>}}
+  ---
+  Nếu thông tin trên không đủ, hãy nói rõ.
+
+User:
+  {{<span class="kw">#start.user_question#</span>}}</pre>
+        </div>
+    </section>
+
+    <!-- ══ AGENT ══ -->
+    <section class="section" id="agent">
+        <div class="section-tag">11 · Agent</div>
+        <h2>🕵️ Agent Node</h2>
+        <p>Agent Node cho LLM tự động lên kế hoạch và quyết định dùng tool nào, bao nhiêu lần — thay vì pipeline cố định.</p>
+
+        <div class="callout">
+            <div class="callout-label">💡 Agent vs Workflow</div>
+            <strong>Workflow</strong>: bạn thiết kế trước từng bước, deterministic. <strong>Agent</strong>: LLM tự quyết định flow, non-deterministic nhưng flexible hơn cho task phức tạp chưa biết trước số bước.
+        </div>
+
+        <h3>Agent Strategies</h3>
+        <div class="cards">
+            <div class="card">
+                <div class="card-ico">🔄</div>
+                <div class="card-title">ReAct</div>
+                <div class="card-desc">Reason + Act cycle: LLM suy nghĩ → chọn tool → xem kết quả → lặp lại. Phổ biến nhất, hỗ trợ nhiều models.</div>
+            </div>
+            <div class="card">
+                <div class="card-ico">⚡</div>
+                <div class="card-title">Function Calling</div>
+                <div class="card-desc">OpenAI/Anthropic native tool use. Nhanh hơn ReAct, structured hơn. Cần model hỗ trợ function calling.</div>
+            </div>
+        </div>
+
+        <h3>Thêm Tools cho Agent</h3>
+        <ul class="feat-list">
+            <li><strong>Built-in Tools</strong>: Google Search, Bing, Wikipedia, DALL-E, Stable Diffusion, WolframAlpha, Jina Reader, GitHub, Notion, Slack, Telegram…</li>
+            <li><strong>Custom Tools</strong>: Định nghĩa tool qua OpenAPI/Swagger spec. Dify tự generate tool interface từ schema.</li>
+            <li><strong>Workflow as Tool</strong>: Biến một Workflow khác thành tool cho Agent gọi — kiến trúc multi-agent.</li>
+            <li><strong>Knowledge Base</strong>: Attach knowledge base vào Agent để search document khi cần.</li>
+        </ul>
+
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">Custom Tool — OpenAPI Schema</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre>{
+  <span class="str">"openapi"</span>: <span class="str">"3.0.0"</span>,
+  <span class="str">"info"</span>: { <span class="str">"title"</span>: <span class="str">"Rider Status API"</span>, <span class="str">"version"</span>: <span class="str">"1.0"</span> },
+  <span class="str">"paths"</span>: {
+    <span class="str">"/api/riders/{riderId}/status"</span>: {
+      <span class="str">"get"</span>: {
+        <span class="str">"summary"</span>: <span class="str">"Get rider contract status"</span>,
+        <span class="str">"operationId"</span>: <span class="str">"getRiderStatus"</span>,
+        <span class="str">"parameters"</span>: [{
+          <span class="str">"name"</span>: <span class="str">"riderId"</span>,
+          <span class="str">"in"</span>: <span class="str">"path"</span>,
+          <span class="str">"required"</span>: <span class="num">true</span>,
+          <span class="str">"schema"</span>: { <span class="str">"type"</span>: <span class="str">"string"</span> },
+          <span class="str">"description"</span>: <span class="str">"Rider contract ID to check status"</span>
+        }]
+      }
+    }
+  }
+}</pre>
+        </div>
+    </section>
+
+    <!-- ══ TOOLS ══ -->
+    <section class="section" id="tools">
+        <div class="section-tag">12 · Integration</div>
+        <h2>🔧 Tools & HTTP Request Node</h2>
+        <p>HTTP Request node là cách đơn giản nhất để tích hợp với bất kỳ external API nào — từ CRM, database API đến internal microservices.</p>
+
+        <h3>Cấu hình HTTP Request Node</h3>
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">HTTP Request — POST to internal API</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="cmt">Method:</span> POST
+<span class="cmt">URL:</span>    https://api.internal.com/riders/{{<span class="kw">#start.rider_id#</span>}}/health
+
+<span class="cmt">Headers:</span>
+  Content-Type: application/json
+  Authorization: Bearer {{<span class="kw">#env.API_TOKEN#</span>}}
+  X-Request-ID: {{<span class="kw">#sys.workflow_run_id#</span>}}
+
+<span class="cmt">Body (JSON):</span>
+{
+  "declaration": {{<span class="kw">#start.health_data#</span>}},
+  "submittedAt": "{{<span class="kw">#start.timestamp#</span>}}"
+}
+
+<span class="cmt">Output variables:</span>
+  body        → JSON response
+  status_code → HTTP status (200, 400, 500…)
+  headers     → Response headers</pre>
+        </div>
+
+        <div class="callout warn">
+            <div class="callout-label">⚠️ Environment Variables</div>
+            Không hardcode API keys trong workflow. Dùng <strong>Environment Variables</strong> (<code>Settings → Environment Variables</code>) và tham chiếu bằng <code>{{#env.VARIABLE_NAME#}}</code>. Secrets được encrypted và không hiển thị trong logs.
+        </div>
+
+        <h3>Xử lý HTTP Response</h3>
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">Code Node — parse HTTP response</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="kw">def</span> <span class="fn">main</span>(status_code: <span class="cls">int</span>, body: <span class="cls">dict</span>) -> <span class="cls">dict</span>:
+    <span class="kw">if</span> status_code != <span class="num">200</span>:
+        <span class="kw">return</span> {
+            <span class="str">"success"</span>: <span class="kw">False</span>,
+            <span class="str">"error"</span>: body.<span class="fn">get</span>(<span class="str">"message"</span>, <span class="str">"Unknown error"</span>),
+            <span class="str">"data"</span>: <span class="kw">None</span>
+        }
+    
+    <span class="kw">return</span> {
+        <span class="str">"success"</span>: <span class="kw">True</span>,
+        <span class="str">"error"</span>: <span class="kw">None</span>,
+        <span class="str">"data"</span>: body.<span class="fn">get</span>(<span class="str">"data"</span>, {})
+    }</pre>
+        </div>
+    </section>
+
+    <!-- ══ CODE NODE ══ -->
+    <section class="section" id="code-node">
+        <div class="section-tag">13 · Code Node</div>
+        <h2>💻 Code Node</h2>
+        <p>Code Node là công cụ mạnh nhất để thực hiện bất kỳ logic tùy ý nào — parse, transform, calculate, format data.</p>
+
+        <div class="env-grid">
+            <div class="env-box">
+                <div class="env-title">🐍 Python</div>
+                <ul class="feat-list">
+                    <li>Standard library đầy đủ</li>
+                    <li>Built-in: <code>json</code>, <code>re</code>, <code>math</code>, <code>datetime</code></li>
+                    <li>Function signature cố định: <code>def main(**kwargs)</code></li>
+                    <li>Return phải là <code>dict</code></li>
+                </ul>
+            </div>
+            <div class="env-box">
+                <div class="env-title">📜 JavaScript</div>
+                <ul class="feat-list">
+                    <li>Node.js runtime</li>
+                    <li>Async/await support</li>
+                    <li>Entry point: <code>async function main(args)</code></li>
+                    <li>Return phải là plain object</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Pattern hay dùng</h3>
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">Python — Xử lý JSON complex</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="kw">import</span> json
+<span class="kw">import</span> re
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+<span class="kw">def</span> <span class="fn">main</span>(llm_output: <span class="cls">str</span>, user_id: <span class="cls">str</span>) -> <span class="cls">dict</span>:
+    <span class="cmt"># Parse JSON từ LLM output (có thể có markdown fences)</span>
+    clean = re.<span class="fn">sub</span>(<span class="str">r'```json|```'</span>, <span class="str">''</span>, llm_output).<span class="fn">strip</span>()
+    
+    <span class="kw">try</span>:
+        data = json.<span class="fn">loads</span>(clean)
+    <span class="kw">except</span> json.JSONDecodeError:
+        <span class="kw">return</span> {
+            <span class="str">"success"</span>: <span class="kw">False</span>,
+            <span class="str">"error"</span>: <span class="str">"LLM không trả về JSON hợp lệ"</span>,
+            <span class="str">"items"</span>: []
+        }
+    
+    <span class="cmt"># Transform và enrich data</span>
+    items = data.<span class="fn">get</span>(<span class="str">"items"</span>, [])
+    enriched = [
+        {**item, <span class="str">"user_id"</span>: user_id, <span class="str">"processed_at"</span>: datetime.<span class="fn">now</span>().<span class="fn">isoformat</span>()}
+        <span class="kw">for</span> item <span class="kw">in</span> items
+        <span class="kw">if</span> item.<span class="fn">get</span>(<span class="str">"score"</span>, <span class="num">0</span>) > <span class="num">0.5</span>  <span class="cmt"># filter low confidence</span>
+    ]
+    
+    <span class="kw">return</span> {
+        <span class="str">"success"</span>: <span class="kw">True</span>,
+        <span class="str">"error"</span>: <span class="kw">None</span>,
+        <span class="str">"items"</span>: enriched,
+        <span class="str">"count"</span>: <span class="fn">len</span>(enriched)
+    }</pre>
+        </div>
+
+        <div class="callout sky">
+            <div class="callout-label">💡 Khai báo Input/Output</div>
+            Trong Code node, bạn phải khai báo input variables (mapping từ node khác) và output variables (tên + type). Dify dùng khai báo này để validate và gợi ý trong node khác.
+        </div>
+    </section>
+
+    <!-- ══ API ══ -->
+    <section class="section" id="api">
+        <div class="section-tag">14 · Publish & API</div>
+        <h2>📡 Publish Workflow thành API</h2>
+        <p>Sau khi hoàn thiện workflow, publish nó thành REST API để tích hợp vào backend application — chỉ cần một API key.</p>
+
+        <h3>Publish steps</h3>
+        <p>Workflow editor → <strong>Publish</strong> (góc phải trên) → <strong>Access API</strong> → copy API Key và Endpoint URL.</p>
+
+        <h3>Gọi Workflow API</h3>
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">Java / Spring Boot — Feign Client</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="cmt">// Dify Workflow API — blocking (synchronous)</span>
+<span class="cls">@FeignClient</span>(name = <span class="str">"dify-client"</span>, url = <span class="str">"${dify.base-url}"</span>)
+<span class="kw">public interface</span> <span class="cls">DifyWorkflowClient</span> {
+
+    <span class="cls">@PostMapping</span>(<span class="str">"/v1/workflows/run"</span>)
+    <span class="cls">DifyResponse</span> <span class="fn">runWorkflow</span>(
+        <span class="cls">@RequestHeader</span>(<span class="str">"Authorization"</span>) <span class="cls">String</span> bearerToken,
+        <span class="cls">@RequestBody</span> <span class="cls">DifyRequest</span> request
+    );
+}
+
+<span class="cmt">// Request body</span>
+<span class="cls">@Data</span>
+<span class="kw">public class</span> <span class="cls">DifyRequest</span> {
+    <span class="kw">private</span> <span class="cls">Map</span>&lt;<span class="cls">String</span>, <span class="cls">Object</span>&gt; inputs;  <span class="cmt">// start node variables</span>
+    <span class="kw">private</span> <span class="cls">String</span> responseMode = <span class="str">"blocking"</span>;  <span class="cmt">// blocking | streaming</span>
+    <span class="kw">private</span> <span class="cls">String</span> user;  <span class="cmt">// unique user identifier</span>
+}
+
+<span class="cmt">// Usage in Service</span>
+<span class="cls">Map</span>&lt;<span class="cls">String</span>, <span class="cls">Object</span>&gt; inputs = <span class="cls">Map</span>.<span class="fn">of</span>(
+    <span class="str">"rider_id"</span>, riderId,
+    <span class="str">"health_data"</span>, healthDeclaration
+);
+
+<span class="cls">DifyResponse</span> result = difyClient.<span class="fn">runWorkflow</span>(
+    <span class="str">"Bearer "</span> + apiKey,
+    <span class="kw">new</span> <span class="cls">DifyRequest</span>(inputs, <span class="str">"blocking"</span>, userId)
+);</pre>
+        </div>
+
+        <h3>Streaming Response</h3>
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">curl — Streaming mode (SSE)</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre>curl -X POST https://api.dify.ai/v1/workflows/run \
+  -H <span class="str">'Authorization: Bearer {API_KEY}'</span> \
+  -H <span class="str">'Content-Type: application/json'</span> \
+  --data-raw <span class="str">'{
+    "inputs": {"topic": "Java Spring Boot"},
+    "response_mode": "streaming",
+    "user": "user-123"
+  }'</span>
+
+<span class="cmt"># SSE events response:</span>
+<span class="cmt"># data: {"event":"workflow_started","workflow_run_id":"..."}</span>
+<span class="cmt"># data: {"event":"node_started","data":{"node_type":"llm",...}}</span>
+<span class="cmt"># data: {"event":"text_chunk","data":{"text":"Hello..."}}</span>
+<span class="cmt"># data: {"event":"workflow_finished","data":{"outputs":{...}}}</span></pre>
+        </div>
+
+        <div class="tbl-wrap">
+            <table>
+                <thead><tr><th>Mode</th><th>Use case</th><th>Response</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>blocking</strong></td><td>Backend-to-backend, batch processing</td><td>JSON sau khi workflow hoàn thành</td></tr>
+                    <tr><td><strong>streaming</strong></td><td>Chat UI, realtime UX</td><td>SSE events, text chunks realtime</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ══ DEBUG ══ -->
+    <section class="section" id="debug">
+        <div class="section-tag">15 · Debug</div>
+        <h2>🐛 Debug & Tracing</h2>
+        <p>Dify có hệ thống debug rất mạnh. Mỗi workflow run có trace đầy đủ từng node — input, output, latency, token usage.</p>
+
+        <h3>Debug Panel</h3>
+        <ul class="feat-list">
+            <li><strong>Node-by-node trace</strong>: Click vào từng node trong Run Log để xem exact input/output của node đó.</li>
+            <li><strong>Token usage</strong>: Xem <code>prompt_tokens</code>, <code>completion_tokens</code>, <code>total_tokens</code> của mỗi LLM node. Tính cost.</li>
+            <li><strong>Latency</strong>: Thời gian xử lý từng node. Identify bottleneck.</li>
+            <li><strong>Error trace</strong>: Khi node fail, xem chính xác error message và stack trace.</li>
+            <li><strong>Preview mode</strong>: Test workflow trong editor mà không cần publish. Nhập test inputs và chạy realtime.</li>
+        </ul>
+
+        <h3>Xử lý lỗi trong Workflow</h3>
+        <div class="cards">
+            <div class="card">
+                <div class="card-ico">🔴</div>
+                <div class="card-title">Error Node</div>
+                <div class="card-desc">Mỗi node có thể cấu hình <strong>Error handling</strong>: fail workflow (default), hoặc tiếp tục với giá trị mặc định, hoặc route sang error branch.</div>
+            </div>
+            <div class="card">
+                <div class="card-ico">🔄</div>
+                <div class="card-title">Retry</div>
+                <div class="card-desc">HTTP Request node hỗ trợ <strong>Retry on error</strong> với max attempts và delay. Hữu ích cho flaky external APIs.</div>
+            </div>
+        </div>
+
+        <h3>Tích hợp LangFuse / LangSmith</h3>
+        <p>Dify hỗ trợ external tracing: <strong>Settings → Tracing → Connect LangFuse/LangSmith</strong>. Tất cả workflow runs sẽ được ghi vào tracing platform để phân tích sâu hơn.</p>
+
+        <div class="code-wrap">
+            <div class="code-header">
+                <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+                <span class="code-lang">LangFuse integration config</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+            </div>
+            <pre><span class="cmt"># Settings → Tracing → LangFuse</span>
+Public Key:  pk-lf-xxxxxxxxxxxxx
+Secret Key:  sk-lf-xxxxxxxxxxxxx
+Host:        https://cloud.langfuse.com  <span class="cmt"># hoặc self-hosted</span>
+
+<span class="cmt"># Sau khi connect, mọi run sẽ tự động ghi vào LangFuse</span>
+<span class="cmt"># Xem traces tại: https://cloud.langfuse.com/traces</span></pre>
+        </div>
+    </section>
+
+    <!-- ══ PATTERNS ══ -->
+    <section class="section" id="patterns">
+        <div class="section-tag">16 · Best Practices</div>
+        <h2>📐 Best Practices & Patterns</h2>
+        <p>Tổng hợp các pattern phổ biến và bài học thực tế khi xây dựng workflow production-ready.</p>
+
+        <h3>Pattern 1: RAG với Fallback</h3>
+        <div class="flow">
+            <div class="flow-node gn">Input</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node sk">Knowledge Retrieval</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node am">IF score &gt; 0.6</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node hl">LLM (với context)</div>
+        </div>
+        <p style="color:var(--muted2);font-size:13px;margin-top:-6px">ELSE branch → LLM không có context → "Tôi không tìm thấy thông tin về câu hỏi này"</p>
+
+        <h3>Pattern 2: Classification Router</h3>
+        <div class="flow">
+            <div class="flow-node gn">Input</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node hl">LLM Classifier</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node am">IF/ELSE (multi-branch)</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node sk">Specialist Handlers</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node hl">Variable Agg.</div>
+            <div class="flow-arr">→</div>
+            <div class="flow-node rd">End</div>
+        </div>
+
+        <h3>Pattern 3: Parallel Processing</h3>
+        <p>Xử lý nhiều nguồn song song rồi merge. Ví dụ: tìm kiếm đồng thời từ Knowledge Base + Web Search + Database API.</p>
+
+        <div class="compare">
+            <div class="cmp-box bad">
+                <div class="cmp-title">❌ Sequential (chậm)</div>
+                <div style="font-size:13px;color:var(--muted2)">
+                    KB Search (1s) → Web Search (2s) → DB API (0.5s) → LLM (3s)<br>
+                    <strong>Total: ~6.5s</strong>
+                </div>
+            </div>
+            <div class="cmp-box good">
+                <div class="cmp-title">✅ Parallel + merge (nhanh)</div>
+                <div style="font-size:13px;color:var(--muted2)">
+                    [KB + Web + DB] chạy song song (max 2s) → Variable Agg. → LLM (3s)<br>
+                    <strong>Total: ~5s</strong>
+                </div>
+            </div>
+        </div>
+
+        <h3>Checklist Production Workflow</h3>
+        <ul class="feat-list">
+            <li><strong>Environment Variables</strong>: Tất cả API keys, endpoints → vào <code>Settings → Env Vars</code>, không hardcode.</li>
+            <li><strong>Error handling</strong>: Mọi HTTP Request node phải có error check (IF status_code != 200 → error branch).</li>
+            <li><strong>Score threshold</strong>: Knowledge Retrieval nên có <code>score_threshold ≥ 0.5</code> để tránh trả về chunks không liên quan.</li>
+            <li><strong>Output validation</strong>: Code node validate JSON từ LLM trước khi dùng (LLM có thể hallucinate format).</li>
+            <li><strong>Token budget</strong>: Set <code>max_tokens</code> phù hợp cho từng LLM node. Không để unlimited.</li>
+            <li><strong>Logging</strong>: Dùng <code>sys.workflow_run_id</code> làm correlation ID khi gọi external API để trace end-to-end.</li>
+            <li><strong>Test data</strong>: Lưu test cases (input + expected output) trong Dify Annotate để regression test khi update workflow.</li>
+            <li><strong>Version control</strong>: Export workflow JSON thường xuyên và commit vào Git.</li>
+        </ul>
+
+        <div class="callout good">
+            <div class="callout-label">🎓 Tip cuối</div>
+            Bắt đầu với workflow đơn giản nhất hoạt động được, sau đó iterate. Đừng cố thiết kế "perfect workflow" ngay từ đầu. Dify's visual editor giúp refactor nhanh — thêm branch, swap model, adjust prompt trong vài phút.
+        </div>
+
+        <!-- INTERACTIVE DEMO -->
+        <h3 style="margin-top:40px">🎮 Demo: Node Variable Explorer</h3>
+        <p>Chọn node type để xem variables thường dùng:</p>
+        <div class="demo-area">
+            <div class="demo-toolbar">
+                <span class="demo-toolbar-title">Variable Reference Cheatsheet</span>
+            </div>
+            <div class="demo-body">
+                <div class="demo-chips">
+                    <div class="prompt-chip selected" onclick="showVars(this,'start')">▶ Start</div>
+                    <div class="prompt-chip" onclick="showVars(this,'llm')">🤖 LLM</div>
+                    <div class="prompt-chip" onclick="showVars(this,'http')">🌐 HTTP</div>
+                    <div class="prompt-chip" onclick="showVars(this,'kr')">📚 Knowledge</div>
+                    <div class="prompt-chip" onclick="showVars(this,'code')">💻 Code</div>
+                    <div class="prompt-chip" onclick="showVars(this,'sys')">⚙️ System</div>
+                    <div class="prompt-chip" onclick="showVars(this,'iter')">🔁 Iteration</div>
+                </div>
+                <div class="demo-out" id="var-out"></div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script>
+    /* ── SIDEBAR ACTIVE ── */
+    function setActive(el) {
+        document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+        el.classList.add('active');
+        if (window.innerWidth <= 900) document.getElementById('sidebar').classList.remove('open');
+    }
+
+    /* ── SCROLL PROGRESS ── */
+    window.addEventListener('scroll', () => {
+        const total = document.body.scrollHeight - window.innerHeight;
+        const pct = Math.round((window.scrollY / total) * 100);
+        document.getElementById('prog-fill').style.width = pct + '%';
+        document.getElementById('prog-pct').textContent = pct + '%';
+    });
+
+    /* ── TABS ── */
+    function switchTab(el, id) {
+        const parent = el.closest('.section');
+        parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        parent.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        parent.querySelector('#' + id).classList.add('active');
+    }
+
+    /* ── COPY CODE ── */
+    function copyCode(btn) {
+        const pre = btn.closest('.code-wrap').querySelector('pre');
+        navigator.clipboard.writeText(pre.innerText).then(() => {
+            btn.textContent = '✓ copied';
+            btn.classList.add('copied');
+            setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+        });
+    }
+
+    /* ── SCROLL SPY ── */
+    const sections = document.querySelectorAll('section[id]');
+    const links = document.querySelectorAll('.sb-link');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                links.forEach(l => {
+                    l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id);
+                });
+            }
+        });
+    }, { threshold: 0.25 });
+    sections.forEach(s => observer.observe(s));
+
+    /* ── VARIABLE DEMO ── */
+    const varData = {
+        start: `<span style="color:var(--green)">▶ Start Node — {{#start.variable_name#}}</span>
+
+<span style="color:var(--muted)">// Các variables bạn tự định nghĩa trong Start node:</span>
+{{<span style="color:var(--accent-lt)">#start.user_query#</span>}}       <span style="color:var(--muted)">// String input từ user</span>
+{{<span style="color:var(--accent-lt)">#start.file#</span>}}              <span style="color:var(--muted)">// File upload</span>
+{{<span style="color:var(--accent-lt)">#start.language#</span>}}          <span style="color:var(--muted)">// Select input</span>
+{{<span style="color:var(--accent-lt)">#start.items#</span>}}             <span style="color:var(--muted)">// Array input</span>
+{{<span style="color:var(--accent-lt)">#start.config#</span>}}            <span style="color:var(--muted)">// JSON object input</span>`,
+
+        llm: `<span style="color:var(--accent-lt)">🤖 LLM Node — {{#llm_node_id.variable#}}</span>
+
+<span style="color:var(--muted)">// Output variables:</span>
+{{<span style="color:var(--accent-lt)">#llm1.text#</span>}}               <span style="color:var(--muted)">// Full text response</span>
+{{<span style="color:var(--accent-lt)">#llm1.usage.prompt_tokens#</span>}} <span style="color:var(--muted)">// Tokens used in prompt</span>
+{{<span style="color:var(--accent-lt)">#llm1.usage.completion_tokens#</span>}} <span style="color:var(--muted)">// Output tokens</span>
+{{<span style="color:var(--accent-lt)">#llm1.usage.total_tokens#</span>}}  <span style="color:var(--muted)">// Total token count</span>
+
+<span style="color:var(--muted)">// Dùng JSON structured output:</span>
+{{<span style="color:var(--accent-lt)">#llm1.text#</span>}}               <span style="color:var(--muted)">// Parse trong Code node tiếp theo</span>`,
+
+        http: `<span style="color:var(--sky)">🌐 HTTP Request Node — {{#http_node_id.variable#}}</span>
+
+<span style="color:var(--muted)">// Output variables:</span>
+{{<span style="color:var(--accent-lt)">#http1.body#</span>}}              <span style="color:var(--muted)">// Response body (object nếu JSON)</span>
+{{<span style="color:var(--accent-lt)">#http1.status_code#</span>}}       <span style="color:var(--muted)">// HTTP status (200, 404, 500...)</span>
+{{<span style="color:var(--accent-lt)">#http1.headers#</span>}}           <span style="color:var(--muted)">// Response headers object</span>
+
+<span style="color:var(--muted)">// Access nested JSON fields:</span>
+{{<span style="color:var(--accent-lt)">#http1.body.data.id#</span>}}      <span style="color:var(--muted)">// Chấm notation cho nested fields</span>
+{{<span style="color:var(--accent-lt)">#http1.body.items[0].name#</span>}}<span style="color:var(--muted)">// Array access bằng index</span>`,
+
+        kr: `<span style="color:var(--sky)">📚 Knowledge Retrieval Node — {{#kr_node_id.variable#}}</span>
+
+<span style="color:var(--muted)">// Output: Array of retrieved chunks</span>
+{{<span style="color:var(--accent-lt)">#knowledge1.result#</span>}}       <span style="color:var(--muted)">// Full array (Array[Object])</span>
+{{<span style="color:var(--accent-lt)">#knowledge1.result[0].content#</span>}} <span style="color:var(--muted)">// Text chunk thứ 1</span>
+{{<span style="color:var(--accent-lt)">#knowledge1.result[1].content#</span>}} <span style="color:var(--muted)">// Text chunk thứ 2</span>
+{{<span style="color:var(--accent-lt)">#knowledge1.result[0].score#</span>}}   <span style="color:var(--muted)">// Similarity score (0-1)</span>
+{{<span style="color:var(--accent-lt)">#knowledge1.result[0].title#</span>}}   <span style="color:var(--muted)">// Document title</span>
+{{<span style="color:var(--accent-lt)">#knowledge1.result[0].url#</span>}}     <span style="color:var(--muted)">// Source URL (nếu có)</span>`,
+
+        code: `<span style="color:var(--green)">💻 Code Node — {{#code_node_id.variable#}}</span>
+
+<span style="color:var(--muted)">// Output dựa trên return dict trong code:</span>
+<span style="color:var(--amber)">def</span> main(input_text: str) -> dict:
+    <span style="color:var(--amber)">return</span> {
+        <span style="color:var(--green)">"result"</span>: processed_text,    <span style="color:var(--muted)"># → {{#code1.result#}}</span>
+        <span style="color:var(--green)">"count"</span>: item_count,          <span style="color:var(--muted)"># → {{#code1.count#}}</span>
+        <span style="color:var(--green)">"items"</span>: processed_list,      <span style="color:var(--muted)"># → {{#code1.items#}}</span>
+        <span style="color:var(--green)">"success"</span>: True               <span style="color:var(--muted)"># → {{#code1.success#}}</span>
+    }`,
+
+        sys: `<span style="color:var(--muted2)">⚙️ System Variables — luôn available</span>
+
+{{<span style="color:var(--accent-lt)">#sys.query#</span>}}               <span style="color:var(--muted)">// User message (Chatbot/ChatFlow)</span>
+{{<span style="color:var(--accent-lt)">#sys.files#</span>}}               <span style="color:var(--muted)">// Uploaded files array</span>
+{{<span style="color:var(--accent-lt)">#sys.conversation_id#</span>}}     <span style="color:var(--muted)">// Current conversation ID</span>
+{{<span style="color:var(--accent-lt)">#sys.user_id#</span>}}             <span style="color:var(--muted)">// User identifier</span>
+{{<span style="color:var(--accent-lt)">#sys.app_id#</span>}}              <span style="color:var(--muted)">// Dify App ID</span>
+{{<span style="color:var(--accent-lt)">#sys.workflow_id#</span>}}         <span style="color:var(--muted)">// Workflow definition ID</span>
+{{<span style="color:var(--accent-lt)">#sys.workflow_run_id#</span>}}     <span style="color:var(--muted)">// Unique run ID (dùng làm correlation ID)</span>
+
+<span style="color:var(--muted)">// Environment Variables (set trong Settings):</span>
+{{<span style="color:var(--accent-lt)">#env.API_TOKEN#</span>}}           <span style="color:var(--muted)">// Secret không lộ trong logs</span>
+{{<span style="color:var(--accent-lt)">#env.BASE_URL#</span>}}            <span style="color:var(--muted)">// Config value theo environment</span>`,
+
+        iter: `<span style="color:var(--amber)">🔁 Iteration Node — bên trong sub-workflow</span>
+
+<span style="color:var(--muted)">// Tham chiếu item hiện tại trong vòng lặp:</span>
+{{<span style="color:var(--accent-lt)">#iteration.item#</span>}}          <span style="color:var(--muted)">// Phần tử hiện tại (string/object)</span>
+{{<span style="color:var(--accent-lt)">#iteration.index#</span>}}         <span style="color:var(--muted)">// Index (0, 1, 2...)</span>
+
+<span style="color:var(--muted)">// Sau khi Iteration hoàn thành (bên ngoài):</span>
+{{<span style="color:var(--accent-lt)">#iter_node.output#</span>}}        <span style="color:var(--muted)">// Array kết quả tất cả iterations</span>
+{{<span style="color:var(--accent-lt)">#iter_node.output[0]#</span>}}     <span style="color:var(--muted)">// Kết quả iteration đầu tiên</span>
+{{<span style="color:var(--accent-lt)">#iter_node.output[0].text#</span>}} <span style="color:var(--muted)">// Nếu sub-workflow output là object</span>`
+    };
+
+    function showVars(el, key) {
+        document.querySelectorAll('.demo-chips .prompt-chip').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('var-out').innerHTML = varData[key];
+    }
+    showVars(document.querySelector('.demo-chips .prompt-chip'), 'start');
+</script>
+</body>
+</html>
